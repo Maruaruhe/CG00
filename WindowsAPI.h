@@ -4,8 +4,18 @@
 
 class WindowsAPI
 {
+public:
+	const int32_t kClientWidth = 1280;
+	const int32_t kClientHeight = 720;
+
+	WNDCLASS wc{};
+	RECT wrc{};
+
 	WindowsAPI();
 	~WindowsAPI();
 
+
+	void Init();
+	void RegisterWNDCLASS();
 };
 

@@ -1,5 +1,12 @@
 #include "WindowsAPI.h"
 
+WindowsAPI::WindowsAPI() {
+	WNDCLASS wc{};
+	RECT wrc{};
+}
+WindowsAPI::~WindowsAPI() {
+}
+
 //Window Procedure
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	switch (msg) {
@@ -8,4 +15,27 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 		return 0;
 	}
 	return DefWindowProc(hwnd, msg, wparam, lparam);
+}
+
+void WindowsAPI::Init() {
+
+}
+
+void WindowsAPI::RegisterWNDCLASS() {
+	wc.lpfnWndProc = WindowProc;
+
+	wc.lpszClassName = L"CG2WindowClass";//めんばにする
+
+	wc.hInstance = GetModuleHandle(nullptr);
+
+	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+
+	RegisterClass(&wc);
+
+	wrc = { 0,0,kClientWidth,kClientHeight };
+
+	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
+
+
+	
 }
