@@ -8,7 +8,7 @@ WindowsAPI::~WindowsAPI() {
 }
 
 //Window Procedure
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT WindowsAPI::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 	switch (msg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
