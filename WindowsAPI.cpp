@@ -24,7 +24,7 @@ void WindowsAPI::Init() {
 void WindowsAPI::RegisterWNDCLASS() {
 	wc.lpfnWndProc = WindowProc;
 
-	wc.lpszClassName = L"CG2WindowClass";//めんばにする
+	wc.lpszClassName = L"CG2WindowClass";
 
 	wc.hInstance = GetModuleHandle(nullptr);
 

@@ -1,4 +1,5 @@
 #include "WindowsAPI.h"
+#include "DirectX12.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
