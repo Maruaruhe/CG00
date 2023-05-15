@@ -1,6 +1,6 @@
 #include "DirectX12.h"
-#include <string>
-#include <format>
+#include "Log.h"
+
 
 DirectX12::DirectX12() {
 	
