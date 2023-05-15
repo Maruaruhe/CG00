@@ -11,6 +11,7 @@ public:
 	WNDCLASS wc{};
 	RECT wrc{};
 
+
 	WindowsAPI();
 	~WindowsAPI();
 
