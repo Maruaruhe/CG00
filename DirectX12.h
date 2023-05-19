@@ -47,6 +47,10 @@ private:
 	ID3D12DescriptorHeap* rtvDescriptorHeap;
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc{};
 	ID3D12Resource* swapChainResources[2];
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
+	UINT backBufferIndex;
 
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;

@@ -88,7 +88,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Command.cpp" />
     <ClCompile Include="DirectX12.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="WindowsAPI.cpp" />
@@ -108,7 +107,6 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Command.h" />
     <ClInclude Include="DirectX12.h" />
     <ClInclude Include="WindowsAPI.h" />
   </ItemGroup>

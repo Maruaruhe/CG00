@@ -52,6 +52,9 @@ void DirectX12::Init(WindowsAPI* winAPI) {
 	MakeCommandQueue();
 	MakeCommandList();
 	MakeSwapChain(winAPI);
+	void MakeDescriptorHeap();
+	void MakeRTV();
+	void DecideCommand();
 }
 
 void DirectX12::MakeDXGIFactory() {
@@ -139,10 +142,25 @@ void DirectX12::MakeDescriptorHeap() {
 	assert(SUCCEEDED(hr));
 }
 void DirectX12::MakeRTV() {
+	rtvDesc = {};
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
+	rtvStartHandle = rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	rtvHandles[0] = rtvStartHandle;
+	device->CreateRenderTargetView(swapChainResources[0], &rtvDesc, rtvHandles[0]);
+	rtvHandles[1].ptr = rtvHandles[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
 }
 void DirectX12::DecideCommand() {
+	backBufferIndex = swapChain->GetCurrentBackBufferIndex();
+	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
 
+	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
+	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
+	hr = commandList->Close();
+	assert(SUCCEEDED(hr));
 }
 void DirectX12::KickCommand() {
 
