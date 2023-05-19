@@ -52,8 +52,8 @@ void DirectX12::Init(WindowsAPI* winAPI) {
 	MakeCommandQueue();
 	MakeCommandList();
 	MakeSwapChain(winAPI);
-	void MakeDescriptorHeap();
-	void MakeRTV();
+	MakeDescriptorHeap();
+	MakeRTV();
 }
 
 void DirectX12::MakeDXGIFactory() {
