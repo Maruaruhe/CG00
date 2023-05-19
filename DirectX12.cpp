@@ -45,13 +45,13 @@ DirectX12::~DirectX12() {
 }
 
 
-void DirectX12::Init() {
+void DirectX12::Init(WindowsAPI* winAPI) {
 	MakeDXGIFactory();
 	Adapter();
 	D3D12Device();
 	MakeCommandQueue();
 	MakeCommandList();
-	MakeSwapChain();
+	MakeSwapChain(winAPI);
 }
 
 void DirectX12::MakeDXGIFactory() {
@@ -90,10 +90,6 @@ void DirectX12::D3D12Device() {
 	}
 }
 
-void DirectX12::GetWinAPI(WindowsAPI* winAPI) {
-	windowsAPI = winAPI;
-}
-
 void DirectX12::LogText(const std::string& message) {
 	OutputDebugStringA(message.c_str());
 }
@@ -112,8 +108,9 @@ void DirectX12::MakeCommandList() {
 	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAlocator, nullptr, IID_PPV_ARGS(&commandList));
 	assert(SUCCEEDED(hr));
 }
-void DirectX12::MakeSwapChain() {
+void DirectX12::MakeSwapChain(WindowsAPI* winAPI) {
 	swapChain = nullptr;
+	swapChainDesc = {};
 	swapChainDesc.Width = kClientWidth;
 	swapChainDesc.Height = kClientHeight;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -123,12 +120,23 @@ void DirectX12::MakeSwapChain() {
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	
 
-	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, windowsAPI->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
+	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, winAPI->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
 	assert(SUCCEEDED(hr));
 }
 
 void DirectX12::MakeDescriptorHeap() {
+	rtvDescriptorHeap = nullptr;
+	rtvDescriptorHeapDesc = {};
+	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+	rtvDescriptorHeapDesc.NumDescriptors = 2;
+	hr = device->CreateDescriptorHeap(&rtvDescriptorHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
+	assert(SUCCEEDED(hr));
 
+	swapChainResources[2] = { nullptr };
+	hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&swapChainResources[0]));
+	assert(SUCCEEDED(hr));
+	hr = swapChain->GetBuffer(1, IID_PPV_ARGS(&swapChainResources[1]));
+	assert(SUCCEEDED(hr));
 }
 void DirectX12::MakeRTV() {
 

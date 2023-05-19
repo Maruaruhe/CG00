@@ -10,7 +10,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//いろいろ
 	windowsAPI.RegisterWNDCLASS();
-	directX12.Init();
+	directX12.Init(&windowsAPI);
 	/*command.MakeCommandQueue();
 	command.MakeCommandList();
 	command.MakeSwapChain();*/

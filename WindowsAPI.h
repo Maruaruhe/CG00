@@ -15,9 +15,11 @@ public:
 	WindowsAPI();
 	~WindowsAPI();
 
-	static LRESULT WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam);
+	static LRESULT WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam);
 
 	void Init();
 	void RegisterWNDCLASS();
+
+	HWND GetHwnd()const { return hwnd_; }
 };
 

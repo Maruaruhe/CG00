@@ -13,11 +13,30 @@
 class DirectX12
 {
 public:
+	DirectX12();
+	~DirectX12();
+
+	void Init(WindowsAPI* winAPI);
+	void MakeDXGIFactory();
+	void Adapter();
+	void D3D12Device();
+
+	void LogText(const std::string& message);
+	void MakeCommandQueue();
+	void MakeCommandList();
+	void MakeSwapChain(WindowsAPI* winAPI);
+	void MakeDescriptorHeap();
+	void MakeRTV();
+	void DecideCommand();
+	void KickCommand();
+
+private:
 	IDXGIFactory7* dxgiFactory;
 	HRESULT hr;
 	IDXGIAdapter4* useAdapter;
 	ID3D12Device* device;
 	DXGI_ADAPTER_DESC3 adapterDesc{};
+
 	ID3D12CommandQueue* commandQueue;
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
 	ID3D12CommandAllocator* commandAlocator;
@@ -25,28 +44,11 @@ public:
 	IDXGISwapChain4* swapChain;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 
+	ID3D12DescriptorHeap* rtvDescriptorHeap;
+	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc{};
+	ID3D12Resource* swapChainResources[2];
+
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;
-
-	WindowsAPI* windowsAPI;
-
-	DirectX12();
-	~DirectX12();
-
-	void Init();
-	void MakeDXGIFactory();
-	void Adapter();
-	void D3D12Device();
-
-	void GetWinAPI(WindowsAPI* winAPI);
-
-	void LogText(const std::string& message);
-	void MakeCommandQueue();
-	void MakeCommandList();
-	void MakeSwapChain();
-	void MakeDescriptorHeap();
-	void MakeRTV();
-	void DecideCommand();
-	void KickCommand();
 };
 

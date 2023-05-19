@@ -8,13 +8,13 @@ WindowsAPI::~WindowsAPI() {
 }
 
 //Window Procedure
-LRESULT WindowsAPI::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT WindowsAPI::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam) {
 	switch (msg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
 	}
-	return DefWindowProc(hwnd, msg, wparam, lparam);
+	return DefWindowProc(hwnd_, msg, wparam, lparam);
 }
 
 void WindowsAPI::Init() {
