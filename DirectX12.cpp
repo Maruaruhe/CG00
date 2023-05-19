@@ -54,7 +54,6 @@ void DirectX12::Init(WindowsAPI* winAPI) {
 	MakeSwapChain(winAPI);
 	void MakeDescriptorHeap();
 	void MakeRTV();
-	void DecideCommand();
 }
 
 void DirectX12::MakeDXGIFactory() {
@@ -163,5 +162,12 @@ void DirectX12::DecideCommand() {
 	assert(SUCCEEDED(hr));
 }
 void DirectX12::KickCommand() {
+	ID3D12CommandList* commandLists[] = { commandList };
+	commandQueue->ExecuteCommandLists(1, commandLists);
 
+	swapChain->Present(1, 0);
+	hr = commandAlocator->Reset();
+	assert(SUCCEEDED(hr));
+	hr = commandList->Reset(commandAlocator, nullptr);
+	assert(SUCCEEDED(hr));
 }
