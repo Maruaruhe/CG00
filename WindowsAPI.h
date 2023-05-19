@@ -10,6 +10,7 @@ public:
 
 	WNDCLASS wc{};
 	RECT wrc{};
+	HWND hwnd;
 
 	WindowsAPI();
 	~WindowsAPI();
@@ -18,5 +19,7 @@ public:
 
 	void Init();
 	void RegisterWNDCLASS();
+
+	HWND GetHwnd()const { return hwnd; }
 };
 

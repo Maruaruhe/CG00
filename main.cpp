@@ -8,9 +8,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//いろいろ
 	windowsAPI.RegisterWNDCLASS();
-	directX12.Init();
-	directX12.Adapter();
-	directX12.D3D12Device();
+	directX12.Init(&windowsAPI);
 
 	//メインループ
 	MSG msg{};
@@ -20,7 +18,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			DispatchMessage(&msg);
 		}
 		else {
-
+			directX12.DecideCommand();
+			directX12.KickCommand();
 		}
 	}
 	return 0;
