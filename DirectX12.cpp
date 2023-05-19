@@ -44,7 +44,14 @@ DirectX12::~DirectX12() {
 
 }
 
+
 void DirectX12::Init() {
+	MakeDXGIFactory();
+	Adapter();
+	D3D12Device();
+}
+
+void DirectX12::MakeDXGIFactory() {
 	dxgiFactory = nullptr;
 	hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(hr));

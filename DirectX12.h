@@ -21,6 +21,7 @@ public:
 	~DirectX12();
 
 	void Init();
+	void MakeDXGIFactory();
 	void Adapter();
 	void D3D12Device();
 	void LogText(const std::string& message);
