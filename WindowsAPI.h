@@ -19,6 +19,5 @@ public:
 
 	void Init();
 	void RegisterWNDCLASS();
-	HWND GetHwnd()const { return hwnd_; }
 };
 

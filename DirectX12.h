@@ -44,5 +44,9 @@ public:
 	void MakeCommandQueue();
 	void MakeCommandList();
 	void MakeSwapChain();
+	void MakeDescriptorHeap();
+	void MakeRTV();
+	void DecideCommand();
+	void KickCommand();
 };
 

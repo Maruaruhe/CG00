@@ -126,3 +126,16 @@ void DirectX12::MakeSwapChain() {
 	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, windowsAPI->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
 	assert(SUCCEEDED(hr));
 }
+
+void DirectX12::MakeDescriptorHeap() {
+
+}
+void DirectX12::MakeRTV() {
+
+}
+void DirectX12::DecideCommand() {
+
+}
+void DirectX12::KickCommand() {
+
+}
