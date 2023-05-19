@@ -1,19 +1,19 @@
 #include "WindowsAPI.h"
 #include "DirectX12.h"
-#include "Command.h"
+//#include "Command.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
 	WindowsAPI windowsAPI;
 	DirectX12 directX12;
-	Command command;
+	/*Command command;*/
 
 	//いろいろ
 	windowsAPI.RegisterWNDCLASS();
 	directX12.Init();
-	command.MakeCommandQueue();
+	/*command.MakeCommandQueue();
 	command.MakeCommandList();
-	command.MakeSwapChain();
+	command.MakeSwapChain();*/
 
 
 	//メインループ

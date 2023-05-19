@@ -49,6 +49,9 @@ void DirectX12::Init() {
 	MakeDXGIFactory();
 	Adapter();
 	D3D12Device();
+	MakeCommandQueue();
+	MakeCommandList();
+	MakeSwapChain();
 }
 
 void DirectX12::MakeDXGIFactory() {
@@ -61,7 +64,7 @@ void DirectX12::Adapter() {
 
 	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; ++i) {
 		//GetAdapterInfo
-		DXGI_ADAPTER_DESC3 adapterDesc{};
+		adapterDesc = {};
 		hr = useAdapter->GetDesc3(&adapterDesc);
 		assert(SUCCEEDED(hr));
 		//ソフトウェアでなければok
@@ -87,6 +90,39 @@ void DirectX12::D3D12Device() {
 	}
 }
 
+void DirectX12::GetWinAPI(WindowsAPI* winAPI) {
+	windowsAPI = winAPI;
+}
+
 void DirectX12::LogText(const std::string& message) {
 	OutputDebugStringA(message.c_str());
+}
+
+void DirectX12::MakeCommandQueue() {
+	commandQueue = nullptr;
+	hr = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue));
+	assert(SUCCEEDED(hr));
+}
+void DirectX12::MakeCommandList() {
+	commandAlocator = nullptr;
+	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAlocator));
+	assert(SUCCEEDED(hr));
+
+	commandList = nullptr;
+	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAlocator, nullptr, IID_PPV_ARGS(&commandList));
+	assert(SUCCEEDED(hr));
+}
+void DirectX12::MakeSwapChain() {
+	swapChain = nullptr;
+	swapChainDesc.Width = kClientWidth;
+	swapChainDesc.Height = kClientHeight;
+	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	swapChainDesc.SampleDesc.Count = 1;
+	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	swapChainDesc.BufferCount = 2;
+	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+	
+
+	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, windowsAPI->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
+	assert(SUCCEEDED(hr));
 }

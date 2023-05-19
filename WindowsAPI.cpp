@@ -1,8 +1,8 @@
 #include "WindowsAPI.h"
 
 WindowsAPI::WindowsAPI() {
-	WNDCLASS wc{};
-	RECT wrc{};
+	wc = {};
+	wrc = {};
 }
 WindowsAPI::~WindowsAPI() {
 }
@@ -38,7 +38,7 @@ void WindowsAPI::RegisterWNDCLASS() {
 
 
 	//ウィンドウの生成
-	HWND hwnd = CreateWindow(
+	hwnd_ = CreateWindow(
 		wc.lpszClassName,
 		L"CG",
 		WS_OVERLAPPEDWINDOW,
@@ -51,5 +51,5 @@ void WindowsAPI::RegisterWNDCLASS() {
 		wc.hInstance,
 		nullptr
 	);
-	ShowWindow(hwnd, SW_SHOW);
+	ShowWindow(hwnd_, SW_SHOW);
 }

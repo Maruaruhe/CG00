@@ -1,7 +1,6 @@
 #include "Command.h"
 
 Command::Command() {
-	directX12.Init();
 }
 Command::~Command() {
 
