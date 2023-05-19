@@ -1,20 +1,20 @@
 #include "WindowsAPI.h"
 
 WindowsAPI::WindowsAPI() {
-	WNDCLASS wc{};
-	RECT wrc{};
+	wc = {};
+	wrc = {};
 }
 WindowsAPI::~WindowsAPI() {
 }
 
 //Window Procedure
-LRESULT WindowsAPI::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+LRESULT WindowsAPI::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam) {
 	switch (msg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		return 0;
 	}
-	return DefWindowProc(hwnd, msg, wparam, lparam);
+	return DefWindowProc(hwnd_, msg, wparam, lparam);
 }
 
 void WindowsAPI::Init() {
@@ -38,7 +38,7 @@ void WindowsAPI::RegisterWNDCLASS() {
 
 
 	//ウィンドウの生成
-	HWND hwnd = CreateWindow(
+	hwnd_ = CreateWindow(
 		wc.lpszClassName,
 		L"CG",
 		WS_OVERLAPPEDWINDOW,
@@ -51,5 +51,5 @@ void WindowsAPI::RegisterWNDCLASS() {
 		wc.hInstance,
 		nullptr
 	);
-	ShowWindow(hwnd, SW_SHOW);
+	ShowWindow(hwnd_, SW_SHOW);
 }
