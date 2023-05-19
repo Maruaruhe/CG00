@@ -29,6 +29,8 @@ public:
 	void MakeRTV();
 	void DecideCommand();
 	void KickCommand();
+	void Debug();
+	void Stop();
 
 private:
 	IDXGIFactory7* dxgiFactory;
@@ -51,6 +53,8 @@ private:
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
 	UINT backBufferIndex;
+	ID3D12Debug1* debugController;
+	ID3D12InfoQueue* infoQueue;
 
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;
