@@ -4,9 +4,13 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
 	WindowsAPI windowsAPI;
+	DirectX12 directX12;
 
 	//いろいろ
 	windowsAPI.RegisterWNDCLASS();
+	directX12.Init();
+	directX12.Adapter();
+	directX12.D3D12Device();
 
 	//メインループ
 	MSG msg{};
