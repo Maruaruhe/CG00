@@ -33,6 +33,7 @@ public:
 	void Stop();
 
 	void TransitionBarrier();
+	void ChangeBarrier();
 	void MakeFenceEvent();
 	void SendSignal();
 	void WaitGPU();

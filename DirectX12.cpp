@@ -209,8 +209,11 @@ void DirectX12::TransitionBarrier() {
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
 	commandList->ResourceBarrier(1, &barrier);
-
-	barrier
+}
+void DirectX12::ChangeBarrier() {
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	commandList->ResourceBarrier(1, &barrier);
 }
 void DirectX12::MakeFenceEvent() {
 	fence = nullptr;
