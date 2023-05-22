@@ -32,6 +32,11 @@ public:
 	void Debug();
 	void Stop();
 
+	void TransitionBarrier();
+	void MakeFenceEvent();
+	void SendSignal();
+	void WaitGPU();
+
 private:
 	IDXGIFactory7* dxgiFactory;
 	HRESULT hr;
@@ -55,6 +60,11 @@ private:
 	UINT backBufferIndex;
 	ID3D12Debug1* debugController;
 	ID3D12InfoQueue* infoQueue;
+
+	D3D12_RESOURCE_BARRIER barrier{};
+	ID3D12Fence* fence;
+	uint64_t fenceValue;
+	HANDLE fenceEvent;
 
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;
