@@ -408,7 +408,7 @@ void DirectX12::MakeRootSignature() {
 	errorBlob = nullptr;
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
 	if (FAILED(hr)) {
-		/*Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));*/
+		LogText(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));
 		assert(false);
 	}
 	rootSignature = nullptr;
