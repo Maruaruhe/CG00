@@ -8,6 +8,7 @@
 #include <dxcapi.h>
 
 #include "WindowsAPI.h"
+#include "Vector4.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
@@ -61,6 +62,15 @@ public:
 
 	void MakeRootSignature();
 	void SetInputLayout();
+	void SetBlendState();
+	void SetRasterizerState();
+	void ShaderCompile();
+	void MakePSO();
+	void MakeVertexResource();
+	void MakeVertexBufferView();
+	void DateResource();
+	void ViewportScissor();
+
 
 private:
 	IDXGIFactory7* dxgiFactory;

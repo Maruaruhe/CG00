@@ -415,3 +415,33 @@ void DirectX12::SetInputLayout() {
 	inputLayoutDesc.pInputElementDescs = inputElementDescs;
 	inputLayoutDesc.NumElements = _countof(inputElementDescs);
 }
+void DirectX12::SetBlendState() {
+	blendDesc = {};
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+}
+void DirectX12::SetRasterizerState() {
+	rasterizerDesc = {};
+	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
+	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
+}
+void DirectX12::ShaderCompile() {
+	vertexShaderBlob = CompileShader(L"Object3D.VS.hlsl", L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
+	assert(vertexShaderBlob != nullptr);
+	pixelShaderBlob = CompileShader(L"Object3D.PS.hlsl", L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
+	assert(pixelShaderBlob != nullptr);
+}
+void DirectX12::MakePSO() {
+
+}
+void DirectX12::MakeVertexResource() {
+
+}
+void DirectX12::MakeVertexBufferView() {
+
+}
+void DirectX12::DateResource() {
+
+}
+void DirectX12::ViewportScissor() {
+
+}
