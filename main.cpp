@@ -6,14 +6,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
 	WindowsAPI windowsAPI;
 	DirectX12 directX12;
-	/*Command command;*/
 
 	//いろいろ
 	windowsAPI.RegisterWNDCLASS();
 	directX12.Init(&windowsAPI);
-	/*command.MakeCommandQueue();
-	command.MakeCommandList();
-	command.MakeSwapChain();*/
 
 
 	//メインループ
@@ -22,12 +18,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
-
 		}
 		else {
-			directX12.DecideCommand();
-			directX12.KickCommand();
+			directX12.Update();
 		}
 	}
+	directX12.End(&windowsAPI);
 	return 0;
 }

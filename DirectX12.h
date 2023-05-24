@@ -4,11 +4,13 @@
 #include <cassert>
 #include <string>
 #include <format>
+#include <dxgidebug.h>
 
 #include "WindowsAPI.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
+#pragma comment(lib,"dxguid.lib")
 
 class DirectX12
 {
@@ -17,6 +19,9 @@ public:
 	~DirectX12();
 
 	void Init(WindowsAPI* winAPI);
+	void Update();
+
+
 	void MakeDXGIFactory();
 	void Adapter();
 	void D3D12Device();
@@ -38,6 +43,10 @@ public:
 	void SendSignal();
 	void WaitGPU();
 
+	void ReportLiveObject();
+	void AllRelease();
+	void End(WindowsAPI* winAPI);
+
 private:
 	IDXGIFactory7* dxgiFactory;
 	HRESULT hr;
@@ -47,7 +56,7 @@ private:
 
 	ID3D12CommandQueue* commandQueue;
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
-	ID3D12CommandAllocator* commandAlocator;
+	ID3D12CommandAllocator* commandAllocator;
 	ID3D12GraphicsCommandList* commandList;
 	IDXGISwapChain4* swapChain;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
@@ -66,6 +75,8 @@ private:
 	ID3D12Fence* fence;
 	uint64_t fenceValue;
 	HANDLE fenceEvent;
+	
+	IDXGIDebug1* debug;
 
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;

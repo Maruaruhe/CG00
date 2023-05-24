@@ -54,13 +54,32 @@ void DirectX12::Init(WindowsAPI* winAPI) {
 	MakeSwapChain(winAPI);
 	MakeDescriptorHeap();
 	MakeRTV();
+	MakeFenceEvent();
+}
+void DirectX12::Update() {
+	DecideCommand();
+	TransitionBarrier();
+	//commandList入れる
+	ChangeBarrier();
+	KickCommand();
+	SendSignal();
+	WaitGPU();
 }
 
+void DirectX12::End(WindowsAPI* winAPI) {
+	CloseWindow(winAPI->GetHwnd());
+	AllRelease();
+	ReportLiveObject();
+}
+//1
 void DirectX12::MakeDXGIFactory() {
 	dxgiFactory = nullptr;
 	hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(hr));
 }
+
+
+//2
 void DirectX12::Adapter() {
 	useAdapter = nullptr;
 
@@ -79,6 +98,9 @@ void DirectX12::Adapter() {
 	}
 	assert(useAdapter != nullptr);
 }
+
+
+//3
 void DirectX12::D3D12Device() {
 	device = nullptr;
 	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_12_2,D3D_FEATURE_LEVEL_12_1,D3D_FEATURE_LEVEL_12_0 };
@@ -92,24 +114,32 @@ void DirectX12::D3D12Device() {
 	}
 }
 
+
+
 void DirectX12::LogText(const std::string& message) {
 	OutputDebugStringA(message.c_str());
 }
-
+//4
 void DirectX12::MakeCommandQueue() {
 	commandQueue = nullptr;
 	hr = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue));
 	assert(SUCCEEDED(hr));
 }
+
+
+//5
 void DirectX12::MakeCommandList() {
-	commandAlocator = nullptr;
-	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAlocator));
+	commandAllocator = nullptr;
+	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
 	assert(SUCCEEDED(hr));
 
 	commandList = nullptr;
-	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAlocator, nullptr, IID_PPV_ARGS(&commandList));
+	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAllocator, nullptr, IID_PPV_ARGS(&commandList));
 	assert(SUCCEEDED(hr));
 }
+
+
+//6
 void DirectX12::MakeSwapChain(WindowsAPI* winAPI) {
 	swapChain = nullptr;
 	swapChainDesc = {};
@@ -126,6 +156,8 @@ void DirectX12::MakeSwapChain(WindowsAPI* winAPI) {
 	assert(SUCCEEDED(hr));
 }
 
+
+//7
 void DirectX12::MakeDescriptorHeap() {
 	rtvDescriptorHeap = nullptr;
 	rtvDescriptorHeapDesc = {};
@@ -140,6 +172,9 @@ void DirectX12::MakeDescriptorHeap() {
 	hr = swapChain->GetBuffer(1, IID_PPV_ARGS(&swapChainResources[1]));
 	assert(SUCCEEDED(hr));
 }
+
+
+//8
 void DirectX12::MakeRTV() {
 	rtvDesc = {};
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
@@ -152,6 +187,9 @@ void DirectX12::MakeRTV() {
 
 	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
 }
+
+
+//1
 void DirectX12::DecideCommand() {
 	backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
@@ -166,9 +204,9 @@ void DirectX12::KickCommand() {
 	commandQueue->ExecuteCommandLists(1, commandLists);
 
 	swapChain->Present(1, 0);
-	hr = commandAlocator->Reset();
+	hr = commandAllocator->Reset();
 	assert(SUCCEEDED(hr));
-	hr = commandList->Reset(commandAlocator, nullptr);
+	hr = commandList->Reset(commandAllocator, nullptr);
 	assert(SUCCEEDED(hr));
 }
 
@@ -184,7 +222,7 @@ void DirectX12::Stop() {
 	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
 		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+		/*infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);*/
 
 		D3D12_MESSAGE_ID denyIds[] = {
 			D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
@@ -200,6 +238,10 @@ void DirectX12::Stop() {
 		infoQueue->Release();
 	}
 }
+
+
+
+//2
 void DirectX12::TransitionBarrier() {
 	barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
@@ -210,6 +252,10 @@ void DirectX12::TransitionBarrier() {
 
 	commandList->ResourceBarrier(1, &barrier);
 }
+
+
+
+//4
 void DirectX12::ChangeBarrier() {
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
@@ -224,13 +270,45 @@ void DirectX12::MakeFenceEvent() {
 	fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
 	assert(fenceEvent != nullptr);
 }
+
+
+
+//5
 void DirectX12::SendSignal() {
 	fenceValue++;
 	commandQueue->Signal(fence, fenceValue);
 }
+
+
+
+//6
 void DirectX12::WaitGPU() {
 	if (fence->GetCompletedValue() < fenceValue) {
 		fence->SetEventOnCompletion(fenceValue, fenceEvent);
 		WaitForSingleObject(fenceEvent, INFINITE);
 	}
+}
+
+void DirectX12::ReportLiveObject() {
+	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
+		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
+		debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
+		debug->ReportLiveObjects(DXGI_DEBUG_D3D12, DXGI_DEBUG_RLO_ALL);
+		debug->Release();
+	}
+}
+
+void DirectX12::AllRelease() {
+	CloseHandle(fenceEvent);
+	fence->Release();
+	rtvDescriptorHeap->Release();
+	swapChainResources[0]->Release();
+	swapChainResources[1]->Release();
+	swapChain->Release();
+	commandList->Release();
+	commandAllocator->Release();
+	commandQueue->Release();
+	device->Release();
+	useAdapter->Release();
+	dxgiFactory->Release();
 }
