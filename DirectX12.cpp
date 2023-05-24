@@ -507,8 +507,11 @@ void DirectX12::MakeVertexBufferView() {
 void DirectX12::DateResource() {
 	vertexDate = nullptr;
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexDate));
+	//hidarisita
 	vertexDate[0] = { -0.5f,-0.5f,0.0f,1.0f };
+	//ue
 	vertexDate[1] = { 0.0f,0.5f,0.0f,1.0f };
+	//migisita
 	vertexDate[2] = { 0.5f,-0.5f,0.0f,1.0f };
 }
 void DirectX12::ViewportScissor() {
