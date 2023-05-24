@@ -71,6 +71,7 @@ public:
 	void DateResource();
 	void ViewportScissor();
 
+	ID3D12Device* GetDevice()const { return device; }
 
 private:
 	IDXGIFactory7* dxgiFactory;

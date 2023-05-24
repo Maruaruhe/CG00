@@ -36,6 +36,10 @@ std::string ConvertString(const std::wstring& str)
 	return result;
 }
 
+void DirectX12::LogText(const std::string& message) {
+	OutputDebugStringA(message.c_str());
+}
+
 DirectX12::DirectX12() {
 	
 }
@@ -123,12 +127,6 @@ void DirectX12::D3D12Device() {
 			break;
 		}
 	}
-}
-
-
-
-void DirectX12::LogText(const std::string& message) {
-	OutputDebugStringA(message.c_str());
 }
 //4
 void DirectX12::MakeCommandQueue() {

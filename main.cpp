@@ -1,6 +1,6 @@
 #include "WindowsAPI.h"
 #include "DirectX12.h"
-#include "Triangle.h"
+//#include "Triangle.h"
 #include "Vector4.h"
 //#include "Command.h"
 
@@ -8,12 +8,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
 	WindowsAPI* windowsAPI = new WindowsAPI;
 	DirectX12* directX12 = new DirectX12;
-	Triangle* triangle = new Triangle;
+	////Triangle* triangle = new Triangle;
 
 	//いろいろ
 	windowsAPI->RegisterWNDCLASS();
 	directX12->InitializeDirectX12(windowsAPI);
-	triangle->SetPos(Vector4{});
 
 
 
