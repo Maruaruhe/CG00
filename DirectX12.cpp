@@ -45,7 +45,7 @@ DirectX12::~DirectX12() {
 }
 
 
-void DirectX12::Init(WindowsAPI* winAPI) {
+void DirectX12::InitializeDirectX12(WindowsAPI* winAPI) {
 	MakeDXGIFactory();
 	Adapter();
 	D3D12Device();
@@ -55,11 +55,22 @@ void DirectX12::Init(WindowsAPI* winAPI) {
 	MakeDescriptorHeap();
 	MakeRTV();
 	MakeFenceEvent();
+
+	InitializeDXC();
+	MakeRootSignature();
+	SetInputLayout();
+	SetBlendState();
+	SetRasterizerState();
+	ShaderCompile();
+	MakePSO();
+	MakeVertexResource();
+	MakeVertexBufferView();
+	DateResource();
+	ViewportScissor();
 }
 void DirectX12::Update() {
 	DecideCommand();
 	TransitionBarrier();
-	//commandList入れる
 	ChangeBarrier();
 	KickCommand();
 	SendSignal();
@@ -67,8 +78,8 @@ void DirectX12::Update() {
 }
 
 void DirectX12::End(WindowsAPI* winAPI) {
-	CloseWindow(winAPI->GetHwnd());
 	AllRelease();
+	CloseWindow(winAPI->GetHwnd());
 	ReportLiveObject();
 }
 //1
@@ -122,6 +133,7 @@ void DirectX12::LogText(const std::string& message) {
 //4
 void DirectX12::MakeCommandQueue() {
 	commandQueue = nullptr;
+	commandQueueDesc = {};
 	hr = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue));
 	assert(SUCCEEDED(hr));
 }

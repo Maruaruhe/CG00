@@ -1,4 +1,5 @@
 #pragma once
+#include "Vector4.h"
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <cassert>
@@ -7,49 +8,15 @@
 #include <dxgidebug.h>
 #include <dxcapi.h>
 
-#include "WindowsAPI.h"
-#include "Vector4.h"
-
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"dxcompiler.lib")
 
-class DirectX12
+class Triangle
 {
 public:
-	DirectX12();
-	~DirectX12();
-
-	void InitializeDirectX12(WindowsAPI* winAPI);
-	void Update();
-
-	
-	void MakeDXGIFactory();
-	void Adapter();
-	void D3D12Device();
-
 	void LogText(const std::string& message);
-	void MakeCommandQueue();
-	void MakeCommandList();
-	void MakeSwapChain(WindowsAPI* winAPI);
-	void MakeDescriptorHeap();
-	void MakeRTV();
-	void DecideCommand();
-	void KickCommand();
-	void Debug();
-	void Stop();
-
-	void TransitionBarrier();
-	void ChangeBarrier();
-	void MakeFenceEvent();
-	void SendSignal();
-	void WaitGPU();
-
-	void ReportLiveObject();
-	void AllRelease();
-	void End(WindowsAPI* winAPI);
-
 	void InitializeDXC();
 
 	IDxcBlob* CompileShader(
@@ -70,39 +37,8 @@ public:
 	void MakeVertexBufferView();
 	void DateResource();
 	void ViewportScissor();
-
-
 private:
-	IDXGIFactory7* dxgiFactory;
 	HRESULT hr;
-	IDXGIAdapter4* useAdapter;
-	ID3D12Device* device;
-	DXGI_ADAPTER_DESC3 adapterDesc{};
-
-	ID3D12CommandQueue* commandQueue;
-	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
-	ID3D12CommandAllocator* commandAllocator;
-	ID3D12GraphicsCommandList* commandList;
-	IDXGISwapChain4* swapChain;
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
-
-	ID3D12DescriptorHeap* rtvDescriptorHeap;
-	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc{};
-	ID3D12Resource* swapChainResources[2];
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
-	UINT backBufferIndex;
-	ID3D12Debug1* debugController;
-	ID3D12InfoQueue* infoQueue;
-
-	D3D12_RESOURCE_BARRIER barrier{};
-	ID3D12Fence* fence;
-	uint64_t fenceValue;
-	HANDLE fenceEvent;
-	
-	IDXGIDebug1* debug;
-
 	//InitializeDXC
 	IDxcUtils* dxcUtils;
 	IDxcCompiler3* dxcCompiler;
@@ -136,8 +72,5 @@ private:
 	//ViewportScissor
 	D3D12_VIEWPORT viewport{};
 	D3D12_RECT scissorRect{};
-
-	const int32_t kClientWidth = 1280;
-	const int32_t kClientHeight = 720;
 };
 
