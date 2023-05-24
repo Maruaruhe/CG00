@@ -59,21 +59,8 @@ void DirectX12::InitializeDirectX12(WindowsAPI* winAPI) {
 	MakeDescriptorHeap();
 	MakeRTV();
 	MakeFenceEvent();
-
-	InitializeDXC();
-	MakeRootSignature();
-	SetInputLayout();
-	SetBlendState();
-	SetRasterizerState();
-	ShaderCompile();
-	MakePSO();
-	MakeVertexResource();
-	MakeVertexBufferView();
-	DateResource();
-	ViewportScissor();
 }
 void DirectX12::Update() {
-	DecideCommand();
 	TransitionBarrier();
 	ChangeBarrier();
 	KickCommand();
@@ -81,11 +68,6 @@ void DirectX12::Update() {
 	WaitGPU();
 }
 
-void DirectX12::End(WindowsAPI* winAPI) {
-	AllRelease();
-	CloseWindow(winAPI->GetHwnd());
-	ReportLiveObject();
-}
 //1
 void DirectX12::MakeDXGIFactory() {
 	dxgiFactory = nullptr;

@@ -1,14 +1,15 @@
 #include "WindowsAPI.h"
+#include "GameScene.h"
 #include "DirectX12.h"
-//#include "Triangle.h"
+#include "Triangle.h"
 #include "Vector4.h"
-//#include "Command.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
 	WindowsAPI* windowsAPI = new WindowsAPI;
 	DirectX12* directX12 = new DirectX12;
-	////Triangle* triangle = new Triangle;
+	Triangle* triangle = new Triangle;
+	GameScene* gameScene = new GameScene;
 
 	//いろいろ
 	windowsAPI->RegisterWNDCLASS();
