@@ -326,7 +326,7 @@ void DirectX12::InitializeDXC() {
 	assert(SUCCEEDED(hr));
 }
 IDxcBlob* CompileShader(
-	const std::wstring& filepath,
+	const std::wstring& filePath,
 	const wchar_t* profile,
 	IDxcUtils* dxcUtiles,
 	IDxcCompiler3* dxcCompiler,
@@ -334,7 +334,7 @@ IDxcBlob* CompileShader(
 ) {
 	//1.hlslファイルを読む---------------------------------------------------------------------------------------------------------
 	//これからシェーダーをコンパイルする旨をログに出す
-	Log(ConvertString(std::format(L"Begin CompilerShader, path:{}, profile:{}\n", filePath, profile)));
+	//Log(ConvertString(std::format(L"Begin CompilerShader, path:{}, profile:{}\n", filePath, profile)));
 	//hlslファイルを読む
 	IDxcBlobEncoding* shaderSource = nullptr;
 	HRESULT hr = dxcUtiles->LoadFile(filePath.c_str(), nullptr, &shaderSource);
@@ -371,7 +371,7 @@ IDxcBlob* CompileShader(
 	IDxcBlobUtf8* shaderError = nullptr;
 	shaderResult->GetOutput(DXC_OUT_ERRORS, IID_PPV_ARGS(&shaderError), nullptr);
 	if (shaderError != nullptr && shaderError->GetStringLength() != 0) {
-		Log(shaderError->GetStringPointer());
+		/*Log(shaderError->GetStringPointer());*/
 		//警告・エラーダメ絶対
 		assert(false);
 	}
@@ -382,10 +382,36 @@ IDxcBlob* CompileShader(
 	hr = shaderResult->GetOutput(DXC_OUT_OBJECT, IID_PPV_ARGS(&shaderBlob), nullptr);
 	assert(SUCCEEDED(hr));
 	//成功したログを出す
-	Log(ConvertString(std::format(L"Compile Succeeded, path:{}, profile:{}\n", filePath, profile)));
+	//Log(ConvertString(std::format(L"Compile Succeeded, path:{}, profile:{}\n", filePath, profile)));
 	//もう使わないリソースを解放
 	shaderSource->Release();
 	shaderResult->Release();
 	//実行用のバイナリを返却
 	return shaderBlob;
+}
+
+void DirectX12::MakeRootSignature() {
+	descriptionRootSignature = {};
+	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+	signatureBlob = nullptr;
+	errorBlob = nullptr;
+	hr = D3D12SerializeRootSignature(&descriptionRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
+	if (FAILED(hr)) {
+		/*Log(reinterpret_cast<char*>(errorBlob->GetBufferPointer()));*/
+		assert(false);
+	}
+	rootSignature = nullptr;
+	hr = device->CreateRootSignature(0, signatureBlob->GetBufferPointer(), signatureBlob->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+	assert(SUCCEEDED(hr));
+}
+
+void DirectX12::SetInputLayout() {
+	inputElementDescs[1] = {};
+	inputElementDescs[0].SemanticName="POSITION";
+	inputElementDescs[0].SemanticIndex = 0;
+	inputElementDescs[0].Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	inputElementDescs[0].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+	inputLayoutDesc = {};
+	inputLayoutDesc.pInputElementDescs = inputElementDescs;
+	inputLayoutDesc.NumElements = _countof(inputElementDescs);
 }
