@@ -312,3 +312,25 @@ void DirectX12::AllRelease() {
 	useAdapter->Release();
 	dxgiFactory->Release();
 }
+
+void DirectX12::InitializeDXC() {
+	dxcUtils = nullptr;
+	dxcCompiler = nullptr;
+	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils));
+	assert(SUCCEEDED(hr));
+	hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxcCompiler));
+	assert(SUCCEEDED(hr));
+
+	includeHandler = nullptr;
+	hr = dxcUtils->CreateDefaultIncludeHandler(&includeHandler);
+	assert(SUCCEEDED(hr));
+}
+IDxcBlob* CompileShader(
+	const std::wstring& filepath,
+	const wchar_t* profile,
+	IDxcUtils* dxcUtiles,
+	IDxcCompiler3* dxcCompiler,
+	IDxcIncludeHandler* includeHandler
+) {
+
+}

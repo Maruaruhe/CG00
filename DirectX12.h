@@ -5,12 +5,14 @@
 #include <string>
 #include <format>
 #include <dxgidebug.h>
+#include <dxcapi.h>
 
 #include "WindowsAPI.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxguid.lib")
+#pragma comment(lib,"dxcompiler.lib")
 
 class DirectX12
 {
@@ -47,6 +49,16 @@ public:
 	void AllRelease();
 	void End(WindowsAPI* winAPI);
 
+	void InitializeDXC();
+
+	IDxcBlob* CompileShader(
+		const std::wstring& filepath,
+		const wchar_t* profile,
+		IDxcUtils* dxcUtiles,
+		IDxcCompiler3* dxcCompiler,
+		IDxcIncludeHandler* includeHandler
+	);
+
 private:
 	IDXGIFactory7* dxgiFactory;
 	HRESULT hr;
@@ -77,6 +89,10 @@ private:
 	HANDLE fenceEvent;
 	
 	IDXGIDebug1* debug;
+
+	IDxcUtils* dxcUtils;
+	IDxcCompiler3* dxcCompiler;
+	IDxcIncludeHandler* includeHandler;
 
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;
