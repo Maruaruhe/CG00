@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector2 MiddleTop = { 0.0f,0.5f };
 	Vector2 RightBottom = { 0.5f,-0.5f };
 
-	//Vector2 LeftBottom = { 0.0f,720.0f };
+	//Vector2 LeftBottom = { 0.0f,720.0f };hh
 	//Vector2 MiddleTop = { 700.0f,500.0f };
 	//Vector2 RightBottom = { 1200.0f,600.0f };
 
