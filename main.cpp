@@ -1,10 +1,13 @@
 #include "mainRoop.h"
 #include "Vector4.h"
+#include "Triangle.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
 	MainRoop* mainRoop = new MainRoop;
 	//いろいろ
+	Triangle* triangle = new Triangle;
+
 	Vector2 LeftBottom = { -0.5f,-0.5f };
 	Vector2 MiddleTop = { 0.0f,0.5f };
 	Vector2 RightBottom = { 0.5f,-0.5f };
@@ -14,6 +17,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//Vector2 RightBottom = { 1200.0f,600.0f };
 
 	mainRoop->Initialize(mainRoop->windowsAPI, mainRoop->directX12, mainRoop->graphicsRenderer);
+	triangle->Draw(mainRoop->directX12);
 	//mainRoop->t1->Draw(/*&LeftBottom, &MiddleTop, &RightBottom, */mainRoop->directX12);
 
 
@@ -29,9 +33,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 	}
 
-	//mainRoop->directX12->AllRelease();
+	mainRoop->directX12->AllRelease();
+	triangle->AllReleasse();
 	/*mainRoop->t1->AllReleasse();*/
-	//mainRoop->graphicsRenderer->AllRelease();
+	mainRoop->graphicsRenderer->AllRelease();
 	mainRoop->End(mainRoop->windowsAPI, mainRoop->directX12, mainRoop->graphicsRenderer);
 	return 0;
 }

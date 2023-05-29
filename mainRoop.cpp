@@ -24,10 +24,10 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRend
 	graphicsRenderer->ShaderCompile();
 	graphicsRenderer->MakePSO(directX12);
 	//
-	graphicsRenderer->MakeVertexResource(directX12);
-	graphicsRenderer->MakeVertexBufferView();
-	graphicsRenderer->DateResource();
-	graphicsRenderer->ViewportScissor();
+	//graphicsRenderer->MakeVertexResource(directX12);
+	//graphicsRenderer->MakeVertexBufferView();
+	//graphicsRenderer->DateResource();
+	//graphicsRenderer->ViewportScissor();
 }
 
 void MainRoop::Update(DirectX12* directX12,GraphicsRenderer* graphicsRenderer) {
@@ -42,9 +42,9 @@ void MainRoop::Update(DirectX12* directX12,GraphicsRenderer* graphicsRenderer) {
 
 void MainRoop::End(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRenderer* graphicsRenderer/*, DrawTriangle* drawTriangle*/) {
 	//Release
-	directX12->AllRelease();
-	//drawTriangle->AllReleasse();
-	graphicsRenderer->AllRelease();
+	//directX12->AllRelease();
+	////drawTriangle->AllReleasse();
+	//graphicsRenderer->AllRelease();
 
 	CloseWindow(winAPI->GetHwnd());
 
