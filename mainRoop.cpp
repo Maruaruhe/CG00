@@ -23,6 +23,7 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRend
 	graphicsRenderer->SetRasterizerState();
 	graphicsRenderer->ShaderCompile();
 	graphicsRenderer->MakePSO(directX12);
+	//
 	graphicsRenderer->MakeVertexResource(directX12);
 	graphicsRenderer->MakeVertexBufferView();
 	graphicsRenderer->DateResource();

@@ -1,6 +1,13 @@
-//#include "DrawTriangle.h"
+//#include "Triangle.h"
 //
-//void DrawTriangle::MakeVertexResource(DirectX12* directX12) {
+//void Triangle::Draw(/*Vector2* leftBot, Vector2* MiddleTop, Vector2* RightBot,*/ DirectX12* directX12){
+//	MakeVertexResource(directX12);
+//	MakeVertexBufferView();
+//	DateResource(/*leftBot, MiddleTop, RightBot*/);
+//	ViewportScissor();
+//}
+//
+//void Triangle::MakeVertexResource(DirectX12* directX12) {
 //	//VertexResourceを生成する--------------------------------------------------------------------------------
 //	//頂点リソース用のヒープの作成の設定
 //	uploadHeapProperties = {};
@@ -22,23 +29,36 @@
 //	hr = directX12->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
 //	assert(SUCCEEDED(hr));
 //}
-//void DrawTriangle::MakeVertexBufferView() {
+//void Triangle::MakeVertexBufferView() {
 //	vertexBufferView = {};
 //	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 //	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
 //	vertexBufferView.StrideInBytes = sizeof(Vector4);
 //}
-//void DrawTriangle::DateResource() {
+//void Triangle::DateResource(/*Vector2* v1, Vector2* v2, Vector2* v3*/) {
+//	/*v1->x = (v1->x - 640) / 640;
+//	v2->x = (v2->x - 640) / 640;
+//	v3->x = (v3->x - 640) / 640;
+//
+//	v1->y = (v1->y - 360) / 360;
+//	v2->y = (v2->y - 360) / 360;
+//	v3->y = (v3->y - 360) / 360;*/
 //	vertexDate = nullptr;
 //	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexDate));
-//	//LeftBottom
+//	////LeftBottom
+//	//vertexDate[0] = { v1->x,v1->y,0.0f,1.0f };
+//	////MiddleTop
+//	//vertexDate[1] = { v2->x,v2->y,0.0f,1.0f };
+//	////RightBottom
+//	//vertexDate[2] = { v3->x,v3->y,0.0f,1.0f };
+//
 //	vertexDate[0] = { -0.5f,-0.5f,0.0f,1.0f };
 //	//MiddleTop
 //	vertexDate[1] = { 0.0f,0.5f,0.0f,1.0f };
 //	//RightBottom
 //	vertexDate[2] = { 0.5f,-0.5f,0.0f,1.0f };
 //}
-//void DrawTriangle::ViewportScissor() {
+//void Triangle::ViewportScissor() {
 //	viewport = {};
 //	viewport.Width = float(kClientWidth);
 //	viewport.Height = float(kClientHeight);
@@ -53,6 +73,6 @@
 //	scissorRect.top = 0;
 //	scissorRect.bottom = kClientHeight;
 //}
-//void DrawTriangle::AllReleasse() {
+//void Triangle::AllReleasse() {
 //	vertexResource->Release();
 //}

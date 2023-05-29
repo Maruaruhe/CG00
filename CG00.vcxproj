@@ -89,7 +89,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DirectX12.cpp" />
-    <ClCompile Include="DrawTriangle.cpp" />
+    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainRoop.cpp" />
@@ -112,7 +112,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DirectX12.h" />
-    <ClInclude Include="DrawTriangle.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="mainRoop.h" />
     <ClInclude Include="GraphicsRenderer.h" />

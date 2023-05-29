@@ -1,12 +1,14 @@
 //#pragma once
 //#include "DirectX12.h"
-//
-//class DrawTriangle
+//#include "Vector4.h"
+//class Triangle
 //{
 //public:
+//	void Draw(/*Vector2* leftBot,Vector2* MiddleTop,Vector2* RightBot,*/ DirectX12* directX12);
+//
 //	void MakeVertexResource(DirectX12* directX12);
 //	void MakeVertexBufferView();
-//	void DateResource();
+//	void DateResource(/*Vector2* v1, Vector2* v2, Vector2* v3*/);
 //	void ViewportScissor();
 //	void AllReleasse();
 //
