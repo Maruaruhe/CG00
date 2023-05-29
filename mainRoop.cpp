@@ -1,6 +1,6 @@
 #include "mainRoop.h"
 
-void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRenderer* graphicsRenderer/*, DrawTriangle* drawTriangle*/) {
+void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRenderer* graphicsRenderer, Triangle* drawTriangle) {
 	//window
 	winAPI->RegisterWNDCLASS();
 
@@ -28,6 +28,10 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRend
 	//graphicsRenderer->MakeVertexBufferView();
 	//graphicsRenderer->DateResource();
 	//graphicsRenderer->ViewportScissor();
+	/*drawTriangle->MakeVertexResource(directX12);
+	drawTriangle->MakeVertexBufferView();
+	drawTriangle->DateResource();
+	drawTriangle->ViewportScissor();*/
 }
 
 void MainRoop::Update(DirectX12* directX12,GraphicsRenderer* graphicsRenderer) {

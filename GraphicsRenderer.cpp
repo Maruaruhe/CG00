@@ -179,15 +179,15 @@ void GraphicsRenderer::MakeVertexBufferView() {
 	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
 	vertexBufferView.StrideInBytes = sizeof(Vector4);
 }
-void GraphicsRenderer::DateResource() {
+void GraphicsRenderer::DateResource(Vector2* leftBot, Vector2* midTop, Vector2* rightBot) {
 	vertexDate = nullptr;
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexDate));
 	//LeftBottom
-	vertexDate[0] = { -0.5f,-0.5f,0.0f,1.0f };
+	vertexDate[0] = { leftBot->x,leftBot->y	,0.0f,1.0f };
 	//MiddleTop
-	vertexDate[1] = { 0.0f,0.5f,0.0f,1.0f };
+	vertexDate[1] = { midTop->x,midTop->y,0.0f,1.0f };
 	//RightBottom
-	vertexDate[2] = { 0.5f,-0.5f,0.0f,1.0f };
+	vertexDate[2] = { rightBot->x,rightBot->y,0.0f,1.0f };
 }
 void GraphicsRenderer::ViewportScissor() {
 	viewport = {};
@@ -206,7 +206,7 @@ void GraphicsRenderer::ViewportScissor() {
 }
 
 void GraphicsRenderer::AllRelease() {
-	vertexResource->Release();
+	//vertexResource->Release();
 	graphicsPipelineState->Release();
 	signatureBlob->Release();
 	if (errorBlob) {
