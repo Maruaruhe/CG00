@@ -1,16 +1,17 @@
 #pragma once
 #include "WindowsAPI.h"
 #include "DirectX12.h"
-#include "Triangle.h"
+#include "GraphicsRenderer.h"
+//#include "DrawTriangle.h"
 
 class MainRoop
 {
 public:
 	WindowsAPI* windowsAPI = new WindowsAPI;
 	DirectX12* directX12 = new DirectX12;
-	Triangle* triangle = new Triangle;
+	GraphicsRenderer* graphicsRenderer = new GraphicsRenderer;
 
-	void Initialize(WindowsAPI* winAPI,DirectX12* directX12,Triangle* triangle);
-	void Update(DirectX12* directX12,Triangle* triangle);
-	void End(WindowsAPI* winAPI, DirectX12* directX12, Triangle* triangle);
+	void Initialize(WindowsAPI* winAPI,DirectX12* directX12,GraphicsRenderer* graphicsRenderer/*,DrawTriangle* drawTriangle*/);
+	void Update(DirectX12* directX12,GraphicsRenderer* graphicsRenderer);
+	void End(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRenderer* graphicsRenderer/*, DrawTriangle* drawTriangle*/);
 };

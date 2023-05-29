@@ -16,7 +16,7 @@
 #pragma comment(lib,"dxguid.lib")
 #pragma comment(lib,"dxcompiler.lib")
 
-class Triangle
+class GraphicsRenderer
 {
 public:
 	void InitializeDXC();
@@ -36,6 +36,7 @@ public:
 	void SetRasterizerState();
 	void ShaderCompile();
 	void MakePSO(DirectX12* directX12);
+	//
 	void MakeVertexResource(DirectX12* directX12);
 	void MakeVertexBufferView();
 	void DateResource();

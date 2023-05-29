@@ -1,6 +1,6 @@
 #include "mainRoop.h"
 
-void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12, Triangle* triangle) {
+void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRenderer* graphicsRenderer/*, DrawTriangle* drawTriangle*/) {
 	//window
 	winAPI->RegisterWNDCLASS();
 
@@ -16,22 +16,22 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12, Triangle* tr
 	directX12->MakeFenceEvent();
 
 	//
-	triangle->InitializeDXC();
-	triangle->MakeRootSignature(directX12);
-	triangle->SetInputLayout();
-	triangle->SetBlendState();
-	triangle->SetRasterizerState();
-	triangle->ShaderCompile();
-	triangle->MakePSO(directX12);
-	triangle->MakeVertexResource(directX12);
-	triangle->MakeVertexBufferView();
-	triangle->DateResource();
-	triangle->ViewportScissor();
+	graphicsRenderer->InitializeDXC();
+	graphicsRenderer->MakeRootSignature(directX12);
+	graphicsRenderer->SetInputLayout();
+	graphicsRenderer->SetBlendState();
+	graphicsRenderer->SetRasterizerState();
+	graphicsRenderer->ShaderCompile();
+	graphicsRenderer->MakePSO(directX12);
+	graphicsRenderer->MakeVertexResource(directX12);
+	graphicsRenderer->MakeVertexBufferView();
+	graphicsRenderer->DateResource();
+	graphicsRenderer->ViewportScissor();
 }
 
-void MainRoop::Update(DirectX12* directX12,Triangle* triangle) {
+void MainRoop::Update(DirectX12* directX12,GraphicsRenderer* graphicsRenderer) {
 	directX12->DecideCommand();
-	triangle->DecideCommand(directX12);
+	graphicsRenderer->DecideCommand(directX12);
 	directX12->TransitionBarrier();
 	directX12->ChangeBarrier();
 	directX12->KickCommand();
@@ -39,10 +39,11 @@ void MainRoop::Update(DirectX12* directX12,Triangle* triangle) {
 	directX12->WaitGPU();
 }
 
-void MainRoop::End(WindowsAPI* winAPI, DirectX12* directX12, Triangle* triangle) {
+void MainRoop::End(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRenderer* graphicsRenderer/*, DrawTriangle* drawTriangle*/) {
 	//Release
 	directX12->AllRelease();
-	triangle->AllRelease();
+	//drawTriangle->AllReleasse();
+	graphicsRenderer->AllRelease();
 
 	CloseWindow(winAPI->GetHwnd());
 

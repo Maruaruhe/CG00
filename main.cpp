@@ -5,7 +5,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
 	MainRoop* mainRoop = new MainRoop;
 	//いろいろ
-	mainRoop->Initialize(mainRoop->windowsAPI, mainRoop->directX12, mainRoop->triangle);
+	Vector2 LeftBottom = {};
+	Vector2 MiddleTop = {};
+	Vector2 RightBottom = {};
+
+	mainRoop->Initialize(mainRoop->windowsAPI, mainRoop->directX12, mainRoop->graphicsRenderer);
 
 
 
@@ -17,9 +21,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			DispatchMessage(&msg);
 		}
 		else {
-			mainRoop->Update(mainRoop->directX12, mainRoop->triangle);
+			mainRoop->Update(mainRoop->directX12, mainRoop->graphicsRenderer);
 		}
 	}
-	mainRoop->End(mainRoop->windowsAPI, mainRoop->directX12, mainRoop->triangle);
+	mainRoop->End(mainRoop->windowsAPI, mainRoop->directX12, mainRoop->graphicsRenderer);
 	return 0;
 }

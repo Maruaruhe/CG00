@@ -1,8 +1,8 @@
-#include "Triangle.h"
+#include "GraphicsRenderer.h"
 #include <assert.h>
 
 
-void Triangle::InitializeDXC() {
+void GraphicsRenderer::InitializeDXC() {
 	dxcUtils = nullptr;
 	dxcCompiler = nullptr;
 	hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(&dxcUtils));
@@ -14,7 +14,7 @@ void Triangle::InitializeDXC() {
 	hr = dxcUtils->CreateDefaultIncludeHandler(&includeHandler);
 	assert(SUCCEEDED(hr));
 }
-IDxcBlob* Triangle::CompileShader(
+IDxcBlob* GraphicsRenderer::CompileShader(
 	const std::wstring& filePath,
 	const wchar_t* profile,
 	IDxcUtils* dxcUtiles,
@@ -79,7 +79,7 @@ IDxcBlob* Triangle::CompileShader(
 	return shaderBlob;
 }
 
-void Triangle::DecideCommand(DirectX12* directX12) {
+void GraphicsRenderer::DecideCommand(DirectX12* directX12) {
 	directX12->GetCommandList()->RSSetViewports(1, &viewport);
 	directX12->GetCommandList()->RSSetScissorRects(1, &scissorRect);
 	directX12->GetCommandList()->SetGraphicsRootSignature(rootSignature);
@@ -91,7 +91,7 @@ void Triangle::DecideCommand(DirectX12* directX12) {
 	assert(SUCCEEDED(hr));
 }
 
-void Triangle::MakeRootSignature(DirectX12* directX12) {
+void GraphicsRenderer::MakeRootSignature(DirectX12* directX12) {
 	descriptionRootSignature = {};
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
 	signatureBlob = nullptr;
@@ -106,7 +106,7 @@ void Triangle::MakeRootSignature(DirectX12* directX12) {
 	assert(SUCCEEDED(hr));
 }
 
-void Triangle::SetInputLayout() {
+void GraphicsRenderer::SetInputLayout() {
 	inputElementDescs[0] = {};
 	inputElementDescs[0].SemanticName = "POSITION";
 	inputElementDescs[0].SemanticIndex = 0;
@@ -116,22 +116,22 @@ void Triangle::SetInputLayout() {
 	inputLayoutDesc.pInputElementDescs = inputElementDescs;
 	inputLayoutDesc.NumElements = _countof(inputElementDescs);
 }
-void Triangle::SetBlendState() {
+void GraphicsRenderer::SetBlendState() {
 	blendDesc = {};
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
 }
-void Triangle::SetRasterizerState() {
+void GraphicsRenderer::SetRasterizerState() {
 	rasterizerDesc = {};
 	rasterizerDesc.CullMode = D3D12_CULL_MODE_BACK;
 	rasterizerDesc.FillMode = D3D12_FILL_MODE_SOLID;
 }
-void Triangle::ShaderCompile() {
+void GraphicsRenderer::ShaderCompile() {
 	vertexShaderBlob = CompileShader(L"Object3D.VS.hlsl", L"vs_6_0", dxcUtils, dxcCompiler, includeHandler);
 	assert(vertexShaderBlob != nullptr);
 	pixelShaderBlob = CompileShader(L"Object3D.PS.hlsl", L"ps_6_0", dxcUtils, dxcCompiler, includeHandler);
 	assert(pixelShaderBlob != nullptr);
 }
-void Triangle::MakePSO(DirectX12* directX12) {
+void GraphicsRenderer::MakePSO(DirectX12* directX12) {
 	//PSOを生成する-----------------------------------------------------------------------------------------------
 	graphicsPipelineStateDesc = {};
 	graphicsPipelineStateDesc.pRootSignature = rootSignature;
@@ -149,7 +149,9 @@ void Triangle::MakePSO(DirectX12* directX12) {
 	hr = directX12->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&graphicsPipelineState));
 	assert((SUCCEEDED(hr)));
 }
-void Triangle::MakeVertexResource(DirectX12* directX12) {
+
+//
+void GraphicsRenderer::MakeVertexResource(DirectX12* directX12) {
 	//VertexResourceを生成する--------------------------------------------------------------------------------
 	//頂点リソース用のヒープの作成の設定
 	uploadHeapProperties = {};
@@ -171,20 +173,23 @@ void Triangle::MakeVertexResource(DirectX12* directX12) {
 	hr = directX12->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
 	assert(SUCCEEDED(hr));
 }
-void Triangle::MakeVertexBufferView() {
+void GraphicsRenderer::MakeVertexBufferView() {
 	vertexBufferView = {};
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
 	vertexBufferView.StrideInBytes = sizeof(Vector4);
 }
-void Triangle::DateResource() {
+void GraphicsRenderer::DateResource() {
 	vertexDate = nullptr;
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexDate));
+	//LeftBottom
 	vertexDate[0] = { -0.5f,-0.5f,0.0f,1.0f };
+	//MiddleTop
 	vertexDate[1] = { 0.0f,0.5f,0.0f,1.0f };
+	//RightBottom
 	vertexDate[2] = { 0.5f,-0.5f,0.0f,1.0f };
 }
-void Triangle::ViewportScissor() {
+void GraphicsRenderer::ViewportScissor() {
 	viewport = {};
 	viewport.Width = float(kClientWidth);
 	viewport.Height = float(kClientHeight);
@@ -200,7 +205,7 @@ void Triangle::ViewportScissor() {
 	scissorRect.bottom = kClientHeight;
 }
 
-void Triangle::AllRelease() {
+void GraphicsRenderer::AllRelease() {
 	vertexResource->Release();
 	graphicsPipelineState->Release();
 	signatureBlob->Release();

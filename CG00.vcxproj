@@ -90,11 +90,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClCompile Include="DirectX12.cpp" />
     <ClCompile Include="DrawTriangle.cpp" />
-    <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mainRoop.cpp" />
-    <ClCompile Include="Triangle.cpp" />
+    <ClCompile Include="GraphicsRenderer.cpp" />
     <ClCompile Include="WindowsAPI.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -114,10 +113,9 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
   <ItemGroup>
     <ClInclude Include="DirectX12.h" />
     <ClInclude Include="DrawTriangle.h" />
-    <ClInclude Include="GameScene.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="mainRoop.h" />
-    <ClInclude Include="Triangle.h" />
+    <ClInclude Include="GraphicsRenderer.h" />
     <ClInclude Include="Vector4.h" />
     <ClInclude Include="WindowsAPI.h" />
   </ItemGroup>
