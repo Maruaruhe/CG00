@@ -1,18 +1,11 @@
-#include "WindowsAPI.h"
-#include "DirectX12.h"
-//#include "Triangle.h"
+#include "mainRoop.h"
 #include "Vector4.h"
-//#include "Command.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
-	WindowsAPI* windowsAPI = new WindowsAPI;
-	DirectX12* directX12 = new DirectX12;
-	////Triangle* triangle = new Triangle;
-
+	MainRoop* mainRoop = new MainRoop;
 	//いろいろ
-	windowsAPI->RegisterWNDCLASS();
-	directX12->InitializeDirectX12(windowsAPI);
+	mainRoop->Initialize(mainRoop->windowsAPI, mainRoop->directX12, mainRoop->triangle);
 
 
 
@@ -24,9 +17,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			DispatchMessage(&msg);
 		}
 		else {
-			directX12->Update();
+			mainRoop->Update(mainRoop->directX12, mainRoop->triangle);
 		}
 	}
-	directX12->End(windowsAPI);
+	mainRoop->End(mainRoop->windowsAPI, mainRoop->directX12, mainRoop->triangle);
 	return 0;
 }
