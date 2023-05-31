@@ -36,6 +36,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 		else {
 			mainRoop->directX12->DecideCommand();
+			mainRoop->triangle[0]->DecideCommand(mainRoop->directX12);
+			mainRoop->triangle[1]->DecideCommand(mainRoop->directX12);
 			mainRoop->graphicsRenderer1->DecideCommand(mainRoop->directX12);
 			mainRoop->graphicsRenderer2->DecideCommand(mainRoop->directX12);
 			mainRoop->Update(mainRoop->directX12);
