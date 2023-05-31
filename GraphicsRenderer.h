@@ -50,7 +50,7 @@ private:
 	HRESULT hr;
 	ID3D12Device* device;
 	//InitializeDXC
-	IDxcUtils* dxcUtils;
+	IDxcUtils* dxcUtils =nullptr;
 	IDxcCompiler3* dxcCompiler;
 	IDxcIncludeHandler* includeHandler;
 	//MakeRootSignature

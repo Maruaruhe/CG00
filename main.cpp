@@ -23,8 +23,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	mainRoop->graphicsRenderer2->Initialize(mainRoop->directX12);
 
 	//三角形描画
-	mainRoop->triangle1->Draw(&LeftBottom1,&MiddleTop1,&RightBottom1,mainRoop->directX12, mainRoop->graphicsRenderer1);
-	mainRoop->triangle2->Draw(&LeftBottom2,&MiddleTop2,&RightBottom2,mainRoop->directX12, mainRoop->graphicsRenderer2);
+	mainRoop->triangle[0]->Draw(&LeftBottom1, &MiddleTop1, &RightBottom1, mainRoop->directX12, mainRoop->graphicsRenderer1);
+	mainRoop->triangle[1]->Draw(&LeftBottom2, &MiddleTop2, &RightBottom2, mainRoop->directX12, mainRoop->graphicsRenderer2);
 
 
 	//メインループ

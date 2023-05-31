@@ -7,12 +7,12 @@
 class MainRoop
 {
 public:
+	int TriangleCount = 2;
 	WindowsAPI* windowsAPI = new WindowsAPI;
 	DirectX12* directX12 = new DirectX12;
 	GraphicsRenderer* graphicsRenderer1 = new GraphicsRenderer;
 	GraphicsRenderer* graphicsRenderer2 = new GraphicsRenderer;
-	Triangle* triangle1 = new Triangle;
-	Triangle* triangle2 = new Triangle;
+	Triangle** triangle = new Triangle*[TriangleCount];
 	
 
 	void Initialize(WindowsAPI* winAPI,DirectX12* directX12/*,GraphicsRenderer* graphicsRenderer*//*,Triangle* drawTriangle*/);
