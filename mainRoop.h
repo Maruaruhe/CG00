@@ -16,6 +16,6 @@ public:
 	
 
 	void Initialize(WindowsAPI* winAPI,DirectX12* directX12/*,GraphicsRenderer* graphicsRenderer*//*,Triangle* drawTriangle*/);
-	void Update(/*DirectX12* directX12,GraphicsRenderer* graphicsRenderer*/);
+	void Update(DirectX12* directX12);
 	void End(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, DrawTriangle* drawTriangle*/);
 };

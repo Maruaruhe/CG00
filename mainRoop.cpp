@@ -36,9 +36,10 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRe
 	drawTriangle->ViewportScissor();*/
 }
 
-void MainRoop::Update(/*DirectX12* directX12,GraphicsRenderer* graphicsRenderer*/) {
+void MainRoop::Update(DirectX12* directX12) {
 	/*directX12->DecideCommand();
 	graphicsRenderer->DecideCommand(directX12);*/
+	directX12->GetCommandList()->Close();
 	directX12->TransitionBarrier();
 	directX12->ChangeBarrier();
 	directX12->KickCommand();
