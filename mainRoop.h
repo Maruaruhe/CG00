@@ -9,12 +9,13 @@ class MainRoop
 public:
 	WindowsAPI* windowsAPI = new WindowsAPI;
 	DirectX12* directX12 = new DirectX12;
-	GraphicsRenderer* graphicsRenderer = new GraphicsRenderer;
+	GraphicsRenderer* graphicsRenderer1 = new GraphicsRenderer;
+	GraphicsRenderer* graphicsRenderer2 = new GraphicsRenderer;
 	Triangle* triangle1 = new Triangle;
 	Triangle* triangle2 = new Triangle;
 	
 
-	void Initialize(WindowsAPI* winAPI,DirectX12* directX12,GraphicsRenderer* graphicsRenderer,Triangle* drawTriangle);
-	void Update(DirectX12* directX12,GraphicsRenderer* graphicsRenderer);
-	void End(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRenderer* graphicsRenderer/*, DrawTriangle* drawTriangle*/);
+	void Initialize(WindowsAPI* winAPI,DirectX12* directX12/*,GraphicsRenderer* graphicsRenderer*//*,Triangle* drawTriangle*/);
+	void Update(/*DirectX12* directX12,GraphicsRenderer* graphicsRenderer*/);
+	void End(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, DrawTriangle* drawTriangle*/);
 };

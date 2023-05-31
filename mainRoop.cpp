@@ -1,28 +1,30 @@
 #include "mainRoop.h"
 
-void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRenderer* graphicsRenderer, Triangle* drawTriangle) {
+void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, Triangle* drawTriangle*/) {
 	//window
 	winAPI->RegisterWNDCLASS();
 
 	//DirectX12
-	directX12->MakeDXGIFactory();
-	directX12->Adapter();
-	directX12->D3D12Device();
-	directX12->MakeCommandQueue();
-	directX12->MakeCommandList();
-	directX12->MakeSwapChain(winAPI);
-	directX12->MakeDescriptorHeap();
-	directX12->MakeRTV();
-	directX12->MakeFenceEvent();
+	//directX12->MakeDXGIFactory();
+	//directX12->Adapter();
+	//directX12->D3D12Device();
+	//directX12->MakeCommandQueue();
+	//directX12->MakeCommandList();
+	//directX12->MakeSwapChain(winAPI);
+	//directX12->MakeDescriptorHeap();
+	//directX12->MakeRTV();
+	//directX12->MakeFenceEvent();
+
+	directX12->InitializeDirectX12(winAPI);
 
 	//
-	graphicsRenderer->InitializeDXC();
+	/*graphicsRenderer->InitializeDXC();
 	graphicsRenderer->MakeRootSignature(directX12);
 	graphicsRenderer->SetInputLayout();
 	graphicsRenderer->SetBlendState();
 	graphicsRenderer->SetRasterizerState();
 	graphicsRenderer->ShaderCompile();
-	graphicsRenderer->MakePSO(directX12);
+	graphicsRenderer->MakePSO(directX12);*/
 	//
 	//graphicsRenderer->MakeVertexResource(directX12);
 	//graphicsRenderer->MakeVertexBufferView();
@@ -34,9 +36,9 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRend
 	drawTriangle->ViewportScissor();*/
 }
 
-void MainRoop::Update(DirectX12* directX12,GraphicsRenderer* graphicsRenderer) {
-	directX12->DecideCommand();
-	graphicsRenderer->DecideCommand(directX12);
+void MainRoop::Update(/*DirectX12* directX12,GraphicsRenderer* graphicsRenderer*/) {
+	/*directX12->DecideCommand();
+	graphicsRenderer->DecideCommand(directX12);*/
 	directX12->TransitionBarrier();
 	directX12->ChangeBarrier();
 	directX12->KickCommand();
@@ -44,7 +46,7 @@ void MainRoop::Update(DirectX12* directX12,GraphicsRenderer* graphicsRenderer) {
 	directX12->WaitGPU();
 }
 
-void MainRoop::End(WindowsAPI* winAPI, DirectX12* directX12, GraphicsRenderer* graphicsRenderer/*, DrawTriangle* drawTriangle*/) {
+void MainRoop::End(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, DrawTriangle* drawTriangle*/) {
 	//Release
 	//directX12->AllRelease();
 	////drawTriangle->AllReleasse();

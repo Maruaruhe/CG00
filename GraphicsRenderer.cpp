@@ -1,6 +1,15 @@
 #include "GraphicsRenderer.h"
 #include <assert.h>
 
+void GraphicsRenderer::Initialize(DirectX12* directX12) {
+	InitializeDXC();
+	MakeRootSignature(directX12);
+	SetInputLayout();
+	SetBlendState();
+	SetRasterizerState();
+	ShaderCompile();
+	MakePSO(directX12);
+}
 
 void GraphicsRenderer::InitializeDXC() {
 	dxcUtils = nullptr;
@@ -87,6 +96,9 @@ void GraphicsRenderer::DecideCommand(DirectX12* directX12) {
 	directX12->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
 	directX12->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directX12->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+}
+
+void GraphicsRenderer::CloseCommand(DirectX12* directX12) {
 	hr = directX12->GetCommandList()->Close();
 	assert(SUCCEEDED(hr));
 }

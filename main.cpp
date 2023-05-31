@@ -11,17 +11,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector2 MiddleTop1 = { -0.5f,0.5f };
 	Vector2 RightBottom1 = { -0.25f,-0.5f };
 
-	Vector2 LeftBottom2 = { 0.f,-0.5f };
-	Vector2 MiddleTop2 = { 0.5f,0.5f };
-	Vector2 RightBottom2 = { 0.75f,-0.5f };
+	Vector2 LeftBottom2 = { 0.0f,-0.5f };
+	Vector2 MiddleTop2 = { 0.5f,1.0f };
+	Vector2 RightBottom2 = { 1.0f,-0.5f };
 
 	//Vector2 LeftBottom = { 0.0f,720.0f };hh
 	//Vector2 MiddleTop = { 700.0f,500.0f };
 	//Vector2 RightBottom = { 1200.0f,600.0f };
 
-	mainRoop->Initialize(mainRoop->windowsAPI, mainRoop->directX12, mainRoop->graphicsRenderer,mainRoop->triangle1);
-	mainRoop->triangle1->Draw(&LeftBottom1,&MiddleTop1,&RightBottom1,mainRoop->directX12, mainRoop->graphicsRenderer);
-	mainRoop->triangle2->Draw(&LeftBottom2,&MiddleTop2,&RightBottom2,mainRoop->directX12, mainRoop->graphicsRenderer);
+	mainRoop->Initialize(mainRoop->windowsAPI, mainRoop->directX12/*, mainRoop->graphicsRenderer*//*,mainRoop->triangle1*/);
+	mainRoop->graphicsRenderer1->Initialize(mainRoop->directX12);
+	mainRoop->graphicsRenderer2->Initialize(mainRoop->directX12);
+
+	mainRoop->triangle1->Draw(&LeftBottom1,&MiddleTop1,&RightBottom1,mainRoop->directX12, mainRoop->graphicsRenderer1);
+	mainRoop->triangle2->Draw(&LeftBottom2,&MiddleTop2,&RightBottom2,mainRoop->directX12, mainRoop->graphicsRenderer2);
 	//mainRoop->triangle->Draw(mainRoop->directX12);
 	//mainRoop->t1->Draw(/*&LeftBottom, &MiddleTop, &RightBottom, */mainRoop->directX12);
 
@@ -34,14 +37,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			DispatchMessage(&msg);
 		}
 		else {
-			mainRoop->Update(mainRoop->directX12, mainRoop->graphicsRenderer);
+			mainRoop->directX12->DecideCommand();
+			mainRoop->graphicsRenderer1->DecideCommand(mainRoop->directX12);
+			mainRoop->graphicsRenderer2->DecideCommand(mainRoop->directX12);
+			mainRoop->directX12->GetCommandList()->Close();
+			mainRoop->Update();
 		}
 	}
 
 	mainRoop->directX12->AllRelease();
 	/*mainRoop->triangle->AllReleasse();*/
 	/*mainRoop->t1->AllReleasse();*/
-	mainRoop->graphicsRenderer->AllRelease();
-	mainRoop->End(mainRoop->windowsAPI, mainRoop->directX12, mainRoop->graphicsRenderer);
+	mainRoop->graphicsRenderer1->AllRelease();
+	mainRoop->graphicsRenderer2->AllRelease();
+	mainRoop->End(mainRoop->windowsAPI, mainRoop->directX12/*, mainRoop->graphicsRenderer1*/);
 	return 0;
 }

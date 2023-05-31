@@ -19,6 +19,8 @@
 class GraphicsRenderer
 {
 public:
+	void Initialize(DirectX12* directX12);
+
 	void InitializeDXC();
 
 	IDxcBlob* CompileShader(
@@ -29,6 +31,7 @@ public:
 		IDxcIncludeHandler* includeHandler
 	);
 	void DecideCommand(DirectX12* directX12);
+	void CloseCommand(DirectX12* directX12);
 
 	void MakeRootSignature(DirectX12* directX12);
 	void SetInputLayout();
