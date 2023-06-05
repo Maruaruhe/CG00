@@ -6,7 +6,7 @@
 class Triangle
 {
 public:
-	void Draw(Vector2 leftBot, Vector2 midTop, Vector2 rightBot, DirectX12* directX12,GraphicsRenderer* gra);
+	void Draw(Vector2* leftBot, Vector2* midTop, Vector2* rightBot, DirectX12* directX12,GraphicsRenderer* gra);
 
 //	void MakeVertexResource(DirectX12* directX12);
 //	void MakeVertexBufferView();
