@@ -10,8 +10,7 @@ public:
 	int TriangleCount = 2;
 	WindowsAPI* windowsAPI = new WindowsAPI;
 	DirectX12* directX12 = new DirectX12;
-	GraphicsRenderer* graphicsRenderer1 = new GraphicsRenderer;
-	GraphicsRenderer* graphicsRenderer2 = new GraphicsRenderer;
+	GraphicsRenderer* graphicsRenderer = new GraphicsRenderer;
 	Triangle** triangle = new Triangle*[TriangleCount];
 	
 

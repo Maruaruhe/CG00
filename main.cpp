@@ -19,12 +19,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//初期化
 	mainRoop->Initialize(mainRoop->windowsAPI, mainRoop->directX12);
-	mainRoop->graphicsRenderer1->Initialize(mainRoop->directX12);
-	mainRoop->graphicsRenderer2->Initialize(mainRoop->directX12);
+	mainRoop->graphicsRenderer->Initialize(mainRoop->directX12);
 
 	//三角形描画
-	mainRoop->triangle[0]->Draw(&LeftBottom1, &MiddleTop1, &RightBottom1, mainRoop->directX12, mainRoop->graphicsRenderer1);
-	mainRoop->triangle[1]->Draw(&LeftBottom2, &MiddleTop2, &RightBottom2, mainRoop->directX12, mainRoop->graphicsRenderer2);
+	mainRoop->triangle[0]->Draw(&LeftBottom1, &MiddleTop1, &RightBottom1, mainRoop->directX12);
+	mainRoop->triangle[1]->Draw(&LeftBottom2, &MiddleTop2, &RightBottom2, mainRoop->directX12);
 
 
 	//メインループ
@@ -36,15 +35,22 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 		else {
 			mainRoop->directX12->DecideCommand();
-			mainRoop->graphicsRenderer1->DecideCommand(mainRoop->directX12);
-			mainRoop->graphicsRenderer2->DecideCommand(mainRoop->directX12);
+			mainRoop->triangle[0]->DecideViewportScissor(mainRoop->directX12);
+			mainRoop->triangle[1]->DecideViewportScissor(mainRoop->directX12);
+			mainRoop->graphicsRenderer->DecideCommand1(mainRoop->directX12);
+			mainRoop->triangle[0]->DecideVertexBuffers(mainRoop->directX12);
+			mainRoop->triangle[1]->DecideVertexBuffers(mainRoop->directX12);
+			mainRoop->graphicsRenderer->DecideCommand2(mainRoop->directX12);
+			
+			
 			mainRoop->Update(mainRoop->directX12);
 		}
 	}
 
 	mainRoop->directX12->AllRelease();
-	mainRoop->graphicsRenderer1->AllRelease();
-	mainRoop->graphicsRenderer2->AllRelease();
+	mainRoop->triangle[0]->AllReleasse();
+	mainRoop->triangle[1]->AllReleasse();
+	mainRoop->graphicsRenderer->AllRelease();
 	mainRoop->End(mainRoop->windowsAPI, mainRoop->directX12);
 	return 0;
 }

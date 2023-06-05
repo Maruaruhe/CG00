@@ -30,7 +30,8 @@ public:
 		IDxcCompiler3* dxcCompiler,
 		IDxcIncludeHandler* includeHandler
 	);
-	void DecideCommand(DirectX12* directX12);
+	void DecideCommand1(DirectX12* directX12);
+	void DecideCommand2(DirectX12* directX12);
 	void CloseCommand(DirectX12* directX12);
 
 	void MakeRootSignature(DirectX12* directX12);
@@ -40,10 +41,10 @@ public:
 	void ShaderCompile();
 	void MakePSO(DirectX12* directX12);
 	//
-	void MakeVertexResource(DirectX12* directX12);
+	/*void MakeVertexResource(DirectX12* directX12);
 	void MakeVertexBufferView();
 	void DateResource(Vector2* leftBot, Vector2* midTop, Vector2* rightBot);
-	void ViewportScissor();
+	void ViewportScissor();*/
 
 	void AllRelease();
 private:
@@ -71,17 +72,17 @@ private:
 	//MakePSO
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
 	ID3D12PipelineState* graphicsPipelineState;
-	//MakeVertexResource
-	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
-	D3D12_RESOURCE_DESC vertexResourceDesc{};
-	ID3D12Resource* vertexResource;
-	//MakeVertexBufferView
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
-	//DateResource
-	Vector4* vertexDate;
-	//ViewportScissor
-	D3D12_VIEWPORT viewport{};
-	D3D12_RECT scissorRect{};
+	////MakeVertexResource
+	//D3D12_HEAP_PROPERTIES uploadHeapProperties{};
+	//D3D12_RESOURCE_DESC vertexResourceDesc{};
+	//ID3D12Resource* vertexResource;
+	////MakeVertexBufferView
+	//D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
+	////DateResource
+	//Vector4* vertexDate;
+	////ViewportScissor
+	//D3D12_VIEWPORT viewport{};
+	//D3D12_RECT scissorRect{};
 
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;
