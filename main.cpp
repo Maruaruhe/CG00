@@ -14,8 +14,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Vector2 RightBottom1 = { -0.25f,-0.5f };
 	//二つ目
 	Vector2 LeftBottom2 = { 0.0f,-0.5f };
-	Vector2 MiddleTop2 = { 0.5f,1.0f };
-	Vector2 RightBottom2 = { 1.0f,-0.5f };
+	Vector2 MiddleTop2 = { 0.5f,0.5f };
+	Vector2 RightBottom2 = { 0.5f,-0.75f };
 
 	//初期化
 	mainRoop->Initialize(mainRoop->windowsAPI, mainRoop->directX12);
