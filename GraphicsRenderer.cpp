@@ -181,25 +181,43 @@ void GraphicsRenderer::MakeVertexResource(DirectX12* directX12) {
 	//バッファの場合はこれにする決まり
 	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	//実際に頂点リソースを作る
-	vertexResource = nullptr;
-	hr = directX12->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
+	vertexResource[0] = nullptr;
+	vertexResource[1] = nullptr;
+	hr = directX12->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource[0]));
+	hr = directX12->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource[1]));
 	assert(SUCCEEDED(hr));
 }
 void GraphicsRenderer::MakeVertexBufferView() {
 	vertexBufferView = {};
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+	vertexBufferView.BufferLocation = vertexResource[0]->GetGPUVirtualAddress();
+	vertexBufferView.BufferLocation = vertexResource[1]->GetGPUVirtualAddress();
 	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
 	vertexBufferView.StrideInBytes = sizeof(Vector4);
 }
-void GraphicsRenderer::DateResource(Vector2* leftBot, Vector2* midTop, Vector2* rightBot) {
-	vertexDate = nullptr;
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexDate));
-	//LeftBottom
-	vertexDate[0] = { leftBot->x,leftBot->y	,0.0f,1.0f };
-	//MiddleTop
-	vertexDate[1] = { midTop->x,midTop->y,0.0f,1.0f };
-	//RightBottom
-	vertexDate[2] = { rightBot->x,rightBot->y,0.0f,1.0f };
+void GraphicsRenderer::DateResource(Vector2 leftBot, Vector2 midTop, Vector2 rightBot) {
+	//if (vertexDate[0] == nullptr) {
+	//	vertexDate[0] = nullptr;
+	//	vertexDate[1] = nullptr;
+	//}
+	vertexResource[0]->Map(0, nullptr, reinterpret_cast<void**>(&vertexDate));
+	vertexResource[1]->Map(0, nullptr, reinterpret_cast<void**>(&vertexDate));
+	if (a == 1) {
+		//LeftBottom
+		vertexDate[1][0] = { leftBot.x,leftBot.y	,0.0f,1.0f };
+		//MiddleTop
+		vertexDate[1][1] = { midTop.x,midTop.y,0.0f,1.0f };
+		//RightBottom
+		vertexDate[1][2] = { rightBot.x,rightBot.y,0.0f,1.0f };
+	}
+	if (a == 0) {
+		//LeftBottom
+		vertexDate[0][0] = { leftBot.x,leftBot.y	,0.0f,1.0f };
+		//MiddleTop
+		vertexDate[0][1] = { midTop.x,midTop.y,0.0f,1.0f };
+		//RightBottom
+		vertexDate[0][2] = { rightBot.x,rightBot.y,0.0f,1.0f };
+		a = 1;
+	}
 }
 void GraphicsRenderer::ViewportScissor() {
 	viewport = {};
