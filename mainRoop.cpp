@@ -17,7 +17,7 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRe
 
 	directX12->InitializeDirectX12(winAPI);
 
-	//
+	
 	/*graphicsRenderer->InitializeDXC();
 	graphicsRenderer->MakeRootSignature(directX12);
 	graphicsRenderer->SetInputLayout();
@@ -25,15 +25,10 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRe
 	graphicsRenderer->SetRasterizerState();
 	graphicsRenderer->ShaderCompile();
 	graphicsRenderer->MakePSO(directX12);*/
-	//
 	//graphicsRenderer->MakeVertexResource(directX12);
 	//graphicsRenderer->MakeVertexBufferView();
 	//graphicsRenderer->DateResource();
 	//graphicsRenderer->ViewportScissor();
-	/*drawTriangle->MakeVertexResource(directX12);
-	drawTriangle->MakeVertexBufferView();
-	drawTriangle->DateResource();
-	drawTriangle->ViewportScissor();*/
 }
 
 void MainRoop::Update(DirectX12* directX12) {
