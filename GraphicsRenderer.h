@@ -30,8 +30,10 @@ public:
 		IDxcCompiler3* dxcCompiler,
 		IDxcIncludeHandler* includeHandler
 	);
+
 	void DecideCommand1(DirectX12* directX12);
 	void DecideCommand2(DirectX12* directX12);
+
 	void CloseCommand(DirectX12* directX12);
 
 	void MakeRootSignature(DirectX12* directX12);

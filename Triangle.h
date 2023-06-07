@@ -21,15 +21,15 @@ class Triangle
 {
 public:
 	void Draw(Vector2* leftBot, Vector2* midTop, Vector2* rightBot, DirectX12* directX12);
+	void DecideViewportScissor(DirectX12* directX12);
+	void DecideVertexBuffers(DirectX12* directX12);
+
 
 	void MakeVertexResource(DirectX12* directX12);
 	void MakeVertexBufferView();
 	void DateResource(Vector2* leftBot, Vector2* midTop, Vector2* rightBot);
 	void ViewportScissor();
 	void AllReleasse();
-
-	void DecideViewportScissor(DirectX12* directX12);
-	void DecideVertexBuffers(DirectX12* directX12);
 
 private:
 	HRESULT hr;
