@@ -1,6 +1,6 @@
 #pragma once
 #include "Vector4.h"
-#include "GraphicsRenderer.h"
+//#include "GraphicsRenderer.h"
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <cassert>
