@@ -12,7 +12,7 @@ public:
 	DirectX12* directX12 = new DirectX12;
 	GraphicsRenderer* graphicsRenderer1 = new GraphicsRenderer;
 	GraphicsRenderer* graphicsRenderer2 = new GraphicsRenderer;
-	Triangle** triangle = new Triangle*[TriangleCount];
+	//Triangle** triangle = new Triangle*[TriangleCount];
 	
 
 	void Initialize(WindowsAPI* winAPI,DirectX12* directX12/*,GraphicsRenderer* graphicsRenderer*//*,Triangle* drawTriangle*/);

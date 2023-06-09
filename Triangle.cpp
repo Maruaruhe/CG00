@@ -1,11 +1,11 @@
-#include "Triangle.h"
-
-void Triangle::Draw(Vector2* leftBot, Vector2* midTop, Vector2* rightBot, DirectX12* directX12,GraphicsRenderer* gra){
-	gra->MakeVertexResource(directX12);
-	gra->MakeVertexBufferView();
-	gra->DateResource(leftBot, midTop, rightBot);
-	gra->ViewportScissor();
-}
+//#include "Triangle.h"
+//
+//void Triangle::Draw(Vector2* leftBot, Vector2* midTop, Vector2* rightBot, DirectX12* directX12,GraphicsRenderer* gra){
+//	gra->MakeVertexResource(directX12);
+//	gra->MakeVertexBufferView();
+//	gra->DateResource(leftBot, midTop, rightBot);
+//	gra->ViewportScissor();
+//}
 
 //void Triangle::MakeVertexResource(DirectX12* directX12) {
 //	//VertexResourceを生成する--------------------------------------------------------------------------------

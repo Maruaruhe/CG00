@@ -45,6 +45,8 @@ public:
 	void DateResource(Vector2* leftBot, Vector2* midTop, Vector2* rightBot);
 	void ViewportScissor();
 
+	void Draw(Vector2* leftBot, Vector2* midTop, Vector2* rightBot, DirectX12* directX12);
+
 	void AllRelease();
 private:
 	HRESULT hr;

@@ -217,6 +217,13 @@ void GraphicsRenderer::ViewportScissor() {
 	scissorRect.bottom = kClientHeight;
 }
 
+void GraphicsRenderer::Draw(Vector2* leftBot, Vector2* midTop, Vector2* rightBot, DirectX12* directX12) {
+	MakeVertexResource(directX12);
+	MakeVertexBufferView();
+	DateResource(leftBot, midTop, rightBot);
+	ViewportScissor();
+}
+
 void GraphicsRenderer::AllRelease() {
 	//vertexResource->Release();
 	graphicsPipelineState->Release();
