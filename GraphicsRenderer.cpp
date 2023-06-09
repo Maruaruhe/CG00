@@ -225,7 +225,7 @@ void GraphicsRenderer::Draw(Vector2* leftBot, Vector2* midTop, Vector2* rightBot
 }
 
 void GraphicsRenderer::AllRelease() {
-	//vertexResource->Release();
+	vertexResource->Release();
 	graphicsPipelineState->Release();
 	signatureBlob->Release();
 	if (errorBlob) {
