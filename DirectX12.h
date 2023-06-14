@@ -106,7 +106,7 @@ private:
 	HANDLE fenceEvent;
 	
 	IDXGIDebug1* debug;
-
+	
 	////InitializeDXC
 	//IDxcUtils* dxcUtils;
 	//IDxcCompiler3* dxcCompiler;
