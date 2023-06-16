@@ -162,7 +162,7 @@ void GraphicsRenderer::MakePSO(DirectX12* directX12) {
 	assert((SUCCEEDED(hr)));
 }
 
-//
+//これ
 void GraphicsRenderer::MakeVertexResource(DirectX12* directX12) {
 	//VertexResourceを生成する--------------------------------------------------------------------------------
 	//頂点リソース用のヒープの作成の設定
@@ -185,15 +185,20 @@ void GraphicsRenderer::MakeVertexResource(DirectX12* directX12) {
 	hr = directX12->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
 	assert(SUCCEEDED(hr));
 }
+//kore
 void GraphicsRenderer::MakeVertexBufferView() {
 	vertexBufferView = {};
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
 	vertexBufferView.StrideInBytes = sizeof(Vector4);
 }
+
+//kore
 void GraphicsRenderer::DateResource(Vector2* leftBot, Vector2* midTop, Vector2* rightBot) {
 	vertexDate = nullptr;
+	//wakeru
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexDate));
+	//
 	//LeftBottom
 	vertexDate[0] = { leftBot->x,leftBot->y	,0.0f,1.0f };
 	//MiddleTop
