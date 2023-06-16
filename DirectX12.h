@@ -31,7 +31,7 @@ public:
 
 	void MakeCommandQueue();
 	void MakeCommandList();
-	void MakeSwapChain(WindowsAPI* winAPI);
+	void MakeSwapChain();
 	void MakeDescriptorHeap();
 	void MakeRTV();
 	void DecideCommand();
@@ -48,6 +48,9 @@ public:
 	void ReportLiveObject();
 	void AllRelease();
 	void End(WindowsAPI* winAPI);
+
+	void PreDraw();
+	void PostDraw();
 
 	//kokokara
 	/*void InitializeDXC();
@@ -77,6 +80,7 @@ public:
 	ID3D12Device* GetDevice()const { return device; }
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList; }
 private:
+	WindowsAPI* winAPI_;
 	IDXGIFactory7* dxgiFactory;
 	HRESULT hr;
 	IDXGIAdapter4* useAdapter;

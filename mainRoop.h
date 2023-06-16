@@ -3,19 +3,31 @@
 #include "DirectX12.h"
 #include "GraphicsRenderer.h"
 #include "Triangle.h"
+#define TRIANGLECOUNT 2
+
+class WindowsAPI;
+class GraphicsRenderer;
+class DirectX12;
 
 class MainRoop
 {
 public:
-	int TriangleCount = 2;
-	WindowsAPI* windowsAPI = new WindowsAPI;
-	DirectX12* directX12 = new DirectX12;
-	GraphicsRenderer* graphicsRenderer1 = new GraphicsRenderer;
-	GraphicsRenderer* graphicsRenderer2 = new GraphicsRenderer;
-	Triangle** triangle = new Triangle*[TriangleCount];
-	
+	void Initialize(WindowsAPI* winAPI,DirectX12* directX12);
+	void Update();
+	void Release();
+	void Draw();
 
-	void Initialize(WindowsAPI* winAPI,DirectX12* directX12/*,GraphicsRenderer* graphicsRenderer*//*,Triangle* drawTriangle*/);
-	void Update(DirectX12* directX12);
-	void End(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, DrawTriangle* drawTriangle*/);
+private:
+	struct TriangleData
+	{
+		Vector4 leftBot_;
+		Vector4 middleTop_;
+		Vector4 rightBot_;
+	};
+
+	TriangleData triangleData[TRIANGLECOUNT];
+
+	DirectX12* directX12_ = new DirectX12;
+	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
+	Triangle* triangle_[TRIANGLECOUNT];
 };
