@@ -1,10 +1,16 @@
 #include "mainRoop.h"
-#include "Vector4.h"
-#include "Triangle.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
 	MainRoop* mainRoop = new MainRoop;
+
+	WindowsAPI* windowsAPI = new WindowsAPI;
+	DirectX12* directX12 = new DirectX12;
+	
+	mainRoop->Initialize(windowsAPI, directX12);
+
+	mainRoop->VariableInit();
+
 	//いろいろ
 
 	//三角形の座標
@@ -28,9 +34,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			DispatchMessage(&msg);
 		}
 		else {
-
+			mainRoop->First();
+			mainRoop->Update();
+			mainRoop->Draw();
+			mainRoop->Final();
 		}
 	}
-
+	mainRoop->End();
 	return 0;
 }

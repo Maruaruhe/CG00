@@ -31,6 +31,7 @@ public:
 
 	void MakeCommandQueue();
 	void MakeCommandList();
+	void CloseCommandList();
 	void MakeSwapChain();
 	void MakeDescriptorHeap();
 	void MakeRTV();

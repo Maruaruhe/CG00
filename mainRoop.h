@@ -17,6 +17,13 @@ public:
 	void Release();
 	void Draw();
 
+	void First();
+	void Final();
+
+	void End();
+
+	void VariableInit();
+
 private:
 	struct TriangleData
 	{

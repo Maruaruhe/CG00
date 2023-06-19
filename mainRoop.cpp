@@ -4,14 +4,7 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRe
 	
 	directX12_ = directX12;
 	directX12_->InitializeDirectX12(winAPI);
-
-	graphicsRenderer_->InitializeDXC();
-	graphicsRenderer_->MakeRootSignature(directX12_);
-	graphicsRenderer_->SetInputLayout();
-	graphicsRenderer_->SetBlendState();
-	graphicsRenderer_->SetRasterizerState();
-	graphicsRenderer_->ShaderCompile();
-	graphicsRenderer_->MakePSO(directX12_);
+	graphicsRenderer_->Initialize(directX12_);
 
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangle_[i] = new Triangle;
@@ -19,7 +12,6 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRe
 	}
 
 	graphicsRenderer_->ViewportScissor();
-
 }
 
 void MainRoop::Update() {
@@ -34,5 +26,27 @@ void MainRoop::Release() {
 void MainRoop::Draw() {
 	for (int i = 0; i < TRIANGLECOUNT; i++){
 		triangle_[i]->Draw(triangleData[i].leftBot_, triangleData[i].middleTop_, triangleData[i].rightBot_);
+	}
+}
+
+void MainRoop::First() {
+	directX12_->PreDraw();
+	graphicsRenderer_->DecideCommand(directX12_);
+}
+
+void MainRoop::Final() {
+	directX12_->PostDraw();
+}
+
+void MainRoop::End() {
+	directX12_->ReportLiveObject();
+}
+
+void MainRoop::VariableInit() {
+
+	for (int i = 0; i < TRIANGLECOUNT; i++) {
+		triangleData[i].leftBot_ = { -0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
+		triangleData[i].middleTop_ = { 0.0f,0.5f + i * 0.1f,0.0f,1.0f };
+		triangleData[i].rightBot_ = { 0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
 	}
 }

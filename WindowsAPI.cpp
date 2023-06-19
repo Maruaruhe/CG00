@@ -18,7 +18,7 @@ LRESULT WindowsAPI::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lpara
 }
 
 void WindowsAPI::Init() {
-
+	RegisterWNDCLASS();
 }
 
 void WindowsAPI::RegisterWNDCLASS() {

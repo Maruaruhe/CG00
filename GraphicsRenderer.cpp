@@ -93,15 +93,12 @@ void GraphicsRenderer::DecideCommand(DirectX12* directX12) {
 	directX12->GetCommandList()->RSSetScissorRects(1, &scissorRect);
 	directX12->GetCommandList()->SetGraphicsRootSignature(rootSignature);
 	directX12->GetCommandList()->SetPipelineState(graphicsPipelineState);
-	directX12->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
-	directX12->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	directX12->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
 
-void GraphicsRenderer::CloseCommand(DirectX12* directX12) {
-	hr = directX12->GetCommandList()->Close();
-	assert(SUCCEEDED(hr));
-}
+//void GraphicsRenderer::CloseCommand(DirectX12* directX12) {
+//	hr = directX12->GetCommandList()->Close();
+//	assert(SUCCEEDED(hr));
+//}
 
 void GraphicsRenderer::MakeRootSignature(DirectX12* directX12) {
 	descriptionRootSignature = {};

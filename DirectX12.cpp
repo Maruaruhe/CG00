@@ -34,6 +34,10 @@ void DirectX12::PreDraw() {
 }
 void DirectX12::PostDraw() {
 	ChangeBarrier();
+	CloseCommandList();
+	KickCommand();
+	SendSignal();
+	WaitGPU();
 }
 
 
@@ -41,6 +45,7 @@ void DirectX12::End(WindowsAPI* winAPI) {
 	AllRelease();
 	ReportLiveObject();
 }
+
 //1
 void DirectX12::MakeDXGIFactory() {
 	dxgiFactory = nullptr;
@@ -108,6 +113,7 @@ void DirectX12::MakeCommandList() {
 void DirectX12::MakeSwapChain() {
 	swapChain = nullptr;
 	swapChainDesc = {};
+
 	swapChainDesc.Width = kClientWidth;
 	swapChainDesc.Height = kClientHeight;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -139,6 +145,10 @@ void DirectX12::MakeDescriptorHeap() {
 	assert(SUCCEEDED(hr));
 }
 
+void DirectX12::CloseCommandList() {
+	hr = commandList->Close();
+	assert(SUCCEEDED(hr));
+}
 
 //8
 void DirectX12::MakeRTV() {
@@ -225,6 +235,7 @@ void DirectX12::ChangeBarrier() {
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
 	commandList->ResourceBarrier(1, &barrier);
 }
+
 void DirectX12::MakeFenceEvent() {
 	fence = nullptr;
 	fenceValue = 0;
