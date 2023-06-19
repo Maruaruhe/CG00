@@ -103,6 +103,14 @@ void GraphicsRenderer::DecideCommand(DirectX12* directX12) {
 void GraphicsRenderer::MakeRootSignature(DirectX12* directX12) {
 	descriptionRootSignature = {};
 	descriptionRootSignature.Flags = D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT;
+
+	rootParameters[0] = {};
+	rootParameters[0].ParameterType = D3D12_ROOT_PARAMETER_TYPE_CBV;
+	rootParameters[0].ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+	rootParameters[0].Descriptor.ShaderRegister = 0;
+	descriptionRootSignature.pParameters = rootParameters;
+	descriptionRootSignature.NumParameters = _countof(rootParameters);
+
 	signatureBlob = nullptr;
 	errorBlob = nullptr;
 	hr = D3D12SerializeRootSignature(&descriptionRootSignature, D3D_ROOT_SIGNATURE_VERSION_1, &signatureBlob, &errorBlob);
@@ -182,6 +190,11 @@ void GraphicsRenderer::MakeVertexResource(DirectX12* directX12) {
 	hr = directX12->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
 	assert(SUCCEEDED(hr));
 }
+
+ID3D12Resource* GraphicsRenderer::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
+
+}
+
 //kore
 void GraphicsRenderer::MakeVertexBufferView() {
 	vertexBufferView = {};

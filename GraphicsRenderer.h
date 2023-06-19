@@ -41,6 +41,9 @@ public:
 	void MakePSO(DirectX12* directX12);
 	//
 	void MakeVertexResource(DirectX12* directX12);
+
+	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
+
 	void MakeVertexBufferView();
 	void DateResource(Vector2* leftBot, Vector2* midTop, Vector2* rightBot);
 	void ViewportScissor();
@@ -55,6 +58,7 @@ private:
 	IDxcIncludeHandler* includeHandler;
 	//MakeRootSignature
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
+	D3D12_ROOT_PARAMETER rootParameters[1];
 	ID3DBlob* signatureBlob;
 	ID3DBlob* errorBlob;
 	ID3D12RootSignature* rootSignature;
