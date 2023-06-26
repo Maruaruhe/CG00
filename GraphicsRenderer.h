@@ -87,6 +87,8 @@ private:
 	D3D12_VIEWPORT viewport{};
 	D3D12_RECT scissorRect{};
 
+	//
+
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;
 };
