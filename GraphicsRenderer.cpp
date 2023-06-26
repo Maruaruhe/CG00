@@ -191,9 +191,9 @@ void GraphicsRenderer::MakeVertexResource(DirectX12* directX12) {
 	assert(SUCCEEDED(hr));
 }
 
-ID3D12Resource* GraphicsRenderer::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
-
-}
+//ID3D12Resource* GraphicsRenderer::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
+//
+//}
 
 //kore
 void GraphicsRenderer::MakeVertexBufferView() {
