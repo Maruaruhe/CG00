@@ -187,7 +187,6 @@ void GraphicsRenderer::MakeVertexResource(DirectX12* directX12) {
 	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 	//実際に頂点リソースを作る
 	vertexResource = nullptr;
-	vertexResource = CreateBufferResource(device, sizeof(Vector4) * 3);
 	hr = directX12->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
 	assert(SUCCEEDED(hr));
 }
@@ -205,8 +204,6 @@ void GraphicsRenderer::DateResource(Vector2* leftBot, Vector2* midTop, Vector2* 
 	vertexDate = nullptr;
 	//wakeru
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexDate));
-
-	vertexResource = CreateBufferResource(device, sizeof(Vector4) * 3);
 	//
 	//LeftBottom
 	vertexDate[0] = { leftBot->x,leftBot->y	,0.0f,1.0f };
