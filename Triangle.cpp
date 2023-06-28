@@ -29,6 +29,7 @@ void Triangle::MakeVertexResource(DirectX12* directX12) {
 	hr = directX12->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
 	assert(SUCCEEDED(hr));
 }
+
 void Triangle::MakeVertexBufferView() {
 	vertexBufferView = {};
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
@@ -40,6 +41,13 @@ void Triangle::DateResource(){
 }
 void Triangle::AllReleasse() {
 	vertexResource->Release();
+	materialResource->Release();
+}
+
+ID3D12Resource* Triangle::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
+
+
+
 }
 
 void Triangle::Draw(Vector4 leftBot, Vector4 midTop, Vector4 rightBot) {
@@ -50,7 +58,16 @@ void Triangle::Draw(Vector4 leftBot, Vector4 midTop, Vector4 rightBot) {
 	//右下
 	vertexDate[2] = rightBot;
 
+	materialResource = CreateBufferResource(device, sizeof(Vector4));
+
+	materialDate = nullptr;
+
+	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialDate));
+
+	*materialDate = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
 	directX12_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
