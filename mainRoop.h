@@ -24,6 +24,8 @@ public:
 
 	void VariableInit();
 
+	void camera();
+
 private:
 	struct TriangleData
 	{
@@ -37,4 +39,9 @@ private:
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
 	Triangle* triangle_[TRIANGLECOUNT];
+
+	Matrix4x4 cameraMatrix;
+	Matrix4x4 viewMatrix;
+	Matrix4x4 projectionMatrix;
+	Matrix4x4 worldViewProjectionMatrix;
 };

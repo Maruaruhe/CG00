@@ -56,7 +56,7 @@ private:
 	IDxcIncludeHandler* includeHandler;
 	//MakeRootSignature
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
-	D3D12_ROOT_PARAMETER rootParameters[1];
+	D3D12_ROOT_PARAMETER rootParameters[2];
 	ID3DBlob* signatureBlob;
 	ID3DBlob* errorBlob;
 	ID3D12RootSignature* rootSignature;
@@ -78,6 +78,7 @@ private:
 	D3D12_RESOURCE_DESC vertexResourceDesc{};
 	ID3D12Resource* vertexResource;
 	ID3D12Resource* materialResource;
+	ID3D12Resource* wvpResource;
 	//MakeVertexBufferView
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
 	//DateResource

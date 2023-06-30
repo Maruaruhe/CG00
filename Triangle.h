@@ -1,6 +1,7 @@
 #pragma once
 #include "DirectX12.h"
 #include "Vector4.h"
+#include "Matrix4x4.h"
 #include "GraphicsRenderer.h"
 
 class Triangle
@@ -9,15 +10,21 @@ public:
 	void Draw(Vector4 leftBot, Vector4 midTop, Vector4 rightBot);
 
 	void Initialize(DirectX12* directX12);
+
 	void MakeVertexResource();
 	void MakeMaterialResource();
+	void MakeWvpResource();
+
 	void MakeVertexBufferView();
 	void DateResource();
 	void MakeResource();
 	void AllReleasse();
 
+	void Update();
 private:
 	DirectX12* directX12_;
+
+	Transform transform;
 
 	HRESULT hr;
 	//MakeVertexResource
@@ -25,11 +32,13 @@ private:
 	D3D12_RESOURCE_DESC vertexResourceDesc{};
 	ID3D12Resource* vertexResource;
 	ID3D12Resource* materialResource;
+	ID3D12Resource* wvpResource;
 	//MakeVertexBufferView
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
 	//DateResource
 	Vector4* vertexDate;
 	Vector4* materialDate;
+	Matrix4x4* wvpDate;
 	//ViewportScissor
 	D3D12_VIEWPORT viewport{};
 	D3D12_RECT scissorRect{};

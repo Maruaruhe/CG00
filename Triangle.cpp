@@ -2,10 +2,18 @@
 
 void Triangle::Initialize(DirectX12* directX12){
 	directX12_ = directX12;
+	transform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	MakeVertexResource();
 	MakeMaterialResource();
 	MakeVertexBufferView();
+	MakeWvpResource();
 	DateResource();
+}
+
+void Triangle::Update() {
+	transform.rotate.y += 0.03f;
+	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+	*wvpDate = worldMatrix;
 }
 
 void Triangle::MakeVertexResource() {
@@ -20,6 +28,16 @@ void Triangle::MakeMaterialResource() {
 	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialDate));
 
 	*materialDate = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+}
+
+void Triangle::MakeWvpResource() {
+	wvpResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Matrix4x4));
+
+	wvpDate = nullptr;
+
+	wvpResource->Map(0, nullptr, reinterpret_cast<void**>(&wvpDate));
+
+	*wvpDate = MakeIdentity4x4();
 }
 
 void Triangle::MakeResource() {
@@ -51,5 +69,6 @@ void Triangle::Draw(Vector4 leftBot, Vector4 midTop, Vector4 rightBot) {
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource->GetGPUVirtualAddress());
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource->GetGPUVirtualAddress());
 	directX12_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }
