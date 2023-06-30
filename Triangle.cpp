@@ -2,33 +2,28 @@
 
 void Triangle::Initialize(DirectX12* directX12){
 	directX12_ = directX12;
-	MakeVertexResource(directX12);
+	MakeVertexResource();
+	MakeMaterialResource();
 	MakeVertexBufferView();
 	DateResource();
 }
 
-void Triangle::MakeVertexResource(DirectX12* directX12) {
-	//VertexResourceを生成する--------------------------------------------------------------------------------
-	//頂点リソース用のヒープの作成の設定
-	uploadHeapProperties = {};
-	uploadHeapProperties.Type = D3D12_HEAP_TYPE_UPLOAD;
-	//頂点リソースの設定
-	vertexResourceDesc = {};
-	//バッファリソース。テクスチャの場合はまた別の設定をする
-	vertexResourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-	vertexResourceDesc.Width = sizeof(Vector4) * 3;
-	//バッファの場合はこれらは１にする決まり
-	vertexResourceDesc.Height = 1;
-	vertexResourceDesc.DepthOrArraySize = 1;
-	vertexResourceDesc.MipLevels = 1;
-	vertexResourceDesc.SampleDesc.Count = 1;
-	//バッファの場合はこれにする決まり
-	vertexResourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
-	//実際に頂点リソースを作る
-	vertexResource = nullptr;
-	vertexResource = CreateBufferResource(device, sizeof(Vector4) * 3);
-	hr = directX12->GetDevice()->CreateCommittedResource(&uploadHeapProperties, D3D12_HEAP_FLAG_NONE, &vertexResourceDesc, D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&vertexResource));
-	assert(SUCCEEDED(hr));
+void Triangle::MakeVertexResource() {
+	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Vector4) * 3);
+}
+
+void Triangle::MakeMaterialResource() {
+	materialResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Vector4));
+
+	materialDate = nullptr;
+
+	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialDate));
+
+	*materialDate = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+}
+
+void Triangle::MakeResource() {
+
 }
 
 void Triangle::MakeVertexBufferView() {
@@ -45,12 +40,6 @@ void Triangle::AllReleasse() {
 	materialResource->Release();
 }
 
-ID3D12Resource* Triangle::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
-
-
-	return;
-}
-
 void Triangle::Draw(Vector4 leftBot, Vector4 midTop, Vector4 rightBot) {
 	//左下
 	vertexDate[0] = leftBot;
@@ -58,14 +47,6 @@ void Triangle::Draw(Vector4 leftBot, Vector4 midTop, Vector4 rightBot) {
 	vertexDate[1] = midTop;
 	//右下
 	vertexDate[2] = rightBot;
-
-	materialResource = CreateBufferResource(device, sizeof(Vector4));
-
-	materialDate = nullptr;
-
-	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialDate));
-
-	*materialDate = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

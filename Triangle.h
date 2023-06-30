@@ -9,12 +9,12 @@ public:
 	void Draw(Vector4 leftBot, Vector4 midTop, Vector4 rightBot);
 
 	void Initialize(DirectX12* directX12);
-	void MakeVertexResource(DirectX12* directX12);
+	void MakeVertexResource();
+	void MakeMaterialResource();
 	void MakeVertexBufferView();
 	void DateResource();
+	void MakeResource();
 	void AllReleasse();
-
-	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 
 private:
 	DirectX12* directX12_;

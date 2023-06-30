@@ -80,6 +80,8 @@ public:
 
 	ID3D12Device* GetDevice()const { return device; }
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList; }
+
+	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 private:
 	WindowsAPI* winAPI_;
 	IDXGIFactory7* dxgiFactory;
