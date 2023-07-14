@@ -3,7 +3,7 @@
 #include "DirectX12.h"
 #include "GraphicsRenderer.h"
 #include "Triangle.h"
-#define TRIANGLECOUNT 1
+#define TRIANGLECOUNT 4
 
 class WindowsAPI;
 class GraphicsRenderer;
