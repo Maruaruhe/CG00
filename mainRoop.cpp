@@ -1,10 +1,11 @@
 #include "mainRoop.h"
 
-void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, Triangle* drawTriangle*/) {
+void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12) {
 	
 	directX12_ = directX12;
 	directX12_->InitializeDirectX12(winAPI);
 	graphicsRenderer_->Initialize(directX12_);
+	VariableInit();
 
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangle_[i] = new Triangle;
@@ -43,18 +44,9 @@ void MainRoop::End() {
 }
 
 void MainRoop::VariableInit() {
-
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangleData[i].leftBot_ = { -1.0f + i * 0.2f,-0.5f + i * 0.2f,0.0f,1.0f };
 		triangleData[i].middleTop_ = { -0.5f + i * 0.2f,0.5f + i * 0.2f,0.0f,1.0f };
 		triangleData[i].rightBot_ = { 0.0f + i * 0.2f,-0.5f + i * 0.2f,0.0f,1.0f };
 	}
-
-	/*triangleData[0].leftBot_ = { -1.0f,-0.5f,0.0f,1.0f };
-	triangleData[0].middleTop_ = { -0.5f,0.5f,0.0f,1.0f };
-	triangleData[0].rightBot_ = { -1.0f,-0.5f,0.0f,1.0f };
-
-	triangleData[1].leftBot_ = { -0.5f,-0.5f ,0.0f,1.0f };
-	triangleData[1].middleTop_ = { 0.0f,0.5f,0.0f,1.0f };
-	triangleData[1].rightBot_ = { 0.5f,-0.5f,0.0f,1.0f };*/
 }
