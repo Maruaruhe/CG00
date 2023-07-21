@@ -1,10 +1,16 @@
 #include "Triangle.h"
 
-void Triangle::Initialize(DirectX12* directX12){
+void Triangle::Initialize(DirectX12* directX12, Vector4 leftBot, Vector4 midTop, Vector4 rightBot){
 	directX12_ = directX12;
 	MakeVertexResource(directX12);
 	MakeVertexBufferView();
 	DateResource();
+	//左下
+	vertexDate[0] = leftBot;
+	//上
+	vertexDate[1] = midTop;
+	//右下
+	vertexDate[2] = rightBot;
 }
 
 void Triangle::MakeVertexResource(DirectX12* directX12) {
@@ -42,14 +48,7 @@ void Triangle::AllReleasse() {
 	vertexResource->Release();
 }
 
-void Triangle::Draw(Vector4 leftBot, Vector4 midTop, Vector4 rightBot) {
-	//左下
-	vertexDate[0] = leftBot;
-	//上
-	vertexDate[1] = midTop;
-	//右下
-	vertexDate[2] = rightBot;
-
+void Triangle::Draw() {
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directX12_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
