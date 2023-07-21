@@ -9,7 +9,7 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12) {
 
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangle_[i] = new Triangle;
-		triangle_[i]->Initialize(directX12_);
+		triangle_[i]->Initialize(directX12_,triangleData[i].leftBot_, triangleData[i].middleTop_, triangleData[i].rightBot_);
 	}
 
 	graphicsRenderer_->ViewportScissor();
