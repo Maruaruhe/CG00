@@ -26,7 +26,7 @@ void MainRoop::Release() {
 
 void MainRoop::Draw() {
 	for (int i = 0; i < TRIANGLECOUNT; i++){
-		triangle_[i]->Draw(triangleData[i].leftBot_, triangleData[i].middleTop_, triangleData[i].rightBot_);
+		triangle_[i]->Draw();
 	}
 }
 
