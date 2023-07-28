@@ -1,13 +1,13 @@
-#include "mainRoop.h"
+#include "gameScene.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
-	MainRoop* mainRoop = new MainRoop;
+	GameScene* gameScene = new GameScene;
 
 	WindowsAPI* windowsAPI = new WindowsAPI;
 	DirectX12* directX12 = new DirectX12;
 	
-	mainRoop->Initialize(windowsAPI, directX12);
+	gameScene->Initialize(windowsAPI, directX12);
 
 	//いろいろ
 
@@ -32,12 +32,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			DispatchMessage(&msg);
 		}
 		else {
-			mainRoop->First();
-			mainRoop->Update();
-			mainRoop->Draw();
-			mainRoop->Final();
+			gameScene->Update();
+			gameScene->Draw();
+			gameScene->Final();
 		}
 	}
-	mainRoop->End();
+	gameScene->End();
 	return 0;
 }

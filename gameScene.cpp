@@ -1,6 +1,6 @@
-#include "mainRoop.h"
+#include "gameScene.h"
 
-void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, Triangle* drawTriangle*/) {
+void GameScene::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, Triangle* drawTriangle*/) {
 	
 	directX12_ = directX12;
 	directX12_->InitializeDirectX12(winAPI);
@@ -15,35 +15,36 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRe
 	graphicsRenderer_->ViewportScissor();
 }
 
-void MainRoop::Update() {
+void GameScene::Update() {
 
 }
 
-void MainRoop::Release() {
+void GameScene::Release() {
 	directX12_->AllRelease();
 	graphicsRenderer_->AllRelease();
 }
 
-void MainRoop::Draw() {
+void GameScene::Draw() {
+	PreDraw();
 	for (int i = 0; i < TRIANGLECOUNT; i++){
 		triangle_[i]->Draw();
 	}
 }
 
-void MainRoop::First() {
+void GameScene::PreDraw() {
 	directX12_->PreDraw();
 	graphicsRenderer_->DecideCommand(directX12_);
 }
 
-void MainRoop::Final() {
+void GameScene::Final() {
 	directX12_->PostDraw();
 }
 
-void MainRoop::End() {
+void GameScene::End() {
 	directX12_->ReportLiveObject();
 }
 
-void MainRoop::VariableInit() {
+void GameScene::VariableInit() {
 
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangleData[i].leftBot_ = { -0.5f,-0.5f + i * 0.1f,0.0f,1.0f };

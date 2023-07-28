@@ -9,7 +9,7 @@ class WindowsAPI;
 class GraphicsRenderer;
 class DirectX12;
 
-class MainRoop
+class GameScene
 {
 public:
 	void Initialize(WindowsAPI* winAPI,DirectX12* directX12);
@@ -17,7 +17,7 @@ public:
 	void Release();
 	void Draw();
 
-	void First();
+	void PreDraw();
 	void Final();
 
 	void End();
