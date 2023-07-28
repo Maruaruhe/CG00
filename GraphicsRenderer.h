@@ -42,7 +42,7 @@ public:
 	//
 	void MakeVertexResource(DirectX12* directX12);
 
-	void MakeVertexBufferView();
+	//void MakeVertexBufferView();
 	void DateResource(Vector2* leftBot, Vector2* midTop, Vector2* rightBot);
 	void ViewportScissor();
 

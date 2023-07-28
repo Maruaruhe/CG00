@@ -192,12 +192,12 @@ void GraphicsRenderer::MakeVertexResource(DirectX12* directX12) {
 }
 
 //kore
-void GraphicsRenderer::MakeVertexBufferView() {
-	vertexBufferView = {};
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
-	vertexBufferView.StrideInBytes = sizeof(Vector4);
-}
+//void GraphicsRenderer::MakeVertexBufferView() {
+//	vertexBufferView = {};
+//	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+//	vertexBufferView.SizeInBytes = sizeof(Vector4) * 3;
+//	vertexBufferView.StrideInBytes = sizeof(Vector4);
+//}
 
 //kore
 void GraphicsRenderer::DateResource(Vector2* leftBot, Vector2* midTop, Vector2* rightBot) {
