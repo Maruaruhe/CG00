@@ -3,6 +3,7 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "GraphicsRenderer.h"
+#include "Camera.h"
 
 class Triangle
 {
@@ -45,5 +46,7 @@ private:
 
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;
+
+	Camera* camera;
 };
 

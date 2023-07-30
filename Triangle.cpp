@@ -14,6 +14,7 @@ void Triangle::Update() {
 	transform.rotate.y += 0.03f;
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 	*wvpDate = worldMatrix;
+	//*wvpDate = camera->MakeWVPMatrix(transform);
 }
 
 void Triangle::MakeVertexResource() {
