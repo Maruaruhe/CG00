@@ -24,7 +24,6 @@ public:
 
 	void VariableInit();
 
-	void camera();
 
 private:
 	struct TriangleData
