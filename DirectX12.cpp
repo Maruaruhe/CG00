@@ -24,15 +24,24 @@ void DirectX12::InitializeDirectX12(WindowsAPI* winAPI) {
 	MakeDescriptorHeap();
 	MakeRTV();
 	MakeFenceEvent();
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(winAPI_->GetHwnd());
+	ImGui_ImplDX12_Init(device, swapChainDesc.BufferCount, rtvDesc.Format, srvDescriptorHeap, srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
 }
 void DirectX12::Update() {
+
 }
 
 void DirectX12::PreDraw() {
 	DecideCommand();
 	TransitionBarrier();
+	SetImGuiDescriptorHeap();
 }
 void DirectX12::PostDraw() {
+	KickImGuiCommand();
 	ChangeBarrier();
 	CloseCommandList();
 	KickCommand();
@@ -127,15 +136,21 @@ void DirectX12::MakeSwapChain() {
 	assert(SUCCEEDED(hr));
 }
 
-
+ID3D12DescriptorHeap* DirectX12::CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
+	ID3D12DescriptorHeap* descriptorHeap = nullptr;
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
+	descriptorHeapDesc.Type = heapType;
+	descriptorHeapDesc.NumDescriptors = numDescriptors;
+	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	HRESULT hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+	assert(SUCCEEDED(hr));
+	return descriptorHeap;
+}
 //7
 void DirectX12::MakeDescriptorHeap() {
-	rtvDescriptorHeap = nullptr;
-	rtvDescriptorHeapDesc = {};
-	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-	rtvDescriptorHeapDesc.NumDescriptors = 2;
-	hr = device->CreateDescriptorHeap(&rtvDescriptorHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
-	assert(SUCCEEDED(hr));
+	rtvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
+	srvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128, false);
+
 
 	swapChainResources[0] = { nullptr };
 	swapChainResources[1] = { nullptr };
@@ -168,20 +183,12 @@ void DirectX12::MakeRTV() {
 //1
 void DirectX12::DecideCommand() {
 	backBufferIndex = swapChain->GetCurrentBackBufferIndex();
-	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
-
-	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
-	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
 }
 void DirectX12::KickCommand() {
 	ID3D12CommandList* commandLists[] = { commandList };
 	commandQueue->ExecuteCommandLists(1, commandLists);
 
 	swapChain->Present(1, 0);
-	hr = commandAllocator->Reset();
-	assert(SUCCEEDED(hr));
-	hr = commandList->Reset(commandAllocator, nullptr);
-	assert(SUCCEEDED(hr));
 }
 
 void DirectX12::Debug() {
@@ -220,11 +227,17 @@ void DirectX12::TransitionBarrier() {
 	barrier = {};
 	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
 	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.pResource = swapChainResources[backBufferIndex];
 	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
 	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
 
 	commandList->ResourceBarrier(1, &barrier);
+
+
+	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
+
+	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
+	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
+
 }
 
 
@@ -262,6 +275,10 @@ void DirectX12::WaitGPU() {
 		fence->SetEventOnCompletion(fenceValue, fenceEvent);
 		WaitForSingleObject(fenceEvent, INFINITE);
 	}
+	hr = commandAllocator->Reset();
+	assert(SUCCEEDED(hr));
+	hr = commandList->Reset(commandAllocator, nullptr);
+	assert(SUCCEEDED(hr));
 }
 
 void DirectX12::ReportLiveObject() {
@@ -314,4 +331,12 @@ ID3D12Resource* DirectX12::CreateBufferResource(ID3D12Device* device, size_t siz
 	assert(SUCCEEDED(hr));
 
 	return Resource;
+}
+
+void DirectX12::SetImGuiDescriptorHeap() {
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap };
+	commandList->SetDescriptorHeaps(1, descriptorHeaps);
+}
+void DirectX12::KickImGuiCommand() {
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 }

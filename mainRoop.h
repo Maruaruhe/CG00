@@ -3,6 +3,7 @@
 #include "DirectX12.h"
 #include "GraphicsRenderer.h"
 #include "Triangle.h"
+#include "ImGuiWND.h"
 #define TRIANGLECOUNT 3
 
 class WindowsAPI;
@@ -35,6 +36,7 @@ private:
 
 	TriangleData triangleData[TRIANGLECOUNT];
 
+	WindowsAPI* winAPI_;
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
 	Triangle* triangle_[TRIANGLECOUNT];

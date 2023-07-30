@@ -3,6 +3,7 @@
 void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, Triangle* drawTriangle*/) {
 	
 	directX12_ = directX12;
+	winAPI_ = winAPI;
 	directX12_->InitializeDirectX12(winAPI);
 	graphicsRenderer_->Initialize(directX12_);
 
@@ -12,12 +13,17 @@ void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRe
 	}
 
 	graphicsRenderer_->ViewportScissor();
+
 }
 
 void MainRoop::Update() {
+	ImGui::ShowDemoWindow();
+
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangle_[i]->Update();
 	}
+
+	ImGui::Render();
 }
 
 void MainRoop::Release() {
@@ -32,6 +38,10 @@ void MainRoop::Draw() {
 }
 
 void MainRoop::First() {
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
+
 	directX12_->PreDraw();
 	graphicsRenderer_->DecideCommand(directX12_);
 }
@@ -51,12 +61,4 @@ void MainRoop::VariableInit() {
 		triangleData[i].middleTop_ = { 0.0f + i * 0.2f,0.5f + i * 0.2f,0.0f,1.0f };
 		triangleData[i].rightBot_ = { 0.5f + i * 0.2f,-0.5f + i * 0.2f,0.0f,1.0f };
 	}
-
-	/*triangleData[0].leftBot_ = { -1.0f,-0.5f,0.0f,1.0f };
-	triangleData[0].middleTop_ = { -0.5f,0.5f,0.0f,1.0f };
-	triangleData[0].rightBot_ = { -1.0f,-0.5f,0.0f,1.0f };
-
-	triangleData[1].leftBot_ = { -0.5f,-0.5f ,0.0f,1.0f };
-	triangleData[1].middleTop_ = { 0.0f,0.5f,0.0f,1.0f };
-	triangleData[1].rightBot_ = { 0.5f,-0.5f,0.0f,1.0f };*/
 }

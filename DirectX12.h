@@ -10,6 +10,8 @@
 #include "WindowsAPI.h"
 #include "Vector4.h"
 
+#include "ImGuiWND.h"
+
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxguid.lib")
@@ -33,6 +35,7 @@ public:
 	void MakeCommandList();
 	void CloseCommandList();
 	void MakeSwapChain();
+	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 	void MakeDescriptorHeap();
 	void MakeRTV();
 	void DecideCommand();
@@ -50,36 +53,16 @@ public:
 	void AllRelease();
 	void End(WindowsAPI* winAPI);
 
+	void SetImGuiDescriptorHeap();
+	void KickImGuiCommand();
+
 	void PreDraw();
 	void PostDraw();
-
-	//kokokara
-	/*void InitializeDXC();
-
-	IDxcBlob* CompileShader(
-		const std::wstring& filepath,
-		const wchar_t* profile,
-		IDxcUtils* dxcUtiles,
-		IDxcCompiler3* dxcCompiler,
-		IDxcIncludeHandler* includeHandler
-	);
-	
-	void MakeRootSignature();
-	void SetInputLayout();
-	void SetBlendState();
-	void SetRasterizerState();
-	void ShaderCompile();
-	void MakePSO();
-	void MakeVertexResource();
-	void MakeVertexBufferView();
-	void DateResource();
-	void ViewportScissor();*/
-
-	////Getter
-	//HANDLE GetFenceEvent() { return fenceEvent; }
-
 	ID3D12Device* GetDevice()const { return device; }
 	ID3D12GraphicsCommandList* GetCommandList() { return commandList; }
+	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc() { return swapChainDesc; }
+	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc() { return rtvDesc; }
+	ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap; }
 
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
 private:
@@ -98,6 +81,7 @@ private:
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 
 	ID3D12DescriptorHeap* rtvDescriptorHeap;
+	ID3D12DescriptorHeap* srvDescriptorHeap;
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc{};
 	ID3D12Resource* swapChainResources[2];
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};

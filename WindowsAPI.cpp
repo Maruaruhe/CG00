@@ -1,4 +1,5 @@
 #include "WindowsAPI.h"
+#include "ImGuiWND.h"
 
 WindowsAPI::WindowsAPI() {
 	wc = {};
@@ -9,6 +10,10 @@ WindowsAPI::~WindowsAPI() {
 
 //Window Procedure
 LRESULT WindowsAPI::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam) {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd_, msg, wparam, lparam)) {
+		return true;
+	}
+
 	switch (msg) {
 	case WM_DESTROY:
 		PostQuitMessage(0);
