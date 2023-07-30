@@ -18,7 +18,6 @@ void Triangle::Update() {
 	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
 	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
-	//*wvpDate = camera->MakeWVPMatrix(transform);
 	*wvpDate = worldViewProjectionMatrix;
 }
 
