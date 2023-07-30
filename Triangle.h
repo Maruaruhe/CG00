@@ -26,6 +26,7 @@ private:
 	DirectX12* directX12_;
 
 	Transform transform;
+	Transform cameraTransform;
 
 	HRESULT hr;
 	//MakeVertexResource
