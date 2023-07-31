@@ -12,11 +12,14 @@ public:
 
 	void Initialize(DirectX12* directX12, Vector4 leftBot, Vector4 midTop, Vector4 rightBot);
 
-	void MakeVertexResource(DirectX12* directX12);
+	void MakeVertexResource();
+	void MakeMaterialResource();
+	void MakeWvpResource();
+
 	void MakeVertexBufferView();
 	void DateResource();
+	void MakeResource();
 	void AllReleasse();
-
 private:
 	DirectX12* directX12_;
 
