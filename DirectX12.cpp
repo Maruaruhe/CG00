@@ -325,6 +325,7 @@ ID3D12DescriptorHeap* DirectX12::CreateDescriptorHeap(ID3D12Device* device, D3D1
 	return descriptorHeap;
 }
 
+//ImGui
 void DirectX12::SetImGuiDescriptorHeap() {
 	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap };
 	commandList->SetDescriptorHeaps(1, descriptorHeaps);
