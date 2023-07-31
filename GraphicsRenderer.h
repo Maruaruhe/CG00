@@ -46,7 +46,7 @@ public:
 	void DateResource(Vector2* leftBot, Vector2* midTop, Vector2* rightBot);
 	void ViewportScissor();
 
-	void AllRelease();
+	void Release();
 private:
 	HRESULT hr;
 	ID3D12Device* device;

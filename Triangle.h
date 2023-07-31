@@ -22,7 +22,7 @@ public:
 
 	void CreateVertexBufferView();
 
-	void WriteDataToResource();
+	void DataResource();
 
 	void Release();
 
@@ -35,6 +35,9 @@ public:
 	void Draw();
 private:
 	DirectX12* directX12_;
+
+	Transform transform;
+	Transform cameraTransform;
 
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties;
@@ -57,6 +60,9 @@ private:
 
 	Transform transform_;
 	Matrix4x4 worldMatrix_;
+
+	const int32_t kClientWidth = 1080;
+	const int32_t kClientHeight = 720;
 
 };
 

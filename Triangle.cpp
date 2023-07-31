@@ -2,11 +2,13 @@
 
 void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	directX12_ = directX12;
+	transform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
+	cameraTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f} };
 	CreateVertexResource();
 	CreateMaterialResource();
 	CreateVertexBufferView();
 	CreateTransformationMatrixResource();
-	WriteDataToResource();
+	DataResource();
 
 	//左下
 	vertexData[0] = triangleData.Left_;
@@ -14,9 +16,6 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	vertexData[1] = triangleData.Top_;
 	//右下
 	vertexData[2] = triangleData.Right_;
-
-	//Transform変数を作る
-	transform_ = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 }
 
 void Triangle::CreateVertexResource() {
@@ -51,7 +50,7 @@ void Triangle::CreateTransformationMatrixResource() {
 	*wvpData = MakeIdentity4x4();
 }
 
-void Triangle::WriteDataToResource() {
+void Triangle::DataResource() {
 	//書き込むためのアドレスを取得
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 }
@@ -69,6 +68,8 @@ void Triangle::Update() {
 	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
 	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	*wvpData = worldViewProjectionMatrix;
+	//worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	//*wvpData = worldMatrix_;
 }
 
 void Triangle::Draw() {

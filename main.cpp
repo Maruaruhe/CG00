@@ -2,28 +2,17 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
-	GameManager* gameScene = new GameManager;
+	GameScene* gameScene = new GameScene;
 
 	WindowsAPI* windowsAPI = new WindowsAPI;
 	DirectX12* directX12 = new DirectX12;
 
-	
-	
-	gameScene->Init(directX12,windowsAPI);
+	gameScene->Initialize(directX12,windowsAPI);
 
 	gameScene->VariableInit();
 
 	//いろいろ
 
-	//三角形の座標
-	//一つ目
-	Vector2 LeftBottom1 = { -1.0f,-0.5f };
-	Vector2 MiddleTop1 = { -0.5f,0.5f };
-	Vector2 RightBottom1 = { -0.25f,-0.5f };
-	//二つ目
-	Vector2 LeftBottom2 = { 0.25f,-0.25f };
-	Vector2 MiddleTop2 = { 0.3f,0.3f };
-	Vector2 RightBottom2 = { 0.4f,-0.1f };
 
 	//初期化
 
@@ -42,6 +31,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			gameScene->EndFrame();
 		}
 	}
-	gameScene->Finalize();
+	gameScene->Final();
 	return 0;
 }

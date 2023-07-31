@@ -2,13 +2,9 @@
 #include <Windows.h>
 #include <cstdint>
 #include "ImGuiWND.h"
-//#include "DirectX12.h"
-
 //クライアント領域のサイズ
 static const int32_t kCliantWidth = 1280;
 static const int32_t kCliantHeight = 720;
-
-//class DirectX12;
 
 class WindowsAPI
 {

@@ -1,7 +1,48 @@
 #include "DirectX12.h"
 #include "Log.h"
 
+void DirectX12::Init(WindowsAPI* windowsAPI) {
+	windowsAPI_ = windowsAPI;
+	windowsAPI->Init();
+	DXGIFactory();
+	Adapter();
+	D3D12Device();
 
+	Error();
+	Command();
+	SwapChain();
+	DescriptorHeap();
+	Fence();
+
+	//ImGuiの初期化
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(windowsAPI_->GetHwnd());
+	ImGui_ImplDX12_Init(device,
+		swapChainDesc.BufferCount,
+		rtvDesc.Format,
+		srvDescriptorHeap,
+		srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
+		srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+}
+
+
+void DirectX12::PreDraw() {
+	GetBackBuffer();
+	Barrier();
+	RTV();
+	SetImGuiDescriptorHeap();
+}
+
+void DirectX12::PostDraw() {
+	PushImGuiDrawCommand();
+	ScreenDisplay();
+	CommandConfirm();
+	CommandKick();
+	Signal();
+	NextFlameCommandList();
+}
 
 void DirectX12::DXGIFactory() {
 	dxgiFactory = nullptr;
@@ -118,17 +159,6 @@ void DirectX12::RTV() {
 	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
 	commandList->ClearRenderTargetView(rtvHandle[backBufferIndex], clearColor, 0, nullptr);
 }
-
-void DirectX12::SetImGuiDescriptorHeap() {
-	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap };
-	commandList->SetDescriptorHeaps(1, descriptorHeaps);
-}
-
-void DirectX12::PushImGuiDrawCommand() {
-	//実際のcommandListのImGuiの描画コマンドを積む
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
-}
-
 
 void DirectX12::CommandKick() {
 	ID3D12CommandList* commandLists[] = { commandList };
@@ -257,57 +287,6 @@ void DirectX12::Release() {
 	CloseWindow(windowsAPI_->GetHwnd());
 }
 
-void DirectX12::Init(WindowsAPI* windowsAPI) {
-	windowsAPI_ = windowsAPI;
-	windowsAPI->Init();
-	DXGIFactory();
-	Adapter();
-	D3D12Device();
-
-	Error();
-	Command();
-	SwapChain();
-	DescriptorHeap();
-	Fence();
-
-	//ImGuiの初期化
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(windowsAPI_->GetHwnd());
-	ImGui_ImplDX12_Init(device,
-		swapChainDesc.BufferCount,
-		rtvDesc.Format,
-		srvDescriptorHeap,
-		srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
-		srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-}
-
-//void DirectX12::Update() {
-//	//ゲームの処理
-//	Signal();
-//	CommandKick();
-//
-//
-//	ResourceLeakCheck();
-//}
-
-void DirectX12::PreDraw() {
-	GetBackBuffer();
-	Barrier();
-	RTV();
-	SetImGuiDescriptorHeap();
-}
-
-void DirectX12::PostDraw() {
-	PushImGuiDrawCommand();
-	ScreenDisplay();
-	CommandConfirm();
-	CommandKick();
-	Signal();
-	NextFlameCommandList();
-}
-
 ID3D12Resource* DirectX12::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
 
 	HRESULT hr;
@@ -344,4 +323,13 @@ ID3D12DescriptorHeap* DirectX12::CreateDescriptorHeap(ID3D12Device* device, D3D1
 	HRESULT hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
 	assert(SUCCEEDED(hr));
 	return descriptorHeap;
+}
+
+void DirectX12::SetImGuiDescriptorHeap() {
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap };
+	commandList->SetDescriptorHeaps(1, descriptorHeaps);
+}
+
+void DirectX12::PushImGuiDrawCommand() {
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
 }

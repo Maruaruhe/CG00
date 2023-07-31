@@ -232,7 +232,7 @@ void GraphicsRenderer::ViewportScissor() {
 	scissorRect.bottom = kClientHeight;
 }
 
-void GraphicsRenderer::AllRelease() {
+void GraphicsRenderer::Release() {
 	//vertexResource->Release();
 	graphicsPipelineState->Release();
 	signatureBlob->Release();

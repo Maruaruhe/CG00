@@ -6,7 +6,6 @@
 #include <dxgidebug.h>
 #include "Vector4.h"
 #include "ImGuiWND.h"
-
 #include "WindowsAPI.h"
 
 #pragma comment(lib,"d3d12.lib")
@@ -44,8 +43,6 @@ public:
 	/// 描画後処理
 	/// </summary>
 	void PostDraw();
-
-	/*void DebugLayer();*/
 
 	void Error();
 
