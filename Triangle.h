@@ -2,10 +2,12 @@
 #include "DirectX12.h"
 #include "Vector4.h"
 #include "GraphicsRenderer.h"
+#include "Matrix4x4.h"
 
 class Triangle
 {
 public:
+	void Update();
 	void Draw();
 
 	void Initialize(DirectX12* directX12, Vector4 leftBot, Vector4 midTop, Vector4 rightBot);
