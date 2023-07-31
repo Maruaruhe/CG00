@@ -53,7 +53,7 @@ private:
 	Vector4* materialData_;
 
 	ID3D12Resource* wvpResource_;
-	Matrix4x4* wvpData_;
+	Matrix4x4* wvpData;
 
 	Transform transform_;
 	Matrix4x4 worldMatrix_;

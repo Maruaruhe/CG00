@@ -44,11 +44,11 @@ void Triangle::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
 	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Matrix4x4));
 	//データを書き込む
-	wvpData_ = nullptr;
+	wvpData = nullptr;
 	//書き込むためのアドレスを取得
-	wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpData_));
+	wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpData));
 	//単位行列を書き込んでおく
-	*wvpData_ = MakeIdentity4x4();
+	*wvpData = MakeIdentity4x4();
 }
 
 void Triangle::WriteDataToResource() {
@@ -62,9 +62,13 @@ void Triangle::Release() {
 }
 
 void Triangle::Update() {
-	transform_.rotate.y += 0.03f;
-	worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	*wvpData_ = worldMatrix_;
+	transform.rotate.y += 0.03f;
+	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
+	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
+	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
+	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+	*wvpData = worldViewProjectionMatrix;
 }
 
 void Triangle::Draw() {
