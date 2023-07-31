@@ -30,7 +30,7 @@ public:
 
 	void CreateTransformationMatrixResource();
 
-	void Update(Vector4& color);
+	void Update(Vector4& color, Transform& transform_);
 
 	void Draw();
 private:

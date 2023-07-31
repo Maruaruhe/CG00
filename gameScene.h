@@ -32,5 +32,6 @@ private:
 	Triangle** triangle_ = new Triangle * [TRIANGLECOUNT];
 
 	float colorVolume[3];
+	Transform transform;
 };
 

@@ -18,8 +18,10 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	vertexData[2] = triangleData.Right_;
 }
 
-void Triangle::Update(Vector4& color) {
-	transform.rotate.y += 0.03f;
+void Triangle::Update(Vector4& color,Transform& transform_) {
+	transform.translate = transform_.translate;
+	transform.rotate = transform_.rotate;
+	transform.scale = transform_.scale;
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
 	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
