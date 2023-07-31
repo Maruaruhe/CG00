@@ -30,5 +30,7 @@ private:
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
 	Triangle** triangle_ = new Triangle * [TRIANGLECOUNT];
+
+	float colorVolume[3];
 };
 

@@ -18,6 +18,32 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	vertexData[2] = triangleData.Right_;
 }
 
+void Triangle::Update() {
+	transform.rotate.y += 0.03f;
+	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
+	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
+	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
+	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
+	*wvpData = worldViewProjectionMatrix;
+	//worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
+	//*wvpData = worldMatrix_;
+}
+
+void Triangle::Draw() {
+
+	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+
+	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
+	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
+	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	//wvp用のCBufferの場所を設定
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
+	directX12_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+}
+
 void Triangle::CreateVertexResource() {
 	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Vector4) * 3);
 }
@@ -58,31 +84,4 @@ void Triangle::DataResource() {
 void Triangle::Release() {
 	vertexResource->Release();
 	materialResource_->Release();
-}
-
-void Triangle::Update() {
-	transform.rotate.y += 0.03f;
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
-	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
-	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
-	*wvpData = worldViewProjectionMatrix;
-	//worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	//*wvpData = worldMatrix_;
-}
-
-void Triangle::Draw() {
-
-
-	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-
-	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
-	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
-	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	//wvp用のCBufferの場所を設定
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
-	directX12_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
 }

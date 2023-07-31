@@ -10,6 +10,9 @@ void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 
 	directX12_ = directX12;
 	directX12_->Init(windowsAPI);
+	colorVolume[0] = 0;
+	colorVolume[1] = 0;
+	colorVolume[2] = 0;
 
 	graphicsRenderer_->Initialize(directX12);
 
@@ -22,6 +25,11 @@ void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 
 void GameScene::Update() {
 	ImGui::ShowDemoWindow();
+
+	ImGui::ColorEdit3("TriangleColor", colorVolume);
+	ImGui::SliderFloat3("TriangleColor", colorVolume, 0.0f, 1.0f);
+
+	float color[4] = {colorVolume[0],colorVolume[1],colorVolume[2],1.0f};
 
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangle_[i]->Update();
