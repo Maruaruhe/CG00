@@ -11,6 +11,7 @@ public:
 	void Draw();
 
 	void Initialize(DirectX12* directX12, Vector4 leftBot, Vector4 midTop, Vector4 rightBot);
+
 	void MakeVertexResource(DirectX12* directX12);
 	void MakeVertexBufferView();
 	void DateResource();
