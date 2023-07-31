@@ -1,64 +1,54 @@
-#include "mainRoop.h"
+#include "gameScene.h"
 
-void MainRoop::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, Triangle* drawTriangle*/) {
-	
+void GameScene::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, Triangle* drawTriangle*/) {
+
 	directX12_ = directX12;
-	winAPI_ = winAPI;
 	directX12_->InitializeDirectX12(winAPI);
 	graphicsRenderer_->Initialize(directX12_);
+	VariableInit();
 
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangle_[i] = new Triangle;
-		triangle_[i]->Initialize(directX12_);
+		triangle_[i]->Initialize(directX12_, triangleData[i].leftBot_, triangleData[i].middleTop_, triangleData[i].rightBot_);
 	}
 
 	graphicsRenderer_->ViewportScissor();
+}
+
+void GameScene::Update() {
 
 }
 
-void MainRoop::Update() {
-	ImGui::ShowDemoWindow();
-
-	for (int i = 0; i < TRIANGLECOUNT; i++) {
-		triangle_[i]->Update();
-	}
-
-	ImGui::Render();
-}
-
-void MainRoop::Release() {
+void GameScene::Release() {
 	directX12_->AllRelease();
 	graphicsRenderer_->AllRelease();
 }
 
-void MainRoop::Draw() {
-	for (int i = 0; i < TRIANGLECOUNT; i++){
-		triangle_[i]->Draw(triangleData[i].leftBot_, triangleData[i].middleTop_, triangleData[i].rightBot_);
+void GameScene::Draw() {
+	PreDraw();
+	for (int i = 0; i < TRIANGLECOUNT; i++) {
+		triangle_[i]->Draw();
 	}
 }
 
-void MainRoop::First() {
-	ImGui_ImplDX12_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-
+void GameScene::PreDraw() {
 	directX12_->PreDraw();
 	graphicsRenderer_->DecideCommand(directX12_);
 }
 
-void MainRoop::Final() {
+void GameScene::Final() {
 	directX12_->PostDraw();
 }
 
-void MainRoop::End() {
+void GameScene::End() {
 	directX12_->ReportLiveObject();
 }
 
-void MainRoop::VariableInit() {
+void GameScene::VariableInit() {
 
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
-		triangleData[i].leftBot_ = { -0.5f + i * 0.2f,-0.5f + i * 0.2f,0.0f,1.0f };
-		triangleData[i].middleTop_ = { 0.0f + i * 0.2f,0.5f + i * 0.2f,0.0f,1.0f };
-		triangleData[i].rightBot_ = { 0.5f + i * 0.2f,-0.5f + i * 0.2f,0.0f,1.0f };
+		triangleData[i].leftBot_ = { -0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
+		triangleData[i].middleTop_ = { 0.0f,0.5f + i * 0.1f,0.0f,1.0f };
+		triangleData[i].rightBot_ = { 0.5f,-0.5f + i * 0.1f,0.0f,1.0f };
 	}
 }
