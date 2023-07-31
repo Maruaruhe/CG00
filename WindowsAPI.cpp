@@ -1,60 +1,73 @@
 #include "WindowsAPI.h"
-#include "ImGuiWND.h"
 
-WindowsAPI::WindowsAPI() {
-	wc = {};
-	wrc = {};
-}
-WindowsAPI::~WindowsAPI() {
+
+
+void WindowsAPI::Init() {
+	WindowClass();
+	WindowSize();
+	WindowCreate();
 }
 
-//Window Procedure
-LRESULT WindowsAPI::WindowProc(HWND hwnd_, UINT msg, WPARAM wparam, LPARAM lparam) {
-	if (ImGui_ImplWin32_WndProcHandler(hwnd_, msg, wparam, lparam)) {
+
+
+
+LRESULT CALLBACK WindowsAPI::WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam)) {
 		return true;
 	}
-
-	switch (msg) {
+	//メッセージに応じてゲーム固有の処理を行う
+	switch (msg)
+	{
+		//ウインドウが破棄された
 	case WM_DESTROY:
+		//OSに対して、アプリの終了を伝える
 		PostQuitMessage(0);
 		return 0;
 	}
-	return DefWindowProc(hwnd_, msg, wparam, lparam);
+
+	//標準のメッセージ処理を行う
+	return DefWindowProc(hwnd, msg, wparam, lparam);
 }
 
-void WindowsAPI::Init() {
-	RegisterWNDCLASS();
-}
+void WindowsAPI::WindowClass() {
 
-void WindowsAPI::RegisterWNDCLASS() {
+
+	//ウインドウプロシージャ	
 	wc.lpfnWndProc = WindowProc;
-
-	wc.lpszClassName = L"CG2WindowClass";
-
+	//ウインドウクラス名（なんでもいい）
+	wc.lpszClassName = L"メンバ変数";
+	//インスタンスハンドル
 	wc.hInstance = GetModuleHandle(nullptr);
-
+	//カーソル
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
 
+	//ウインドウクラスを登録する
 	RegisterClass(&wc);
+}
 
-	wrc = { 0,0,kClientWidth,kClientHeight };
-
+void WindowsAPI::WindowSize() {
+	wrc = { 0,0,kCliantWidth,kCliantHeight };
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
+}
 
-
-	//ウィンドウの生成
-	hwnd_ = CreateWindow(
-		wc.lpszClassName,
-		L"CG",
-		WS_OVERLAPPEDWINDOW,
-		CW_USEDEFAULT,
-		CW_USEDEFAULT,
-		wrc.right - wrc.left,
-		wrc.bottom - wrc.top,
-		nullptr,
-		nullptr,
-		wc.hInstance,
+void WindowsAPI::WindowCreate() {
+	//ウインドウの生成
+	hwnd = CreateWindow(
+		wc.lpszClassName,		//利用するクラス名
+		L"メンバ変数",			//タイトルバーの文字
+		WS_OVERLAPPEDWINDOW,	//よく見るウインドウスタイル
+		CW_USEDEFAULT,			//表示X座標（Windowsに任せる）
+		CW_USEDEFAULT,			//表示Y座標（Windowsに任せる）
+		wrc.right - wrc.left,	//ウインドウ横幅
+		wrc.bottom - wrc.top,	//ウインドウ縦幅
+		nullptr,				//ウインドウハンドル
+		nullptr,				//メニューハンドル
+		wc.hInstance,			//インスタンスハンドル
 		nullptr
 	);
-	ShowWindow(hwnd_, SW_SHOW);
+
+	/*directX12->DebugLayer();*/
+
+	ShowWindow(hwnd, SW_SHOW);
 }
+

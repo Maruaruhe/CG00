@@ -1,49 +1,63 @@
 #pragma once
 #include "DirectX12.h"
+#include <dxcapi.h>
 #include "Vector4.h"
-#include "GraphicsRenderer.h"
 #include "Matrix4x4.h"
+
+#pragma comment(lib,"dxcompiler.lib")
+
+struct TriangleData
+{
+	Vector4 Left_;
+	Vector4 Top_;
+	Vector4 Right_;
+};
 
 class Triangle
 {
 public:
+	void Initialize(DirectX12* directX12, TriangleData triangleData);
+
+	void CreateVertexResource();
+
+	void CreateVertexBufferView();
+
+	void WriteDataToResource();
+
+	void Release();
+
+	void CreateMaterialResource();
+
+	void CreateTransformationMatrixResource();
+
 	void Update();
+
 	void Draw();
-
-	void Initialize(DirectX12* directX12, Vector4 leftBot, Vector4 midTop, Vector4 rightBot);
-
-	void MakeVertexResource();
-	void MakeMaterialResource();
-	void MakeWvpResource();
-
-	void MakeVertexBufferView();
-	void DateResource();
-	void MakeResource();
-	void AllReleasse();
 private:
 	DirectX12* directX12_;
 
-	Transform transform;
-	Transform cameraTransform;
-
-	HRESULT hr;
-	//MakeVertexResource
-	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
-	D3D12_RESOURCE_DESC vertexResourceDesc{};
+	//頂点リソース用のヒープの設定
+	D3D12_HEAP_PROPERTIES uploadHeapProperties;
+	//頂点リソースの設定
+	D3D12_RESOURCE_DESC vertexResourceDesc;
+	//実際に頂点リソースを作る
 	ID3D12Resource* vertexResource;
-	ID3D12Resource* materialResource;
-	ID3D12Resource* wvpResource;
-	//MakeVertexBufferView
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
-	//DateResource
-	Vector4* vertexDate;
-	Vector4* materialDate;
-	Matrix4x4* wvpDate;
-	//ViewportScissor
-	D3D12_VIEWPORT viewport{};
-	D3D12_RECT scissorRect{};
+	//頂点バッファビューを作成する
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 
-	const int32_t kClientWidth = 1280;
-	const int32_t kClientHeight = 720;
+	//頂点リソースにデータを書き込む
+	Vector4* vertexData;
+
+	ID3D12Resource* materialResource_;
+
+	Vector4* materialData_;
+
+	ID3D12Resource* wvpResource_;
+	Matrix4x4* wvpData_;
+
+	Transform transform_;
+	Matrix4x4 worldMatrix_;
+
 };
+
 

@@ -2,14 +2,14 @@
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
-	GameScene* gameScene = new GameScene;
+	GameManager* gameScene = new GameManager;
 
 	WindowsAPI* windowsAPI = new WindowsAPI;
 	DirectX12* directX12 = new DirectX12;
 
 	
 	
-	gameScene->Initialize(windowsAPI, directX12);
+	gameScene->Init(directX12,windowsAPI);
 
 	gameScene->VariableInit();
 
@@ -36,12 +36,12 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			DispatchMessage(&msg);
 		}
 		else {
-			gameScene->PreDraw();
+			gameScene->BeginFrame();
 			gameScene->Update();
 			gameScene->Draw();
-			gameScene->Final();
+			gameScene->EndFrame();
 		}
 	}
-	gameScene->End();
+	gameScene->Finalize();
 	return 0;
 }

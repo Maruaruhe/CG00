@@ -1,40 +1,49 @@
 #pragma once
-#include "WindowsAPI.h"
 #include "DirectX12.h"
 #include "GraphicsRenderer.h"
+#include "WindowsAPI.h"
 #include "Triangle.h"
-#define TRIANGLECOUNT 2
+#include "ImGuiWND.h"
 
-class WindowsAPI;
-class GraphicsRenderer;
+#define MAXTRIANGLE 5 //三角形の最大数
+
 class DirectX12;
+class GraphicsRenderer;
+class WindowsAPI;
 
-class GameScene
+class GameManager
 {
 public:
-	void Initialize(WindowsAPI* winAPI, DirectX12* directX12);
+
+
+
+	/*void PreInit(GraphicsRenderer* graphicsRenderer);*/
+	void Init(DirectX12* directX12, WindowsAPI* windowsAPI);
 	void Update();
 	void Release();
+
+
+
+	void BeginFrame();
+
+	void EndFrame();
+
+	void Finalize();
+
 	void Draw();
 
-	void PreDraw();
-	void Final();
-
-	void End();
-
 	void VariableInit();
-
 private:
-	struct TriangleData
-	{
-		Vector4 leftBot_;
-		Vector4 middleTop_;
-		Vector4 rightBot_;
-	};
-
-	TriangleData triangleData[TRIANGLECOUNT];
+	TriangleData triangleData[MAXTRIANGLE];
 
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
-	Triangle* triangle_[TRIANGLECOUNT];
+	Triangle** triangle_ = new Triangle * [MAXTRIANGLE];
+
+
+
+	/*DirectX12* directX12;
+	GraphicsRenderer* graphicsRenderer;
+	WindowsAPI* windowsAPI;*/
 };
+
