@@ -29,10 +29,10 @@ void GameScene::Update() {
 	ImGui::ColorEdit3("TriangleColor", colorVolume);
 	ImGui::SliderFloat3("TriangleColor", colorVolume, 0.0f, 1.0f);
 
-	float color[4] = {colorVolume[0],colorVolume[1],colorVolume[2],1.0f};
+	Vector4 color = {colorVolume[0],colorVolume[1],colorVolume[2],1.0f};
 
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
-		triangle_[i]->Update();
+		triangle_[i]->Update(color);
 	}
 
 	ImGui::Render();

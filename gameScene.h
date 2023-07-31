@@ -5,7 +5,7 @@
 #include "Triangle.h"
 #include "ImGuiWND.h"
 
-#define TRIANGLECOUNT 1
+#define TRIANGLECOUNT 3
 
 class DirectX12;
 class GraphicsRenderer;

@@ -18,7 +18,7 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	vertexData[2] = triangleData.Right_;
 }
 
-void Triangle::Update() {
+void Triangle::Update(Vector4& color) {
 	transform.rotate.y += 0.03f;
 	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
@@ -28,12 +28,11 @@ void Triangle::Update() {
 	*wvpData = worldViewProjectionMatrix;
 	//worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
 	//*wvpData = worldMatrix_;
+//	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+	*materialData_ = color;
 }
 
 void Triangle::Draw() {
-
-	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
