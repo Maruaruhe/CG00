@@ -2,104 +2,146 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <cassert>
-#include <string>
 #include <format>
 #include <dxgidebug.h>
-#include <dxcapi.h>
+#include "Vector4.h"
+#include "ImGuiWND.h"
 
 #include "WindowsAPI.h"
-#include "Vector4.h"
-
-#include "ImGuiWND.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 #pragma comment(lib,"dxguid.lib")
-#pragma comment(lib,"dxcompiler.lib")
+
+class WindowsAPI;
 
 class DirectX12
 {
 public:
-	DirectX12();
-	~DirectX12();
 
-	void InitializeDirectX12(WindowsAPI* winAPI);
-	void Update();
+	void Init(WindowsAPI* windowsAPI);
 
-	
-	void MakeDXGIFactory();
+	void DXGIFactory();
+
 	void Adapter();
+
 	void D3D12Device();
 
-	void MakeCommandQueue();
-	void MakeCommandList();
-	void CloseCommandList();
-	void MakeSwapChain();
-	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
-	void MakeDescriptorHeap();
-	void MakeRTV();
-	void DecideCommand();
-	void KickCommand();
-	void Debug();
-	void Stop();
+	void Command();
 
-	void TransitionBarrier();
-	void ChangeBarrier();
-	void MakeFenceEvent();
-	void SendSignal();
-	void WaitGPU();
-	void RTV();
+	void SwapChain();
 
-	void ReportLiveObject();
-	void AllRelease();
-	void End(WindowsAPI* winAPI);
+	void DescriptorHeap();
+
+	/*void RTV();*/
+
+	/// <summary>
+	/// 描画前処理
+	/// </summary>
+	void PreDraw();
+
+	/// <summary>
+	/// 描画後処理
+	/// </summary>
+	void PostDraw();
+
+	/*void DebugLayer();*/
+
+	void Error();
+
+	void Barrier();
+
+	void ScreenDisplay();
+
+	void CommandConfirm();
+
+	void Fence();
+
+	/*void Update();*/
+
+	void ResourceLeakCheck();
+
+	void Release();
 
 	void SetImGuiDescriptorHeap();
-	void KickImGuiCommand();
 
-	void PreDraw();
-	void PostDraw();
-	ID3D12Device* GetDevice()const { return device; }
-	ID3D12GraphicsCommandList* GetCommandList() { return commandList; }
-	DXGI_SWAP_CHAIN_DESC1 GetSwapChainDesc() { return swapChainDesc; }
-	D3D12_RENDER_TARGET_VIEW_DESC GetRtvDesc() { return rtvDesc; }
-	ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap; }
+	void PushImGuiDrawCommand();
 
 	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
+
+
+	ID3D12Device* GetDevice() { return device; }
+
+	ID3D12GraphicsCommandList* GetCommandList() { return commandList; }
+
+	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
+public:
+	void GetBackBuffer();
+
+	void RTV();
+
+	void CommandKick();
+
+	void Signal();
+
+	void NextFlameCommandList();
+
 private:
-	WindowsAPI* winAPI_;
-	IDXGIFactory7* dxgiFactory;
-	HRESULT hr;
-	IDXGIAdapter4* useAdapter;
+	WindowsAPI* windowsAPI_;
 	ID3D12Device* device;
-	DXGI_ADAPTER_DESC3 adapterDesc{};
+	IDXGIFactory7* dxgiFactory;
 
+	DXGI_ADAPTER_DESC3 adapterDesc;
+
+	//使用するアダプタ用の変数。最初にnullptrを入れておく
+	IDXGIAdapter4* useAdapter;
+
+	//コマンドキューを生成する
 	ID3D12CommandQueue* commandQueue;
-	D3D12_COMMAND_QUEUE_DESC commandQueueDesc{};
+	D3D12_COMMAND_QUEUE_DESC commandQueueDesc;
+
+	//コマンドアロケータを生成する
 	ID3D12CommandAllocator* commandAllocator;
+
+	//コマンドリストを生成する
 	ID3D12GraphicsCommandList* commandList;
+
+	//スワップチェーンを生成する
 	IDXGISwapChain4* swapChain;
-	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
+	DXGI_SWAP_CHAIN_DESC1 swapChainDesc;
 
+	//ディスクリプターヒープの生成
 	ID3D12DescriptorHeap* rtvDescriptorHeap;
-	ID3D12DescriptorHeap* srvDescriptorHeap;
-	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc{};
-	ID3D12Resource* swapChainResources[2];
-	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
-	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[2];
-	UINT backBufferIndex;
-	ID3D12Debug1* debugController;
-	ID3D12InfoQueue* infoQueue;
+	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc;
 
-	D3D12_RESOURCE_BARRIER barrier{};
+	//RTVの設定
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc;
+
+	//ディスクリプタの先頭を取得する
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;
+
+	//RTVを２つ作るのでディスクリプタ２つ用意
+	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle[2];
+
+
+	UINT backBufferIndex;
+
+	ID3D12Resource* swapChainResource[2];
+	//TransitionBarrierの設定
+	D3D12_RESOURCE_BARRIER barrier;
+
+	//初期値0でFenceを作る
 	ID3D12Fence* fence;
 	uint64_t fenceValue;
+
+	//FenceのSignalを待つためのイベントを作成する
 	HANDLE fenceEvent;
-	
+
 	IDXGIDebug1* debug;
-	
-	const int32_t kClientWidth = 1280;
+
+	ID3D12DescriptorHeap* srvDescriptorHeap;
+
+	const int32_t kClientWidth = 1080;
 	const int32_t kClientHeight = 720;
 };
 

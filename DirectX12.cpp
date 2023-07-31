@@ -2,74 +2,13 @@
 #include "Log.h"
 
 
-DirectX12::DirectX12() {
-	
-}
 
-DirectX12::~DirectX12() {
-
-}
-
-
-void DirectX12::InitializeDirectX12(WindowsAPI* winAPI) {
-	winAPI_ = winAPI;
-	winAPI->Init();
-	MakeDXGIFactory();
-	Adapter();
-	D3D12Device();
-
-	MakeCommandQueue();
-	MakeCommandList();
-	MakeSwapChain();
-	MakeDescriptorHeap();
-	MakeRTV();
-	MakeFenceEvent();
-
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-	ImGui_ImplWin32_Init(winAPI_->GetHwnd());
-	ImGui_ImplDX12_Init(device, 
-		swapChainDesc.BufferCount, 
-		rtvDesc.Format, 
-		srvDescriptorHeap, 
-		srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), 
-		srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
-}
-void DirectX12::Update() {
-
-}
-
-void DirectX12::PreDraw() {
-	DecideCommand();
-	TransitionBarrier();
-	RTV();
-	SetImGuiDescriptorHeap();
-}
-void DirectX12::PostDraw() {
-	KickImGuiCommand();
-	ChangeBarrier();
-	CloseCommandList();
-	KickCommand();
-	SendSignal();
-	WaitGPU();
-}
-
-
-void DirectX12::End(WindowsAPI* winAPI) {
-	AllRelease();
-	ReportLiveObject();
-}
-
-//1
-void DirectX12::MakeDXGIFactory() {
+void DirectX12::DXGIFactory() {
 	dxgiFactory = nullptr;
 	HRESULT hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(hr));
 }
 
-
-//2
 void DirectX12::Adapter() {
 	useAdapter = nullptr;
 
@@ -89,8 +28,6 @@ void DirectX12::Adapter() {
 	assert(useAdapter != nullptr);
 }
 
-
-//3
 void DirectX12::D3D12Device() {
 	device = nullptr;
 	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_12_2,D3D_FEATURE_LEVEL_12_1,D3D_FEATURE_LEVEL_12_0 };
@@ -103,19 +40,15 @@ void DirectX12::D3D12Device() {
 		}
 	}
 }
-//4
-void DirectX12::MakeCommandQueue() {
+
+void DirectX12::Command() {
 	commandQueue = nullptr;
 	commandQueueDesc = {};
 	HRESULT hr = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue));
 	assert(SUCCEEDED(hr));
-}
 
-
-//5
-void DirectX12::MakeCommandList() {
 	commandAllocator = nullptr;
-	HRESULT hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
+	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator));
 	assert(SUCCEEDED(hr));
 
 	commandList = nullptr;
@@ -123,9 +56,7 @@ void DirectX12::MakeCommandList() {
 	assert(SUCCEEDED(hr));
 }
 
-
-//6
-void DirectX12::MakeSwapChain() {
+void DirectX12::SwapChain() {
 	swapChain = nullptr;
 	swapChainDesc = {};
 
@@ -136,27 +67,16 @@ void DirectX12::MakeSwapChain() {
 	swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	swapChainDesc.BufferCount = 2;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-	
 
-	HRESULT hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, winAPI_->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
+
+	HRESULT hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, windowsAPI_->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
 	assert(SUCCEEDED(hr));
 }
 
-ID3D12DescriptorHeap* DirectX12::CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
-	ID3D12DescriptorHeap* descriptorHeap = nullptr;
-	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
-	descriptorHeapDesc.Type = heapType;
-	descriptorHeapDesc.NumDescriptors = numDescriptors;
-	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	HRESULT hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
-	assert(SUCCEEDED(hr));
-	return descriptorHeap;
-}
-//7
-void DirectX12::MakeDescriptorHeap() {
+void DirectX12::DescriptorHeap() {
 	rtvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
 	rtvDescriptorHeapDesc = {};
-	
+
 	srvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128, true);
 
 	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
@@ -165,137 +85,153 @@ void DirectX12::MakeDescriptorHeap() {
 	HRESULT hr = device->CreateDescriptorHeap(&rtvDescriptorHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
 	assert(SUCCEEDED(hr));
 
-	swapChainResources[0] = { nullptr };
-	swapChainResources[1] = { nullptr };
-	hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&swapChainResources[0]));
+	swapChainResource[0] = { nullptr };
+	swapChainResource[1] = { nullptr };
+	hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&swapChainResource[0]));
 	assert(SUCCEEDED(hr));
-	hr = swapChain->GetBuffer(1, IID_PPV_ARGS(&swapChainResources[1]));
+	hr = swapChain->GetBuffer(1, IID_PPV_ARGS(&swapChainResource[1]));
 	assert(SUCCEEDED(hr));
-}
 
-void DirectX12::CloseCommandList() {
-	hr = commandList->Close();
-	assert(SUCCEEDED(hr));
-}
-
-//8
-void DirectX12::MakeRTV() {
 	rtvDesc = {};
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 	rtvStartHandle = rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-	rtvHandles[0] = rtvStartHandle;
-	device->CreateRenderTargetView(swapChainResources[0], &rtvDesc, rtvHandles[0]);
-	rtvHandles[1].ptr = rtvHandles[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	rtvHandle[0] = rtvStartHandle;
+	device->CreateRenderTargetView(swapChainResource[0], &rtvDesc, rtvHandle[0]);
+	rtvHandle[1].ptr = rtvHandle[0].ptr + device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
+	device->CreateRenderTargetView(swapChainResource[1], &rtvDesc, rtvHandle[1]);
+
+
 }
 
-
-//1
-void DirectX12::DecideCommand() {
+void DirectX12::GetBackBuffer() {
+	//これから書き込むバックバッファのインデックスを取得
 	backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 }
-void DirectX12::KickCommand() {
+
+void DirectX12::RTV() {
+	commandList->OMSetRenderTargets(1, &rtvHandle[backBufferIndex], false, nullptr);
+
+	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
+	commandList->ClearRenderTargetView(rtvHandle[backBufferIndex], clearColor, 0, nullptr);
+}
+
+void DirectX12::SetImGuiDescriptorHeap() {
+	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap };
+	commandList->SetDescriptorHeaps(1, descriptorHeaps);
+}
+
+void DirectX12::PushImGuiDrawCommand() {
+	//実際のcommandListのImGuiの描画コマンドを積む
+	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
+}
+
+
+void DirectX12::CommandKick() {
 	ID3D12CommandList* commandLists[] = { commandList };
 	commandQueue->ExecuteCommandLists(1, commandLists);
 
 	swapChain->Present(1, 0);
 }
 
-void DirectX12::RTV() {
-	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
-
-	float clearColor[] = { 0.1f,0.25f,0.5f,1.0f };
-	commandList->ClearRenderTargetView(rtvHandles[backBufferIndex], clearColor, 0, nullptr);
-}
-
-void DirectX12::Debug() {
-	debugController = nullptr;
-	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
-		debugController->EnableDebugLayer();
-		debugController->SetEnableGPUBasedValidation(TRUE);
-	}
-}
-void DirectX12::Stop() {
-	infoQueue = nullptr;
-	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
-		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
-		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
-		/*infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);*/
-
-		D3D12_MESSAGE_ID denyIds[] = {
-			D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
-		};
-		D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
-		D3D12_INFO_QUEUE_FILTER filter{};
-		filter.DenyList.NumIDs = _countof(denyIds);
-		filter.DenyList.pIDList = denyIds;
-		filter.DenyList.NumSeverities = _countof(severities);
-		filter.DenyList.pSeverityList = severities;
-
-		infoQueue->PushStorageFilter(&filter);
-		infoQueue->Release();
-	}
-}
-
-
-
-//2
-void DirectX12::TransitionBarrier() {
-	barrier = {};
-	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-
-	commandList->ResourceBarrier(1, &barrier);
-}
-
-
-
-//4
-void DirectX12::ChangeBarrier() {
-	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-	commandList->ResourceBarrier(1, &barrier);
-}
-
-void DirectX12::MakeFenceEvent() {
-	fence = nullptr;
-	fenceValue = 0;
-	hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
-	assert(SUCCEEDED(hr));
-
-	fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
-	assert(fenceEvent != nullptr);
-}
-
-
-
-//5
-void DirectX12::SendSignal() {
-	fenceValue++;
-	commandQueue->Signal(fence, fenceValue);
-}
-
-
-
-//6
-void DirectX12::WaitGPU() {
-	if (fence->GetCompletedValue() < fenceValue) {
-		fence->SetEventOnCompletion(fenceValue, fenceEvent);
-		WaitForSingleObject(fenceEvent, INFINITE);
-	}
+void DirectX12::NextFlameCommandList() {
 	HRESULT hr = commandAllocator->Reset();
 	assert(SUCCEEDED(hr));
 	hr = commandList->Reset(commandAllocator, nullptr);
 	assert(SUCCEEDED(hr));
 }
 
-void DirectX12::ReportLiveObject() {
+//void DirectX12::DebugLayer() {
+//	#ifdef _DEBUG
+//	ID3D12Debug1* debugControllar = nullptr;
+//	if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugControllar)))) {
+//		//デバッグレイヤーを有効化する
+//		debugControllar->EnableDebugLayer();
+//		//さらにGPU側でもチェックを行うようにする
+//		debugControllar->SetEnableGPUBasedValidation(TRUE);
+//	}
+//#endif // _DEBUG
+//}
+
+void DirectX12::Error() {
+#ifdef _DEBUG
+	ID3D12InfoQueue* infoQueue = nullptr;
+	if (SUCCEEDED(device->QueryInterface(IID_PPV_ARGS(&infoQueue)))) {
+		//やばいエラー時に止まる
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_CORRUPTION, true);
+		//エラー時に止まる
+		infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_ERROR, true);
+		//警告時に止まる
+		//infoQueue->SetBreakOnSeverity(D3D12_MESSAGE_SEVERITY_WARNING, true);
+
+		//抑制するメッセージのID
+		D3D12_MESSAGE_ID denyIds[] = {
+			//windows11でのDXGいデバッグレイヤーとDX12デバッグレイヤーの相互作用バグによるエラーメッセージ
+			//https://stackoverflow.com/questions/69805245/directx-12-application-is-crashing-in-windows-11
+			D3D12_MESSAGE_ID_RESOURCE_BARRIER_MISMATCHING_COMMAND_LIST_TYPE
+		};
+		//抑制するレベル
+		D3D12_MESSAGE_SEVERITY severities[] = { D3D12_MESSAGE_SEVERITY_INFO };
+		D3D12_INFO_QUEUE_FILTER filter{};
+		filter.DenyList.NumIDs = _countof(denyIds);
+		filter.DenyList.pIDList = denyIds;
+		filter.DenyList.NumSeverities = _countof(severities);
+		filter.DenyList.pSeverityList = severities;
+		//指定したメッセージの表示を抑制する
+		infoQueue->PushStorageFilter(&filter);
+		//解放
+		infoQueue->Release();
+	}
+#endif // _DEBUG
+}
+
+void DirectX12::Barrier() {
+	barrier = {};
+	barrier.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+	barrier.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+	barrier.Transition.pResource = swapChainResource[backBufferIndex];
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
+
+	commandList->ResourceBarrier(1, &barrier);
+}
+
+void DirectX12::ScreenDisplay() {
+	barrier.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
+	barrier.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
+	commandList->ResourceBarrier(1, &barrier);
+}
+
+void DirectX12::CommandConfirm() {
+	HRESULT hr = commandList->Close();
+	assert(SUCCEEDED(hr));
+}
+
+void DirectX12::Fence() {
+	fence = nullptr;
+	fenceValue = 0;
+	HRESULT hr = device->CreateFence(fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence));
+	assert(SUCCEEDED(hr));
+
+	fenceEvent = CreateEvent(NULL, FALSE, FALSE, NULL);
+	assert(fenceEvent != nullptr);
+}
+
+void DirectX12::Signal() {
+	fenceValue++;
+	commandQueue->Signal(fence, fenceValue);
+	if (fence->GetCompletedValue() < fenceValue) {
+		fence->SetEventOnCompletion(fenceValue, fenceEvent);
+		WaitForSingleObject(fenceEvent, INFINITE);
+	}
+}
+
+
+
+void DirectX12::ResourceLeakCheck() {
 	if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
 		debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_ALL);
 		debug->ReportLiveObjects(DXGI_DEBUG_APP, DXGI_DEBUG_RLO_ALL);
@@ -304,12 +240,13 @@ void DirectX12::ReportLiveObject() {
 	}
 }
 
-void DirectX12::AllRelease() {
+void DirectX12::Release() {
 	CloseHandle(fenceEvent);
 	fence->Release();
+
 	rtvDescriptorHeap->Release();
-	swapChainResources[0]->Release();
-	swapChainResources[1]->Release();
+	swapChainResource[0]->Release();
+	swapChainResource[1]->Release();
 	swapChain->Release();
 	commandList->Release();
 	commandAllocator->Release();
@@ -317,7 +254,58 @@ void DirectX12::AllRelease() {
 	device->Release();
 	useAdapter->Release();
 	dxgiFactory->Release();
-	CloseWindow(winAPI_->GetHwnd());
+	CloseWindow(windowsAPI_->GetHwnd());
+}
+
+void DirectX12::Init(WindowsAPI* windowsAPI) {
+	windowsAPI_ = windowsAPI;
+	windowsAPI->Init();
+	DXGIFactory();
+	Adapter();
+	D3D12Device();
+
+	Error();
+	Command();
+	SwapChain();
+	DescriptorHeap();
+	Fence();
+
+	//ImGuiの初期化
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGui::StyleColorsDark();
+	ImGui_ImplWin32_Init(windowsAPI_->GetHwnd());
+	ImGui_ImplDX12_Init(device,
+		swapChainDesc.BufferCount,
+		rtvDesc.Format,
+		srvDescriptorHeap,
+		srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(),
+		srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart());
+}
+
+//void DirectX12::Update() {
+//	//ゲームの処理
+//	Signal();
+//	CommandKick();
+//
+//
+//	ResourceLeakCheck();
+//}
+
+void DirectX12::PreDraw() {
+	GetBackBuffer();
+	Barrier();
+	RTV();
+	SetImGuiDescriptorHeap();
+}
+
+void DirectX12::PostDraw() {
+	PushImGuiDrawCommand();
+	ScreenDisplay();
+	CommandConfirm();
+	CommandKick();
+	Signal();
+	NextFlameCommandList();
 }
 
 ID3D12Resource* DirectX12::CreateBufferResource(ID3D12Device* device, size_t sizeInBytes) {
@@ -347,10 +335,13 @@ ID3D12Resource* DirectX12::CreateBufferResource(ID3D12Device* device, size_t siz
 	return Resource;
 }
 
-void DirectX12::SetImGuiDescriptorHeap() {
-	ID3D12DescriptorHeap* descriptorHeaps[] = { srvDescriptorHeap };
-	commandList->SetDescriptorHeaps(1, descriptorHeaps);
-}
-void DirectX12::KickImGuiCommand() {
-	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList);
+ID3D12DescriptorHeap* DirectX12::CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible) {
+	ID3D12DescriptorHeap* descriptorHeap = nullptr;
+	D3D12_DESCRIPTOR_HEAP_DESC descriptorHeapDesc{};
+	descriptorHeapDesc.Type = heapType;
+	descriptorHeapDesc.NumDescriptors = numDescriptors;
+	descriptorHeapDesc.Flags = shaderVisible ? D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE : D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	HRESULT hr = device->CreateDescriptorHeap(&descriptorHeapDesc, IID_PPV_ARGS(&descriptorHeap));
+	assert(SUCCEEDED(hr));
+	return descriptorHeap;
 }

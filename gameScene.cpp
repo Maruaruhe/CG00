@@ -3,7 +3,7 @@
 void GameScene::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsRenderer* graphicsRenderer*//*, Triangle* drawTriangle*/) {
 
 	directX12_ = directX12;
-	directX12_->InitializeDirectX12(winAPI);
+	directX12_->Init(winAPI);
 	graphicsRenderer_->Initialize(directX12_);
 	VariableInit();
 
@@ -16,11 +16,13 @@ void GameScene::Initialize(WindowsAPI* winAPI, DirectX12* directX12/*, GraphicsR
 }
 
 void GameScene::Update() {
+	ImGui::ShowDemoWindow();
 
+	ImGui::Render();
 }
 
 void GameScene::Release() {
-	directX12_->AllRelease();
+	directX12_->Release();
 	graphicsRenderer_->AllRelease();
 }
 
@@ -32,6 +34,9 @@ void GameScene::Draw() {
 }
 
 void GameScene::PreDraw() {
+	ImGui_ImplDX12_NewFrame();
+	ImGui_ImplWin32_NewFrame();
+	ImGui::NewFrame();
 	directX12_->PreDraw();
 	graphicsRenderer_->DecideCommand(directX12_);
 }
@@ -41,7 +46,7 @@ void GameScene::Final() {
 }
 
 void GameScene::End() {
-	directX12_->ReportLiveObject();
+	directX12_->ResourceLeakCheck();
 }
 
 void GameScene::VariableInit() {
