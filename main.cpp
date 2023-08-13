@@ -1,7 +1,6 @@
 #include "gameScene.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-
 	CoInitializeEx(0, COINIT_MULTITHREADED);
 	//インスタンス
 	GameScene* gameScene = new GameScene;
