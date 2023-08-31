@@ -1,7 +1,5 @@
 #include "gameScene.h"
 
-
-
 void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 {
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
@@ -26,7 +24,7 @@ void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 	transform.rotate = { 0.0f,0.0f,0.0f };
 	transform.scale = { 1.0f,1.0f,1.0f };
 
-	//texture_->scene(directX12);
+	//texture_->LoadAndExport();
 }
 
 void GameScene::Update() {
