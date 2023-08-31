@@ -13,6 +13,11 @@ struct TriangleData
 	Vector4 Right_;
 };
 
+struct VertexData {
+	Vector4 position;
+	Vector2 texcoord;
+};
+
 class Triangle
 {
 public:
@@ -49,7 +54,8 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 
 	//頂点リソースにデータを書き込む
-	Vector4* vertexData;
+	//Vector4* vertexData;
+	VertexData* vertexData;
 
 	ID3D12Resource* materialResource_;
 

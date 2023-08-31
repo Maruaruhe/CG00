@@ -11,11 +11,23 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	DataResource();
 
 	//左下
-	vertexData[0] = triangleData.Left_;
+	//vertexData[0] = triangleData.Left_;
 	//上
-	vertexData[1] = triangleData.Top_;
+	//vertexData[1] = triangleData.Top_;
 	//右下
-	vertexData[2] = triangleData.Right_;
+	//vertexData[2] = triangleData.Right_;
+
+	vertexData = nullptr;
+
+	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+	vertexData[0].position = { -0.5f,-0.5f,0.0f,1.0f };
+	vertexData[0].texcoord = { 0.0f,1.0f };
+
+	vertexData[1].position = { 0.0f,0.5f,0.0f,1.0f };
+	vertexData[1].texcoord = { 0.5f,0.0f };
+
+	vertexData[2].position = { 0.5f,-0.5f,0.0f,1.0f };
+	vertexData[2].texcoord = { 1.0f,1.0f };
 }
 
 void Triangle::Update(Vector4& color,Transform& transform_) {
