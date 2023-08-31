@@ -15,11 +15,12 @@ public:
 	DirectX::ScratchImage LoadTexture(const std::string& filePath);
 	ID3D12Resource* CreateTextureResource(ID3D12Device* decvice, const DirectX::TexMetadata& matadata);
 	void UploadTextureData(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages);
+	void LoadAndExport();
 	void scene(DirectX12* directX12);
 
 private:
 	DirectX12* directX12_;
-	/*DirectX::ScratchImage mipImages;
-	const DirectX::TexMetadata& metadata;
-    ID3D12Resource* textureResource;*/
+	//DirectX::ScratchImage mipImages;
+	//const DirectX::TexMetadata& metadata;
+ //   ID3D12Resource* textureResource;
 };

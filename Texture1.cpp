@@ -56,8 +56,16 @@ void Texture::UploadTextureData(ID3D12Resource* resource, const DirectX::Scratch
 	}
 }
 
+void Texture::LoadAndExport() {
+	/*DirectX::ScratchImage mipImages = LoadTexture("resources/uvChecker.png");
+	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
+	ID3D12Resource* textureResource = CreateTextureResource(directX12_->GetDevice(), metadata);
+	UploadTextureData(textureResource, mipImages);*/
+}
+
 void Texture::scene(DirectX12* directX12) {
 	directX12_ = directX12;
+
 	DirectX::ScratchImage mipImages = LoadTexture("resources/uvChecker.png");
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
 	ID3D12Resource* textureResource = CreateTextureResource(directX12_->GetDevice(), metadata);
