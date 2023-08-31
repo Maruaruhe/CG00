@@ -17,9 +17,10 @@ public:
 	void UploadTextureData(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages);
 	void LoadAndExport();
 	void scene(DirectX12* directX12);
-
+	//D3D12_GPU_DESCRIPTOR_HANDLE GetSrvGPU() { return textureSrvHandleGPU; }
 private:
 	DirectX12* directX12_;
+	//D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
 	//DirectX::ScratchImage mipImages;
 	//const DirectX::TexMetadata& metadata;
  //   ID3D12Resource* textureResource;

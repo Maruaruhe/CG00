@@ -56,7 +56,11 @@ private:
 	IDxcIncludeHandler* includeHandler;
 	//MakeRootSignature
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
-	D3D12_ROOT_PARAMETER rootParameters[2];
+	D3D12_ROOT_PARAMETER rootParameters[3];
+
+	D3D12_DESCRIPTOR_RANGE descriptorRange[1];
+	D3D12_STATIC_SAMPLER_DESC staticSamplers[1];
+
 	ID3DBlob* signatureBlob;
 	ID3DBlob* errorBlob;
 	ID3D12RootSignature* rootSignature;

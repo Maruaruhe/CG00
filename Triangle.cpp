@@ -51,6 +51,8 @@ void Triangle::Draw() {
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU = directX12_->GetSrvDescriptorHeap()->GetGPUDescriptorHandleForHeapStart();
+	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, textureSrvHandleGPU);
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
