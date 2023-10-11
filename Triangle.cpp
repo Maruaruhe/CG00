@@ -56,7 +56,7 @@ void Triangle::Draw() {
 }
 
 void Triangle::CreateVertexResource() {
-	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(vertexData) * 3);
+	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * 3);
 }
 
 void Triangle::CreateVertexBufferView() {
@@ -64,9 +64,9 @@ void Triangle::CreateVertexBufferView() {
 	//リソースの先頭のアドレスから使う
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(vertexData) * 3;
+	vertexBufferView.SizeInBytes = sizeof(VertexData) * 3;
 	//1頂点当たりのサイズ
-	vertexBufferView.StrideInBytes = sizeof(vertexData);
+	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
 void Triangle::CreateMaterialResource() {
