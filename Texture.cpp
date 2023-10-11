@@ -37,6 +37,8 @@ ID3D12Resource* Texture::CreateTextureResource(ID3D12Device* device, const Direc
 		nullptr,
 		IID_PPV_ARGS(&resource));
 	assert(SUCCEEDED(hr));
+
+	return resource;
 }
 void Texture::UploadTextureData(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages) {
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();

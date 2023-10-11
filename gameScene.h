@@ -4,7 +4,7 @@
 #include "WindowsAPI.h"
 #include "Triangle.h"
 #include "ImGuiWND.h"
-#include "Texture1.h"
+#include "Texture.h"
 
 #define TRIANGLECOUNT 3
 
