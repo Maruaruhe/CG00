@@ -1,20 +1,12 @@
-#include "WindowsAPI.h"
-#include "DirectX12.h"
+#include "GameScene.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	//インスタンス
-	WindowsAPI* winAPI;
-	winAPI = new WindowsAPI;
-	DirectX12* directX12;
-	directX12 = new DirectX12;
-
-	//GameScene* gameScene;
-	//gameScene = new GameScene();
+	GameScene* gameScene;
+	gameScene = new GameScene();
 
 	//いろいろ
-	//gameScene->Initialize(winAPI,directX12);
-	winAPI->Init();
-	directX12->Init(winAPI);
+	gameScene->Initialize();
 
 	//メインループ
 	MSG msg{};
@@ -24,10 +16,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 			DispatchMessage(&msg);
 		}
 		else {
-			//gameScene->Update();
-			directX12->DecideCommand();
-
-			directX12->KickCommand();
+			gameScene->Update();
 		}
 	}
 	return 0;
