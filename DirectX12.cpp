@@ -58,12 +58,7 @@ void DirectX12::InitializeDevice() {
 		}
 	}
 }
-//
-//void DirectX12::MakeCommandQueue() {
-//	commandQueue = nullptr;
-//	hr = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue));
-//	assert(SUCCEEDED(hr));
-//}
+
 void DirectX12::InitializeCommand() {
 	//コマンドアロケータ生成
 	commandAlocator = nullptr;

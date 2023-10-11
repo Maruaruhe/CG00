@@ -13,15 +13,12 @@
 class DirectX12
 {
 public:
-	DirectX12();
-	~DirectX12();
-
 	void Init(WindowsAPI* winAPI);
+
+private:
 	void InitializeDXGIFactory();
 	void InitializeAdapter();
 	void InitializeDevice();
-
-	//void MakeCommandQueue();
 	void InitializeCommand();
 	void InitializeSwapChain();
 	void InitializeDescriptorHeap();
