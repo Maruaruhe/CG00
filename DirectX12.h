@@ -17,19 +17,21 @@ public:
 	~DirectX12();
 
 	void Init(WindowsAPI* winAPI);
-	void MakeDXGIFactory();
-	void Adapter();
-	void D3D12Device();
+	void InitializeDXGIFactory();
+	void InitializeAdapter();
+	void InitializeDevice();
 
-	void MakeCommandQueue();
-	void MakeCommandList();
-	void MakeSwapChain(WindowsAPI* winAPI);
-	void MakeDescriptorHeap();
-	void MakeRTV();
+	//void MakeCommandQueue();
+	void InitializeCommand();
+	void InitializeSwapChain();
+	void InitializeDescriptorHeap();
+	void InitializeRenderTargetView();
 	void DecideCommand();
 	void KickCommand();
 
 private:
+	WindowsAPI* winAPI_;
+
 	IDXGIFactory7* dxgiFactory;
 	HRESULT hr;
 	IDXGIAdapter4* useAdapter;

@@ -10,22 +10,24 @@ DirectX12::~DirectX12() {
 
 
 void DirectX12::Init(WindowsAPI* winAPI) {
-	MakeDXGIFactory();
-	Adapter();
-	D3D12Device();
-	MakeCommandQueue();
-	MakeCommandList();
-	MakeSwapChain(winAPI);
-	MakeDescriptorHeap();
-	MakeRTV();
+	winAPI_ = winAPI;
+	InitializeDXGIFactory();
+	InitializeAdapter();
+	InitializeDevice();
+	//MakeCommandQueue();
+	InitializeCommand();
+	InitializeSwapChain();
+	InitializeDescriptorHeap();
+	InitializeRenderTargetView();
 }
 
-void DirectX12::MakeDXGIFactory() {
+void DirectX12::InitializeDXGIFactory() {
+	//DXGIファクトリーの生成
 	dxgiFactory = nullptr;
 	hr = CreateDXGIFactory(IID_PPV_ARGS(&dxgiFactory));
 	assert(SUCCEEDED(hr));
 }
-void DirectX12::Adapter() {
+void DirectX12::InitializeAdapter() {
 	useAdapter = nullptr;
 
 	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; ++i) {
@@ -43,8 +45,9 @@ void DirectX12::Adapter() {
 	}
 	assert(useAdapter != nullptr);
 }
-void DirectX12::D3D12Device() {
+void DirectX12::InitializeDevice() {
 	device = nullptr;
+	//対応レベルの配列
 	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_12_2,D3D_FEATURE_LEVEL_12_1,D3D_FEATURE_LEVEL_12_0 };
 	const char* featureLevelStrings[] = { "12.2","12.1","12.0" };
 	for (size_t i = 0; i < _countof(featureLevels); ++i) {
@@ -55,24 +58,32 @@ void DirectX12::D3D12Device() {
 		}
 	}
 }
-
-void DirectX12::MakeCommandQueue() {
+//
+//void DirectX12::MakeCommandQueue() {
+//	commandQueue = nullptr;
+//	hr = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue));
+//	assert(SUCCEEDED(hr));
+//}
+void DirectX12::InitializeCommand() {
+	//コマンドアロケータ生成
+	commandAlocator = nullptr;
+	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAlocator));
+	assert(SUCCEEDED(hr));
+	//コマンドリスト生成
+	commandList = nullptr;
+	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAlocator, nullptr, IID_PPV_ARGS(&commandList));
+	assert(SUCCEEDED(hr));
+	//コマンドキュー生成
 	commandQueue = nullptr;
 	hr = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue));
 	assert(SUCCEEDED(hr));
 }
-void DirectX12::MakeCommandList() {
-	commandAlocator = nullptr;
-	hr = device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAlocator));
-	assert(SUCCEEDED(hr));
 
-	commandList = nullptr;
-	hr = device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, commandAlocator, nullptr, IID_PPV_ARGS(&commandList));
-	assert(SUCCEEDED(hr));
-}
-void DirectX12::MakeSwapChain(WindowsAPI* winAPI) {
+void DirectX12::InitializeSwapChain() {
+	//スワップチェーン生成の設定
 	swapChain = nullptr;
 	swapChainDesc = {};
+
 	swapChainDesc.Width = kClientWidth;
 	swapChainDesc.Height = kClientHeight;
 	swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -81,12 +92,11 @@ void DirectX12::MakeSwapChain(WindowsAPI* winAPI) {
 	swapChainDesc.BufferCount = 2;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 
-
-	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, winAPI->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
+	hr = dxgiFactory->CreateSwapChainForHwnd(commandQueue, winAPI_->GetHwnd(), &swapChainDesc, nullptr, nullptr, reinterpret_cast<IDXGISwapChain1**>(&swapChain));
 	assert(SUCCEEDED(hr));
 }
 
-void DirectX12::MakeDescriptorHeap() {
+void DirectX12::InitializeDescriptorHeap() {
 	rtvDescriptorHeap = nullptr;
 	rtvDescriptorHeapDesc = {};
 	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
@@ -101,7 +111,8 @@ void DirectX12::MakeDescriptorHeap() {
 	hr = swapChain->GetBuffer(1, IID_PPV_ARGS(&swapChainResources[1]));
 	assert(SUCCEEDED(hr));
 }
-void DirectX12::MakeRTV() {
+
+void DirectX12::InitializeRenderTargetView() {
 	rtvDesc = {};
 	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
@@ -113,6 +124,7 @@ void DirectX12::MakeRTV() {
 
 	device->CreateRenderTargetView(swapChainResources[1], &rtvDesc, rtvHandles[1]);
 }
+
 void DirectX12::DecideCommand() {
 	backBufferIndex = swapChain->GetCurrentBackBufferIndex();
 	commandList->OMSetRenderTargets(1, &rtvHandles[backBufferIndex], false, nullptr);
