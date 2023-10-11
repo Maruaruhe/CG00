@@ -14,6 +14,8 @@
 
 class WindowsAPI;
 
+class Texture;
+
 class DirectX12
 {
 public:
@@ -85,8 +87,14 @@ public:
 
 	ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap; }
 
+
+	D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU() { return textureSrvHandleGPU; }
 private:
 	WindowsAPI* windowsAPI_;
+	Texture* texture;
+
+	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
+
 	ID3D12Device* device;
 	IDXGIFactory7* dxgiFactory;
 

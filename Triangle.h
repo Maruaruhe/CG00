@@ -6,11 +6,16 @@
 
 #pragma comment(lib,"dxcompiler.lib")
 
+struct VertexData {
+	Vector4 position;
+	Vector2 texcoord;
+};
+
 struct TriangleData
 {
-	Vector4 Left_;
-	Vector4 Top_;
-	Vector4 Right_;
+	VertexData Left_;
+	VertexData Top_;
+	VertexData Right_;
 };
 
 class Triangle
@@ -49,12 +54,9 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 
 	//頂点リソースにデータを書き込む
-	Vector4* vertexData;
-	/*struct VertexDate {
-		Vector4 position;
-		Vector2 texcoord;
-	};*/
-	//VertexDate* vertexData = nullptr;
+	//Vector4* vertexData;
+
+	VertexData* vertexData;
 
 	ID3D12Resource* materialResource_;
 

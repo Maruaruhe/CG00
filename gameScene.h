@@ -6,7 +6,7 @@
 #include "ImGuiWND.h"
 #include "Texture.h"
 
-#define TRIANGLECOUNT 3
+#define TRIANGLECOUNT 1
 
 class DirectX12;
 class GraphicsRenderer;

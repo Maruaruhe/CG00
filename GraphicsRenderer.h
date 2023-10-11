@@ -56,12 +56,12 @@ private:
 	IDxcIncludeHandler* includeHandler;
 	//MakeRootSignature
 	D3D12_ROOT_SIGNATURE_DESC descriptionRootSignature{};
-	D3D12_ROOT_PARAMETER rootParameters[2];
+	D3D12_ROOT_PARAMETER rootParameters[3];
 	ID3DBlob* signatureBlob;
 	ID3DBlob* errorBlob;
 	ID3D12RootSignature* rootSignature;
 	//SetInputLayout
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[1];
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
 	//SetBlendState
 	D3D12_BLEND_DESC blendDesc{};
