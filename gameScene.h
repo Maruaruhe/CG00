@@ -4,12 +4,14 @@
 #include "WindowsAPI.h"
 #include "Triangle.h"
 #include "ImGuiWND.h"
+#include "Texture1.h"
 
 #define TRIANGLECOUNT 3
 
 class DirectX12;
 class GraphicsRenderer;
 class WindowsAPI;
+class Texture;
 
 class GameScene
 {
@@ -30,6 +32,7 @@ private:
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
 	Triangle** triangle_ = new Triangle * [TRIANGLECOUNT];
+	//Texture* texture_ = new Texture;
 
 	float colorVolume[3];
 	Transform transform;

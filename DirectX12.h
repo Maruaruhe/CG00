@@ -83,6 +83,8 @@ public:
 
 	void NextFlameCommandList();
 
+	ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap; }
+
 private:
 	WindowsAPI* windowsAPI_;
 	ID3D12Device* device;

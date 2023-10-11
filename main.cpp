@@ -11,7 +11,6 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	gameScene->Initialize(directX12,windowsAPI);
 
 	gameScene->VariableInit();
-
 	//いろいろ
 
 

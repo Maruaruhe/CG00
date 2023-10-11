@@ -25,6 +25,8 @@ void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 	transform.translate = { 0.0f,0.0f,0.0f };
 	transform.rotate = { 0.0f,0.0f,0.0f };
 	transform.scale = { 1.0f,1.0f,1.0f };
+
+	//texture_->scene(directX12);
 }
 
 void GameScene::Update() {
