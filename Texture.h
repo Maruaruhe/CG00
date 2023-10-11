@@ -1,6 +1,10 @@
 #pragma once
 #include <string>
-#include "Logh.h"
+#include <d3d12.h>
+#include "externals/DirectXTex/DirectXTex.h"
+
+#include "DirectX12.h"
+#include "Log.h"
 
 class Texture
 {
@@ -9,6 +13,6 @@ public:
 	ID3D12Resource* CreateTextureResource(ID3D12Device* decvice, const DirectX::TexMetadata& matadata);
 	void UploadTextureData(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages);
 private:
-
+	DirectX12* directX12_;
 };
 

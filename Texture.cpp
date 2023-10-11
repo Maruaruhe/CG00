@@ -1,4 +1,3 @@
-#include "DirectXTexP.h"
 #include "Texture.h"
 
 DirectX::ScratchImage Texture::LoadTexture(const std::string& filePath) {
@@ -37,9 +36,7 @@ ID3D12Resource* Texture::CreateTextureResource(ID3D12Device* device, const Direc
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
 		IID_PPV_ARGS(&resource));
-
 	assert(SUCCEEDED(hr));
-	return resource;
 }
 void Texture::UploadTextureData(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages) {
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();

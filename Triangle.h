@@ -50,6 +50,11 @@ private:
 
 	//頂点リソースにデータを書き込む
 	Vector4* vertexData;
+	/*struct VertexDate {
+		Vector4 position;
+		Vector2 texcoord;
+	};*/
+	//VertexDate* vertexData = nullptr;
 
 	ID3D12Resource* materialResource_;
 

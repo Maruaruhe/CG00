@@ -88,6 +88,7 @@ private:
 	ID3D12Device* device;
 	IDXGIFactory7* dxgiFactory;
 
+
 	DXGI_ADAPTER_DESC3 adapterDesc;
 
 	//使用するアダプタ用の変数。最初にnullptrを入れておく
