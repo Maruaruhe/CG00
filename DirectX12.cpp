@@ -1,41 +1,5 @@
 #include "DirectX12.h"
 
-//str->wstr
-std::wstring ConvertString(const std::string& str)
-{
-	if (str.empty())
-	{
-		return std::wstring();
-	}
-
-	auto sizeNeeded = MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), NULL, 0);
-	if (sizeNeeded == 0)
-	{
-		return std::wstring();
-	}
-	std::wstring result(sizeNeeded, 0);
-	MultiByteToWideChar(CP_UTF8, 0, reinterpret_cast<const char*>(&str[0]), static_cast<int>(str.size()), &result[0], sizeNeeded);
-	return result;
-}
-
-//wstr->str
-std::string ConvertString(const std::wstring& str)
-{
-	if (str.empty())
-	{
-		return std::string();
-	}
-
-	auto sizeNeeded = WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), NULL, 0, NULL, NULL);
-	if (sizeNeeded == 0)
-	{
-		return std::string();
-	}
-	std::string result(sizeNeeded, 0);
-	WideCharToMultiByte(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), result.data(), sizeNeeded, NULL, NULL);
-	return result;
-}
-
 DirectX12::DirectX12() {
 
 }
@@ -92,10 +56,6 @@ void DirectX12::D3D12Device() {
 	}
 }
 
-void DirectX12::LogText(const std::string& message) {
-	OutputDebugStringA(message.c_str());
-}
-
 void DirectX12::MakeCommandQueue() {
 	commandQueue = nullptr;
 	hr = device->CreateCommandQueue(&commandQueueDesc, IID_PPV_ARGS(&commandQueue));
@@ -134,7 +94,8 @@ void DirectX12::MakeDescriptorHeap() {
 	hr = device->CreateDescriptorHeap(&rtvDescriptorHeapDesc, IID_PPV_ARGS(&rtvDescriptorHeap));
 	assert(SUCCEEDED(hr));
 
-	swapChainResources[2] = { nullptr };
+	swapChainResources[0] = { nullptr };
+	swapChainResources[1] = { nullptr };
 	hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&swapChainResources[0]));
 	assert(SUCCEEDED(hr));
 	hr = swapChain->GetBuffer(1, IID_PPV_ARGS(&swapChainResources[1]));

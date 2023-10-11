@@ -2,9 +2,9 @@
 #include <d3d12.h>
 #include <dxgi1_6.h>
 #include <cassert>
-#include <string>
 #include <format>
 
+#include "Log.h"
 #include "WindowsAPI.h"
 
 #pragma comment(lib,"d3d12.lib")
@@ -21,7 +21,6 @@ public:
 	void Adapter();
 	void D3D12Device();
 
-	void LogText(const std::string& message);
 	void MakeCommandQueue();
 	void MakeCommandList();
 	void MakeSwapChain(WindowsAPI* winAPI);
