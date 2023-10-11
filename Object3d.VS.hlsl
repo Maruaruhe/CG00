@@ -1,6 +1,3 @@
-
-
-
 struct TransformationMatrix {
 	float32_t4x4 WVP;
 };
