@@ -14,15 +14,15 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 	//左下
 	vertexData[0].position = triangleData.Left_.position;
-	vertexData[0].texcoord = triangleData.Left_.texcoord;
+	//vertexData[0].texcoord = triangleData.Left_.texcoord;
 	vertexData[0].texcoord = {0.0f,1.0f};
 	//上
 	vertexData[1].position = triangleData.Top_.position;
-	vertexData[1].texcoord = triangleData.Top_.texcoord;
+	//vertexData[1].texcoord = triangleData.Top_.texcoord;
 	vertexData[1].texcoord = { 0.5f,0.0f };
 	//右下
 	vertexData[2].position = triangleData.Right_.position;
-	vertexData[2].texcoord = triangleData.Right_.texcoord;
+	//vertexData[2].texcoord = triangleData.Right_.texcoord;
 	vertexData[2].texcoord = { 1.0f,1.0f };
 }
 
