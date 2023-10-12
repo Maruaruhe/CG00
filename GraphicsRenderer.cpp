@@ -198,6 +198,9 @@ void GraphicsRenderer::MakePSO(DirectX12* directX12) {
 	graphicsPipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 	graphicsPipelineStateDesc.SampleDesc.Count = 1;
 	graphicsPipelineStateDesc.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+	graphicsPipelineStateDesc.DepthStencilState = directX12->GetDepthStencilDesc();
+	graphicsPipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
 	graphicsPipelineState = nullptr;
 	hr = directX12->GetDevice()->CreateGraphicsPipelineState(&graphicsPipelineStateDesc, IID_PPV_ARGS(&graphicsPipelineState));
 	assert((SUCCEEDED(hr)));

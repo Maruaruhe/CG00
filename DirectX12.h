@@ -89,6 +89,8 @@ public:
 
 
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU() { return textureSrvHandleGPU; }
+
+	D3D12_DEPTH_STENCIL_DESC GetDepthStencilDesc() { return depthStencilDesc; }
 private:
 	WindowsAPI* windowsAPI_;
 	Texture* texture;
@@ -122,8 +124,13 @@ private:
 	ID3D12DescriptorHeap* rtvDescriptorHeap;
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc;
 
+	ID3D12DescriptorHeap* dsvDescriptorHeap;
+
 	//RTVの設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc;
+	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc;
+
+	D3D12_DEPTH_STENCIL_DESC depthStencilDesc{};
 
 	//ディスクリプタの先頭を取得する
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvStartHandle;

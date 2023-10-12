@@ -83,4 +83,6 @@ ID3D12Resource* Texture::CreateDepthStencilTextureResource(ID3D12Device* device,
 		&depthClearValue,
 		IID_PPV_ARGS(&resource));
 	assert(SUCCEEDED(hr));
+
+	return resource;
 }
