@@ -83,17 +83,36 @@ void GameScene::Draw() {
 
 void GameScene::VariableInit() {
 
-	for (int i = 0; i < TRIANGLECOUNT; i++) {
-		//triangleData[i].Left_.position = { -0.7f + i * 0.1f,-0.5f + i * 0.1f,0.0f,1.0f };
-		triangleData[i].Left_.position = { -0.5f,-0.5f,0.0f,1.0f };
-		triangleData[i].Left_.texcoord = { 0.0f,1.0f };
+	//for (int i = 0; i < TRIANGLECOUNT; i++) {
+	//	//triangleData[i].Left_.position = { -0.7f + i * 0.1f,-0.5f + i * 0.1f,0.0f,1.0f };
+	//	triangleData[i].Left_.position = { -0.5f,-0.5f,0.0f,1.0f };
+	//	triangleData[i].Left_.texcoord = { 0.0f,1.0f };
 
-		//triangleData[i].Top_.position = { -0.2f + i * 0.1f,0.5f + i * 0.1f,0.0f,1.0f };
-		triangleData[i].Top_.position = { 0.0f,0.5f,0.0f,1.0f };
-		triangleData[i].Top_.texcoord = { 0.5f,0.0f };
+	//	//triangleData[i].Top_.position = { -0.2f + i * 0.1f,0.5f + i * 0.1f,0.0f,1.0f };
+	//	triangleData[i].Top_.position = { 0.0f,0.5f,0.0f,1.0f };
+	//	triangleData[i].Top_.texcoord = { 0.5f,0.0f };
 
-		//triangleData[i].Right_.position = { 0.3f + i * 0.1f,-0.5f + i * 0.1f,0.0f,1.0f };
-		triangleData[i].Right_.position = { 0.5f,-0.5f,0.0f,1.0f };
-		triangleData[i].Right_.texcoord = { 1.0f,1.0f };
-	}
+	//	//triangleData[i].Right_.position = { 0.3f + i * 0.1f,-0.5f + i * 0.1f,0.0f,1.0f };
+	//	triangleData[i].Right_.position = { 0.5f,-0.5f,0.0f,1.0f };
+	//	triangleData[i].Right_.texcoord = { 1.0f,1.0f };
+	//}
+	triangleData[0].Left_.position = { -0.5f,-0.5f,0.0f,1.0f };
+	triangleData[0].Left_.texcoord = { 0.0f,1.0f };
+
+	triangleData[0].Top_.position = { 0.0f,0.5f,0.0f,1.0f };
+	triangleData[0].Top_.texcoord = { 0.5f,0.0f };
+
+	triangleData[0].Right_.position = { 0.5f,-0.5f,0.0f,1.0f };
+	triangleData[0].Right_.texcoord = { 1.0f,1.0f };
+
+	//
+	triangleData[1].Left_.position = { -0.5f,-0.5f,0.5f,1.0f };
+	triangleData[1].Left_.texcoord = { 0.0f,1.0f };
+
+	triangleData[1].Top_.position = { 0.0f,0.0f,0.0f,1.0f };
+	triangleData[1].Top_.texcoord = { 0.5f,0.0f };
+
+	triangleData[1].Right_.position = { 0.5f,-0.5f,-0.5f,1.0f };
+	triangleData[1].Right_.texcoord = { 1.0f,1.0f };
+
 }

@@ -150,6 +150,9 @@ void DirectX12::DescriptorHeap() {
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
 	ID3D12Resource* textureResource = texture->CreateTextureResource(device, metadata);
 	texture->UploadTextureData(textureResource, mipImages);
+	//
+	ID3D12Resource* depthStencilResource = texture->CreateDepthStencilTextureResource(device, kClientWidth, kCliantHeight);
+
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = metadata.format;
