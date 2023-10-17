@@ -4,10 +4,7 @@
 
 void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 {
-	for (int i = 0; i < TRIANGLECOUNT; i++) {
-		triangle_[i] = new Triangle;
-	}
-
+	VariableInit();
 	directX12_ = directX12;
 	directX12_->Init(windowsAPI);
 	colorVolume[0] = 1.0f;
@@ -19,6 +16,7 @@ void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangle_[i] = new Triangle;
 		triangle_[i]->Initialize(directX12_, triangleData[i]);
+		//triangleSprite_[i]->Initialize(directX12_, spriteData[i]);
 	}
 
 	graphicsRenderer_->ViewportScissor();
@@ -42,7 +40,11 @@ void GameScene::Update() {
 	Vector4 color = {colorVolume[0],colorVolume[1],colorVolume[2],1.0f};
 
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
-		triangle_[i]->Update(color,transform);
+		triangle_[0]->Update(color,transform);
+		triangle_[1]->Update(color,transform);
+		triangle_[2]->UpdateSprite(color,transform);
+		triangle_[3]->UpdateSprite(color,transform);
+		//triangleSprite_[i]->UpdateSprite(color,transform);
 	}
 
 	ImGui::Render();
@@ -53,6 +55,7 @@ void GameScene::Release() {
 	graphicsRenderer_->Release();
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangle_[i]->Release();
+		//triangleSprite_[i]->Release();
 	}
 }
 
@@ -77,6 +80,7 @@ void GameScene::Final() {
 void GameScene::Draw() {
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangle_[i]->Draw();
+		//triangleSprite_[i]->Draw();
 	}
 
 }
@@ -115,4 +119,31 @@ void GameScene::VariableInit() {
 	triangleData[1].Right_.position = { 0.5f,-0.5f,-0.5f,1.0f };
 	triangleData[1].Right_.texcoord = { 1.0f,1.0f };
 
+	triangleData[2].Left_.position = { 0.0f,360.0f,0.0f,1.0f };
+	triangleData[2].Left_.texcoord = { 0.0f,1.0f };
+	triangleData[2].Top_.position = { 0.0f,0.0f,0.0f,1.0f };
+	triangleData[2].Top_.texcoord = { 0.0f,0.0f };
+	triangleData[2].Right_.position = { 640.0f,360.0f,0.0f,1.0f };
+	triangleData[2].Right_.texcoord = { 1.0f,1.0f };
+
+	triangleData[3].Left_.position = { 0.0f,0.0f,0.0f,1.0f };
+	triangleData[3].Left_.texcoord = { 0.0f,0.0f };
+	triangleData[3].Top_.position = { 640.0f,0.0f,0.0f,1.0f };
+	triangleData[3].Top_.texcoord = { 1.0f,0.0f };
+	triangleData[3].Right_.position = { 640.0f,360.0f,0.0f,1.0f };
+	triangleData[3].Right_.texcoord = { 1.0f,1.0f };
+
+	/*spriteData[0].Left_.position = { 0.0f,360.0f,0.0f,1.0f };
+	spriteData[0].Left_.texcoord = { 0.0f,1.0f };
+	spriteData[0].Top_.position = { 0.0f,0.0f,0.0f,1.0f };
+	spriteData[0].Top_.texcoord = { 0.0f,0.0f };
+	spriteData[0].Right_.position = { 640.0f,360.0f,0.0f,1.0f };
+	spriteData[0].Right_.texcoord = { 1.0f,1.0f };
+
+	spriteData[1].Left_.position = { 0.0f,0.0f,0.0f,1.0f };
+	spriteData[1].Left_.texcoord = { 0.0f,0.0f };
+	spriteData[1].Top_.position = { 640.0f,0.0f,0.0f,1.0f };
+	spriteData[1].Top_.texcoord = { 1.0f,0.0f };
+	spriteData[1].Right_.position = { 640.0f,360.0f,0.0f,1.0f };
+	spriteData[1].Right_.texcoord = { 1.0f,1.0f };*/
 }

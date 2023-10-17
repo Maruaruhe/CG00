@@ -6,7 +6,7 @@
 #include "ImGuiWND.h"
 #include "Texture.h"
 
-#define TRIANGLECOUNT 2
+#define TRIANGLECOUNT 4
 
 class DirectX12;
 class GraphicsRenderer;
@@ -28,10 +28,12 @@ public:
 	void VariableInit();
 private:
 	TriangleData triangleData[TRIANGLECOUNT];
+	TriangleData spriteData[TRIANGLECOUNT];
 
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
 	Triangle** triangle_ = new Triangle * [TRIANGLECOUNT];
+	Triangle** triangleSprite_ = new Triangle * [TRIANGLECOUNT];
 	//Texture* texture_ = new Texture;
 
 	float colorVolume[3];

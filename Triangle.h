@@ -36,6 +36,7 @@ public:
 	void CreateTransformationMatrixResource();
 
 	void Update(Vector4& color, Transform& transform_);
+	void UpdateSprite(Vector4& color, Transform& transform_);
 
 	void Draw();
 private:
