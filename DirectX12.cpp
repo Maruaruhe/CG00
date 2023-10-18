@@ -54,7 +54,7 @@ void DirectX12::DXGIFactory() {
 void DirectX12::Adapter() {
 	useAdapter = nullptr;
 
-	for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; ++i) {
+		for (UINT i = 0; dxgiFactory->EnumAdapterByGpuPreference(i, DXGI_GPU_PREFERENCE_HIGH_PERFORMANCE, IID_PPV_ARGS(&useAdapter)) != DXGI_ERROR_NOT_FOUND; ++i) {
 		//GetAdapterInfo
 		adapterDesc = {};
 		HRESULT hr = useAdapter->GetDesc3(&adapterDesc);

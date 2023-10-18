@@ -156,7 +156,7 @@ private:
 
 	ID3D12DescriptorHeap* srvDescriptorHeap;
 
-	const int32_t kClientWidth = 1080;
+	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;
 };
 
