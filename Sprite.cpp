@@ -1,6 +1,6 @@
-#include "Triangle.h"
+#include "Sprite.h"
 
-void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
+void Sprite::Initialize(DirectX12* directX12, SpriteData spriteData) {
 	directX12_ = directX12;
 	transform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	cameraTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f} };
@@ -15,36 +15,17 @@ void Triangle::Initialize(DirectX12* directX12, TriangleData triangleData) {
 	//左下
 	vertexData[0].position = triangleData.Left_.position;
 	vertexData[0].texcoord = triangleData.Left_.texcoord;
-	//vertexData[0].texcoord = {0.0f,1.0f};
-	//上
+	//左上
 	vertexData[1].position = triangleData.Top_.position;
 	vertexData[1].texcoord = triangleData.Top_.texcoord;
-	//vertexData[1].texcoord = { 0.5f,0.0f };
 	//右下
 	vertexData[2].position = triangleData.Right_.position;
 	vertexData[2].texcoord = triangleData.Right_.texcoord;
-	//vertexData[2].texcoord = { 1.0f,1.0f };
+	//右上
+
 }
 
-void Triangle::Update(Vector4& color,Transform& transform_) {
-	transform.translate = transform_.translate;
-	transform.rotate = transform_.rotate;
-	transform.scale = transform_.scale;
-	Matrix4x4 worldMatrix = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
-	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
-	//Matrix4x4 viewMatrix = MakeIdentity4x4();
-	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
-	//Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kCliantHeight), 0.0f, 100.0f);
-	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
-	*wvpData = worldViewProjectionMatrix;
-	//worldMatrix_ = MakeAffineMatrix(transform_.scale, transform_.rotate, transform_.translate);
-	//*wvpData = worldMatrix_;
-//	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-	*materialData_ = color;
-}
-
-void Triangle::UpdateSprite(Vector4& color, Transform& transform_) {
+void Sprite::Update(Vector4& color, Transform& transform_) {
 	transform.translate = transform_.translate;
 	transform.rotate = transform_.rotate;
 	transform.scale = transform_.scale;
@@ -59,7 +40,7 @@ void Triangle::UpdateSprite(Vector4& color, Transform& transform_) {
 	*materialData_ = color;
 }
 
-void Triangle::Draw() {
+void Sprite::Draw() {
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -69,31 +50,31 @@ void Triangle::Draw() {
 
 	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, directX12_->GetSrvHandleGPU());
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
-	directX12_->GetCommandList()->DrawInstanced(3, 1, 0, 0);
+	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
 }
 
-void Triangle::CreateVertexResource() {
-	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * 3);
+void Sprite::CreateVertexResource() {
+	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * 6);
 }
 
-void Triangle::CreateVertexBufferView() {
+void Sprite::CreateVertexBufferView() {
 	vertexBufferView = {};
 	//リソースの先頭のアドレスから使う
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(VertexData) * 3;
+	vertexBufferView.SizeInBytes = sizeof(VertexData) * 6;
 	//1頂点当たりのサイズ
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
-void Triangle::CreateMaterialResource() {
+void Sprite::CreateMaterialResource() {
 	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Vector4));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 }
 
-void Triangle::CreateTransformationMatrixResource() {
+void Sprite::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
 	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Matrix4x4));
 	//データを書き込む
@@ -104,12 +85,12 @@ void Triangle::CreateTransformationMatrixResource() {
 	*wvpData = MakeIdentity4x4();
 }
 
-void Triangle::DataResource() {
+void Sprite::DataResource() {
 	//書き込むためのアドレスを取得
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 }
 
-void Triangle::Release() {
+void Sprite::Release() {
 	vertexResource->Release();
 	materialResource_->Release();
 }

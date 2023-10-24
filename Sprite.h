@@ -1,27 +1,19 @@
 #pragma once
-#include "DirectX12.h"
-#include <dxcapi.h>
-#include "Vector4.h"
-#include "Matrix4x4.h"
+#include "Triangle.h"
 
-#pragma comment(lib,"dxcompiler.lib")
-
-struct VertexData {
-	Vector4 position;
-	Vector2 texcoord;
+struct SpriteData {
+	VertexData LeftTop;
+	VertexData LeftBot;
+	VertexData RightTop;
+	VertexData RightBot;
 };
 
-struct TriangleData
-{
-	VertexData Left_;
-	VertexData Top_;
-	VertexData Right_;
-};
+class Triangle;
 
-class Triangle
+class Sprite
 {
 public:
-	void Initialize(DirectX12* directX12, TriangleData triangleData);
+	void Initialize(DirectX12* directX12, SpriteData);
 
 	void CreateVertexResource();
 
@@ -36,7 +28,6 @@ public:
 	void CreateTransformationMatrixResource();
 
 	void Update(Vector4& color, Transform& transform_);
-	void UpdateSprite(Vector4& color, Transform& transform_);
 
 	void Draw();
 private:
@@ -72,5 +63,4 @@ private:
 	const int32_t kClientHeight = 720;
 
 };
-
 
