@@ -46,7 +46,7 @@ void WindowsAPI::WindowClass() {
 }
 
 void WindowsAPI::WindowSize() {
-	wrc = { 0,0,kCliantWidth,kCliantHeight };
+	wrc = { 0,0,kCliantWidth,kClientHeight };
 	AdjustWindowRect(&wrc, WS_OVERLAPPEDWINDOW, false);
 }
 

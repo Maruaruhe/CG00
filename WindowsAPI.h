@@ -4,7 +4,7 @@
 #include "ImGuiWND.h"
 //クライアント領域のサイズ
 static const int32_t kCliantWidth = 1280;
-static const int32_t kCliantHeight = 720;
+static const int32_t kClientHeight = 720;
 
 class WindowsAPI
 {

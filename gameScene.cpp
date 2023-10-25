@@ -82,7 +82,8 @@ void GameScene::Final() {
 
 void GameScene::Draw() {
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
-		//triangle_[i]->Draw();
+		triangle_[2]->Draw();
+		triangle_[3]->Draw();
 		//triangleSprite_[i]->Draw();
 	}
 	sphere->Draw();
