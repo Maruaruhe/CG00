@@ -53,6 +53,10 @@ void Sphere::InitializePosition() {
 				vertexData[start].texcoord.x = float(lonIndex) / float(kSubdivision);
 				vertexData[start].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision);
 
+				vertexData[start].normal.x = vertexData[start].position.x;
+				vertexData[start].normal.y = vertexData[start].position.y;
+				vertexData[start].normal.z = vertexData[start].position.z;
+
 
 
 				vertexData[start + 1].position.x = cos(lat + kLatEvery) * cos(lon);
@@ -63,6 +67,9 @@ void Sphere::InitializePosition() {
 				vertexData[start + 1].texcoord.x = float(lonIndex) / float(kSubdivision);
 				vertexData[start + 1].texcoord.y = 1.0f - num - (float(latIndex) / float(kSubdivision));
 
+				vertexData[start + 1].normal.x = vertexData[start].position.x;
+				vertexData[start + 1].normal.y = vertexData[start].position.y;
+				vertexData[start + 1].normal.z = vertexData[start].position.z;
 
 
 				vertexData[start + 2].position.x = cos(lat) * cos(lon + kLonEvery);
@@ -72,6 +79,10 @@ void Sphere::InitializePosition() {
 
 				vertexData[start + 2].texcoord.x = num + (float(lonIndex) / float(kSubdivision));
 				vertexData[start + 2].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision);
+
+				vertexData[start + 2].normal.y = vertexData[start].position.y;
+				vertexData[start + 2].normal.z = vertexData[start].position.z;
+				vertexData[start + 2].normal.x = vertexData[start].position.x;
 
 
 
@@ -84,6 +95,9 @@ void Sphere::InitializePosition() {
 				vertexData[start + 3].texcoord.x = float(lonIndex) / float(kSubdivision);
 				vertexData[start + 3].texcoord.y = 1.0f - num - (float(latIndex) / float(kSubdivision));
 
+				vertexData[start + 3].normal.x = vertexData[start].position.x;
+				vertexData[start + 3].normal.y = vertexData[start].position.y;
+				vertexData[start + 3].normal.z = vertexData[start].position.z;
 
 
 				vertexData[start + 4].position.x = cos(lat + kLatEvery) * cos(lon + kLonEvery);
@@ -94,6 +108,9 @@ void Sphere::InitializePosition() {
 				vertexData[start + 4].texcoord.x = num + (float(lonIndex) / float(kSubdivision));
 				vertexData[start + 4].texcoord.y = 1.0f - num - (float(latIndex) / float(kSubdivision));
 
+				vertexData[start + 4].normal.x = vertexData[start].position.x;
+				vertexData[start + 4].normal.y = vertexData[start].position.y;
+				vertexData[start + 4].normal.z = vertexData[start].position.z;
 
 
 				vertexData[start + 5].position.x = cos(lat) * cos(lon + kLonEvery);
@@ -104,6 +121,9 @@ void Sphere::InitializePosition() {
 				vertexData[start + 5].texcoord.x = num + (float(lonIndex) / float(kSubdivision));
 				vertexData[start + 5].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision);
 
+				vertexData[start + 5].normal.x = vertexData[start].position.x;
+				vertexData[start + 5].normal.y = vertexData[start].position.y;
+				vertexData[start + 5].normal.z = vertexData[start].position.z;
 
 			}
 		}
@@ -145,6 +165,8 @@ void Sphere ::Draw() {
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResourceSprite->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 
@@ -172,6 +194,10 @@ void Sphere::CreateMaterialResource() {
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+
+	materialResourceSprite = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
+
+	
 }
 
 void Sphere::CreateTransformationMatrixResource() {

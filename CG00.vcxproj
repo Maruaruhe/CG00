@@ -98,8 +98,10 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="externals\imgui\imgui_tables.cpp" />
     <ClCompile Include="externals\imgui\imgui_widgets.cpp" />
     <ClCompile Include="ImGuiWND.cpp" />
+    <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Matrix4x4.cpp" />
     <ClCompile Include="Sphere.cpp" />
+    <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="Log.cpp" />
@@ -134,9 +136,12 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="externals\imgui\imstb_textedit.h" />
     <ClInclude Include="externals\imgui\imstb_truetype.h" />
     <ClInclude Include="ImGuiWND.h" />
+    <ClInclude Include="Lighting.h" />
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="Sphere.h" />
+    <ClInclude Include="Sprite.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TransformationMatrix.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="Log.h" />
     <ClInclude Include="gameScene.h" />
