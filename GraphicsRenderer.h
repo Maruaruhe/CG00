@@ -61,7 +61,7 @@ private:
 	ID3DBlob* errorBlob;
 	ID3D12RootSignature* rootSignature;
 	//SetInputLayout
-	D3D12_INPUT_ELEMENT_DESC inputElementDescs[2] = {};
+	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
 	//SetBlendState
 	D3D12_BLEND_DESC blendDesc{};
