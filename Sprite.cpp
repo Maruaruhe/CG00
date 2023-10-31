@@ -95,13 +95,13 @@ void Sprite::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
 	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Matrix4x4));
 	//データを書き込む
-	wvpData = nullptr;
+	//wvpData = nullptr;
 	transformationMatrix = nullptr;
 	//書き込むためのアドレスを取得
 	//wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&wvpData));
 	wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrix));
 	//単位行列を書き込んでおく
-	*wvpData = MakeIdentity4x4();
+	//*wvpData = MakeIdentity4x4();
 	transformationMatrix->WVP = MakeIdentity4x4();
 }
 

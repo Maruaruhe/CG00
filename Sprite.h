@@ -56,10 +56,10 @@ private:
 	ID3D12Resource* wvpResource_;
 
 	TransformationMatrix* transformationMatrix;
-	Matrix4x4* wvpData;
+	//Matrix4x4* wvpData;
 
 	Transform transform_;
-	Matrix4x4 worldMatrix_;
+	//Matrix4x4 worldMatrix_;
 
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;
