@@ -52,6 +52,8 @@ private:
 
 	Material* materialData_;
 
+	TransformationMatrix transformationMatrix;
+
 	ID3D12Resource* wvpResource_;
 	Matrix4x4* wvpData;
 
