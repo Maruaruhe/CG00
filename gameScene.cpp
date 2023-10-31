@@ -4,6 +4,7 @@
 
 void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 {
+	light->Initialize();
 	VariableInit();
 	directX12_ = directX12;
 	directX12_->Init(windowsAPI);

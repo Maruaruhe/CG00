@@ -6,6 +6,7 @@
 #include "ImGuiWND.h"
 #include "Texture.h"
 #include "Sphere.h"
+#include "Lighting.h"
 
 #define TRIANGLECOUNT 4
 
@@ -14,6 +15,7 @@ class GraphicsRenderer;
 class WindowsAPI;
 class Texture;
 class Sphere;
+class Lighting;
 
 class GameScene
 {
@@ -38,6 +40,7 @@ private:
 	Triangle** triangleSprite_ = new Triangle * [TRIANGLECOUNT];
 	//Texture* texture_ = new Texture;
 	Sphere* sphere = new Sphere;
+	Lighting* light = new Lighting;
 
 	float colorVolume[3];
 	Transform transform;

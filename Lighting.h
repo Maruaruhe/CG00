@@ -9,9 +9,10 @@ struct DirectionalLight {
 
 class Lighting
 {
-private:
-	void Initialize();
 public:
+	void Initialize();
+
+private:
 	DirectionalLight* directionalLight;
 };
 
