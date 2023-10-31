@@ -19,6 +19,11 @@ struct TriangleData
 	VertexData Right_;
 };
 
+struct Material {
+	Vector4 color;
+	int32_t enableLighting;
+};
+
 class Triangle
 {
 public:

@@ -195,9 +195,7 @@ void Sphere::CreateMaterialResource() {
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 
-	materialResourceSprite = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
-
-	
+	//materialResourceSprite = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
 }
 
 void Sphere::CreateTransformationMatrixResource() {

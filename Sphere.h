@@ -51,9 +51,6 @@ private:
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 
 	//頂点リソースにデータを書き込む
-	//Vector4* vertexData;
-
-	//VertexData* vertexData;
 
 	ID3D12Resource* materialResource_;
 
