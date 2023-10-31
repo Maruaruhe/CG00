@@ -53,7 +53,7 @@ void Sprite::Draw() {
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResourceSprite->GetGPUVirtualAddress());
+	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResourceSprite->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 
@@ -77,7 +77,7 @@ void Sprite::CreateVertexBufferView() {
 }
 
 void Sprite::CreateMaterialResource() {
-	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Vector4));
+	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 
@@ -85,7 +85,7 @@ void Sprite::CreateMaterialResource() {
 	materialData_->enableLighting = false;
 
 
-	materialResourceSprite = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
+	//materialResourceSprite = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
 }
 
 void Sprite::CreateTransformationMatrixResource() {

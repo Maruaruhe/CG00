@@ -33,7 +33,7 @@ void Triangle::Update(Vector4& color,Transform& transform_) {
 	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
 	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	*wvpData = worldViewProjectionMatrix;
-	*materialData_ = color;
+	materialData_->color = color;
 }
 
 void Triangle::UpdateSprite(Vector4& color, Transform& transform_) {
@@ -45,7 +45,7 @@ void Triangle::UpdateSprite(Vector4& color, Transform& transform_) {
 	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kClientHeight), 0.0f, 100.0f);
 	Matrix4x4 worldViewProjectionMatrix = Multiply(worldMatrix, Multiply(viewMatrix, projectionMatrix));
 	*wvpData = worldViewProjectionMatrix;
-	*materialData_ = color;
+	materialData_->color = color;
 }
 
 void Triangle::Draw() {
@@ -76,10 +76,11 @@ void Triangle::CreateVertexBufferView() {
 }
 
 void Triangle::CreateMaterialResource() {
-	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Vector4));
+	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
-	*materialData_ = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+	materialData_->color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
+	materialData_->enableLighting = false;
 }
 
 void Triangle::CreateTransformationMatrixResource() {

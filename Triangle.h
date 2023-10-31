@@ -50,7 +50,7 @@ private:
 
 	ID3D12Resource* materialResource_;
 
-	Vector4* materialData_;
+	Material* materialData_;
 
 	ID3D12Resource* wvpResource_;
 	Matrix4x4* wvpData;
