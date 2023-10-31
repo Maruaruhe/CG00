@@ -1,6 +1,11 @@
 #pragma once
-#include <stdint.h>
-#include "Triangle.h"
+#include "DirectX12.h"
+#include <dxcapi.h>
+#include "Vector4.h"
+#include "Matrix4x4.h"
+#include "struct.h"
+
+#pragma comment(lib,"dxcompiler.lib")
 
 struct SpriteData {
 	TriangleData first;
