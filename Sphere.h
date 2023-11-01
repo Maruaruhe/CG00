@@ -41,8 +41,6 @@ public:
 private:
 	DirectX12* directX12_;
 
-	DirectionalLight lighting_;
-
 	Transform transform;
 	Transform cameraTransform;
 
@@ -52,7 +50,6 @@ private:
 	D3D12_RESOURCE_DESC vertexResourceDesc;
 	//実際に頂点リソースを作る
 	ID3D12Resource* vertexResource;
-	ID3D12Resource* directionalLightResource;
 
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
@@ -70,6 +67,9 @@ private:
 
 	Transform transform_;
 	//Matrix4x4 worldMatrix_;
+
+	DirectionalLight* lighting_;
+	ID3D12Resource* directionalLightResource;
 
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;
