@@ -34,6 +34,7 @@ private:
 
 	Transform transform;
 	Transform cameraTransform;
+	Transform uvTransform;
 
 	//頂点リソース用のヒープの設定
 	D3D12_HEAP_PROPERTIES uploadHeapProperties;
