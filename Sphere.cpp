@@ -67,9 +67,9 @@ void Sphere::InitializePosition() {
 				vertexData[start + 1].texcoord.x = float(lonIndex) / float(kSubdivision);
 				vertexData[start + 1].texcoord.y = 1.0f - num - (float(latIndex) / float(kSubdivision));
 
-				vertexData[start + 1].normal.x = vertexData[start].position.x;
-				vertexData[start + 1].normal.y = vertexData[start].position.y;
-				vertexData[start + 1].normal.z = vertexData[start].position.z;
+				vertexData[start + 1].normal.x = vertexData[start + 1].position.x;
+				vertexData[start + 1].normal.y = vertexData[start + 1].position.y;
+				vertexData[start + 1].normal.z = vertexData[start + 1].position.z;
 
 
 				vertexData[start + 2].position.x = cos(lat) * cos(lon + kLonEvery);
@@ -80,9 +80,9 @@ void Sphere::InitializePosition() {
 				vertexData[start + 2].texcoord.x = num + (float(lonIndex) / float(kSubdivision));
 				vertexData[start + 2].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision);
 
-				vertexData[start + 2].normal.y = vertexData[start].position.y;
-				vertexData[start + 2].normal.z = vertexData[start].position.z;
-				vertexData[start + 2].normal.x = vertexData[start].position.x;
+				vertexData[start + 2].normal.y = vertexData[start + 2].position.y;
+				vertexData[start + 2].normal.z = vertexData[start + 2].position.z;
+				vertexData[start + 2].normal.x = vertexData[start + 2].position.x;
 
 
 
@@ -95,9 +95,9 @@ void Sphere::InitializePosition() {
 				vertexData[start + 3].texcoord.x = float(lonIndex) / float(kSubdivision);
 				vertexData[start + 3].texcoord.y = 1.0f - num - (float(latIndex) / float(kSubdivision));
 
-				vertexData[start + 3].normal.x = vertexData[start].position.x;
-				vertexData[start + 3].normal.y = vertexData[start].position.y;
-				vertexData[start + 3].normal.z = vertexData[start].position.z;
+				vertexData[start + 3].normal.x = vertexData[start + 3].position.x;
+				vertexData[start + 3].normal.y = vertexData[start + 3].position.y;
+				vertexData[start + 3].normal.z = vertexData[start + 3].position.z;
 
 
 				vertexData[start + 4].position.x = cos(lat + kLatEvery) * cos(lon + kLonEvery);
@@ -108,9 +108,9 @@ void Sphere::InitializePosition() {
 				vertexData[start + 4].texcoord.x = num + (float(lonIndex) / float(kSubdivision));
 				vertexData[start + 4].texcoord.y = 1.0f - num - (float(latIndex) / float(kSubdivision));
 
-				vertexData[start + 4].normal.x = vertexData[start].position.x;
-				vertexData[start + 4].normal.y = vertexData[start].position.y;
-				vertexData[start + 4].normal.z = vertexData[start].position.z;
+				vertexData[start + 4].normal.x = vertexData[start + 4].position.x;
+				vertexData[start + 4].normal.y = vertexData[start + 4].position.y;
+				vertexData[start + 4].normal.z = vertexData[start + 4].position.z;
 
 
 				vertexData[start + 5].position.x = cos(lat) * cos(lon + kLonEvery);
@@ -121,9 +121,9 @@ void Sphere::InitializePosition() {
 				vertexData[start + 5].texcoord.x = num + (float(lonIndex) / float(kSubdivision));
 				vertexData[start + 5].texcoord.y = 1.0f - float(latIndex) / float(kSubdivision);
 
-				vertexData[start + 5].normal.x = vertexData[start].position.x;
-				vertexData[start + 5].normal.y = vertexData[start].position.y;
-				vertexData[start + 5].normal.z = vertexData[start].position.z;
+				vertexData[start + 5].normal.x = vertexData[start + 5].position.x;
+				vertexData[start + 5].normal.y = vertexData[start + 5].position.y;
+				vertexData[start + 5].normal.z = vertexData[start + 5].position.z;
 
 			}
 		}
@@ -137,6 +137,7 @@ void Sphere::Initialize(DirectX12* directX12) {
 	CreateMaterialResource();
 	CreateVertexBufferView();
 	CreateTransformationMatrixResource();
+	CreateDirectionalLightResource();
 	DataResource();
 
 	vertexData = nullptr;
@@ -145,7 +146,7 @@ void Sphere::Initialize(DirectX12* directX12) {
 	InitializePosition();
 }
 
-void Sphere::Update(Vector4& color, Transform& transform_) {
+void Sphere::Update(Vector4& color, Transform& transform_,DirectionalLight& direcionalLight) {
 	transform.translate = transform_.translate;
 	transform.rotate = transform_.rotate;
 	transform.scale = transform_.scale;
@@ -156,6 +157,7 @@ void Sphere::Update(Vector4& color, Transform& transform_) {
 	Matrix4x4 worldViewProjectionMatrix = Multiply(transformationMatrix->World, Multiply(viewMatrix, projectionMatrix));
 	transformationMatrix->WVP = worldViewProjectionMatrix;
 	materialData_->color = color;
+	lighting_ = direcionalLight;
 
 	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 }
@@ -166,11 +168,12 @@ void Sphere ::Draw() {
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResourceSprite->GetGPUVirtualAddress());
+	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResourceSprite->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 
 	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall ? directX12_->GetSrvHandleGPU2() : directX12_->GetSrvHandleGPU());
+	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
 	directX12_->GetCommandList()->DrawInstanced(1536, 1, 0, 0);
 }
@@ -201,13 +204,19 @@ void Sphere::CreateMaterialResource() {
 
 void Sphere::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Matrix4x4));
+	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(TransformationMatrix));
 	//データを書き込む
 	transformationMatrix = nullptr;
 	//書き込むためのアドレスを取得
 	wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrix));
 	//単位行列を書き込んでおく
 	transformationMatrix->WVP = MakeIdentity4x4();
+}
+
+void Sphere::CreateDirectionalLightResource() {
+	directionalLightResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(DirectionalLight));
+	//lighting_ = nullptr;
+	directionalLightResource->Map(0,nullptr, reinterpret_cast<void**>(&lighting_));
 }
 
 void Sphere::DataResource() {

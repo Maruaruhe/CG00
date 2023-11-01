@@ -4,7 +4,12 @@
 
 void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 {
-	light->Initialize();
+	//light->Initialize();
+	light.color = { 1.0f,1.0f,1.0f,1.0f };
+	light.direction = { 0.0f,-1.0f,0.0f };
+	light.intensity = 1.0f;
+
+
 	VariableInit();
 	directX12_ = directX12;
 	directX12_->Init(windowsAPI);
@@ -38,6 +43,8 @@ void GameScene::Update() {
 	ImGui::SliderFloat3("translate", &transform.translate.x, -1.5f, 1.5f);
 	ImGui::SliderFloat3("rotate", &transform.rotate.x, -3.0f, 3.0f);
 	ImGui::SliderFloat3("scale", &transform.scale.x, 0.0f, 10.0f);
+	ImGui::SliderFloat3("lightcolor", &light.color.x, 0.0f, 1.0f);
+	ImGui::SliderFloat3("light", &light.direction.x, -1.0f, 1.0f);
 
 	Vector4 color = {colorVolume[0],colorVolume[1],colorVolume[2],1.0f};
 
@@ -48,7 +55,7 @@ void GameScene::Update() {
 		triangle_[3]->UpdateSprite(color,transform);
 		//triangleSprite_[i]->UpdateSprite(color,transform);
 	}
-	sphere->Update(color, transform);
+	sphere->Update(color, transform, light);
 
 	ImGui::Render();
 }

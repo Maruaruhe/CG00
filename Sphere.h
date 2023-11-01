@@ -5,6 +5,7 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "struct.h"
+#include "Lighting.h"
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -32,11 +33,15 @@ public:
 
 	void CreateTransformationMatrixResource();
 
-	void Update(Vector4& color, Transform& transform_);
+	void CreateDirectionalLightResource();
+
+	void Update(Vector4& color, Transform& transform_, DirectionalLight& directionalLight);
 
 	void Draw();
 private:
 	DirectX12* directX12_;
+
+	DirectionalLight lighting_;
 
 	Transform transform;
 	Transform cameraTransform;
@@ -47,7 +52,8 @@ private:
 	D3D12_RESOURCE_DESC vertexResourceDesc;
 	//実際に頂点リソースを作る
 	ID3D12Resource* vertexResource;
-	ID3D12Resource* materialResourceSprite;
+	ID3D12Resource* directionalLightResource;
+
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 

@@ -40,7 +40,8 @@ private:
 	Triangle** triangleSprite_ = new Triangle * [TRIANGLECOUNT];
 	//Texture* texture_ = new Texture;
 	Sphere* sphere = new Sphere;
-	Lighting* light = new Lighting;
+	//Lighting* light = new Lighting;
+	DirectionalLight light;
 
 	float colorVolume[3];
 	Transform transform;
