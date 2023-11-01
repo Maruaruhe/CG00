@@ -92,11 +92,11 @@ void GameScene::Final() {
 
 void GameScene::Draw() {
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
-		triangle_[0]->Draw();
-		triangle_[1]->Draw();
+		//triangle_[0]->Draw();
+		//triangle_[1]->Draw();
 		//triangleSprite_[i]->Draw();
 	}
-	sprite->Draw();
+	//sprite->Draw();
 	sphere->Draw();
 
 }
