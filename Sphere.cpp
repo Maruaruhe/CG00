@@ -157,9 +157,9 @@ void Sphere::Update(Vector4& color, Transform& transform_,DirectionalLight& dire
 	Matrix4x4 worldViewProjectionMatrix = Multiply(transformationMatrix->World, Multiply(viewMatrix, projectionMatrix));
 	transformationMatrix->WVP = worldViewProjectionMatrix;
 	materialData_->color = color;
-	lighting_->color = direcionalLight.color;
-	lighting_->direction = direcionalLight.direction;
-	lighting_->intensity = direcionalLight.intensity;
+	directionalLight_->color = direcionalLight.color;
+	directionalLight_->direction = direcionalLight.direction;
+	directionalLight_->intensity = direcionalLight.intensity;
 
 	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 }
@@ -217,8 +217,8 @@ void Sphere::CreateTransformationMatrixResource() {
 
 void Sphere::CreateDirectionalLightResource() {
 	directionalLightResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(DirectionalLight));
-	lighting_ = nullptr;
-	directionalLightResource->Map(0,nullptr, reinterpret_cast<void**>(&lighting_));
+	directionalLight_ = nullptr;
+	directionalLightResource->Map(0,nullptr, reinterpret_cast<void**>(&directionalLight_));
 }
 
 void Sphere::DataResource() {

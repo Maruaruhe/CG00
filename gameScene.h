@@ -7,8 +7,9 @@
 #include "Texture.h"
 #include "Sphere.h"
 #include "Lighting.h"
+#include "Sprite.h"
 
-#define TRIANGLECOUNT 4
+#define TRIANGLECOUNT 2
 
 class DirectX12;
 class GraphicsRenderer;
@@ -32,15 +33,15 @@ public:
 	void VariableInit();
 private:
 	TriangleData triangleData[TRIANGLECOUNT];
-	TriangleData spriteData[TRIANGLECOUNT];
+	SpriteData spriteData;
 
 	DirectX12* directX12_ = new DirectX12;
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
 	Triangle** triangle_ = new Triangle * [TRIANGLECOUNT];
-	Triangle** triangleSprite_ = new Triangle * [TRIANGLECOUNT];
+	Sprite* sprite = new Sprite;
 	//Texture* texture_ = new Texture;
 	Sphere* sphere = new Sphere;
-	//Lighting* light = new Lighting;
+
 	DirectionalLight light;
 
 	float colorVolume[3];

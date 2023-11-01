@@ -9,10 +9,10 @@
 
 #pragma comment(lib,"dxcompiler.lib")
 
-struct SpriteData {
-	TriangleData first;
-	TriangleData second;
-};
+//struct SpriteData {
+//	TriangleData first;
+//	TriangleData second;
+//};
 
 class Sphere
 {
@@ -68,7 +68,7 @@ private:
 	Transform transform_;
 	//Matrix4x4 worldMatrix_;
 
-	DirectionalLight* lighting_;
+	DirectionalLight* directionalLight_;
 	ID3D12Resource* directionalLightResource;
 
 	const int32_t kClientWidth = 1280;
@@ -77,7 +77,7 @@ private:
 	bool useMonsterBall = true;
 
 private:
-	SpriteData spData[256];
+	//SpriteData spData[256];
 	VertexData* vertexData;
 
 	float num = 0.0625f;

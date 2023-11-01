@@ -24,6 +24,7 @@ void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 		triangle_[i]->Initialize(directX12_, triangleData[i]);
 		//triangleSprite_[i]->Initialize(directX12_, spriteData[i]);
 	}
+	sprite->Initialize(directX12_, spriteData);
 	sphere->Initialize(directX12_);
 
 	graphicsRenderer_->ViewportScissor();
@@ -51,10 +52,10 @@ void GameScene::Update() {
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangle_[0]->Update(color,transform);
 		triangle_[1]->Update(color,transform);
-		triangle_[2]->UpdateSprite(color,transform);
-		triangle_[3]->UpdateSprite(color,transform);
-		//triangleSprite_[i]->UpdateSprite(color,transform);
+		//triangle_[2]->UpdateSprite(color,transform);
+		//triangle_[3]->UpdateSprite(color,transform);
 	}
+	sprite->Update(color, transform);
 	sphere->Update(color, transform, light);
 
 	ImGui::Render();
@@ -66,6 +67,7 @@ void GameScene::Release() {
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
 		triangle_[i]->Release();
 		//triangleSprite_[i]->Release();
+		sprite->Release();
 	}
 	sphere->Release();
 }
@@ -90,10 +92,11 @@ void GameScene::Final() {
 
 void GameScene::Draw() {
 	for (int i = 0; i < TRIANGLECOUNT; i++) {
-		triangle_[2]->Draw();
-		triangle_[3]->Draw();
+		triangle_[0]->Draw();
+		triangle_[1]->Draw();
 		//triangleSprite_[i]->Draw();
 	}
+	sprite->Draw();
 	sphere->Draw();
 
 }
@@ -118,7 +121,7 @@ void GameScene::VariableInit() {
 	triangleData[1].Right_.position = { 0.5f,-0.5f,-0.5f,1.0f };
 	triangleData[1].Right_.texcoord = { 1.0f,1.0f };
 
-	triangleData[2].Left_.position = { 0.0f,360.0f,0.0f,1.0f };
+	/*triangleData[2].Left_.position = { 0.0f,360.0f,0.0f,1.0f };
 	triangleData[2].Left_.texcoord = { 0.0f,1.0f };
 	triangleData[2].Top_.position = { 0.0f,0.0f,0.0f,1.0f };
 	triangleData[2].Top_.texcoord = { 0.0f,0.0f };
@@ -130,5 +133,14 @@ void GameScene::VariableInit() {
 	triangleData[3].Top_.position = { 640.0f,0.0f,0.0f,1.0f };
 	triangleData[3].Top_.texcoord = { 1.0f,0.0f };
 	triangleData[3].Right_.position = { 640.0f,360.0f,0.0f,1.0f };
-	triangleData[3].Right_.texcoord = { 1.0f,1.0f };
+	triangleData[3].Right_.texcoord = { 1.0f,1.0f };*/
+
+	spriteData.LeftBot.position = { 0.0f,360.0f,0.0f,1.0f };
+	spriteData.LeftBot.texcoord = { 0.0f,1.0f };
+	spriteData.LeftTop.position = { 0.0f,0.0f,0.0f,1.0f };
+	spriteData.LeftTop.texcoord = { 0.0f,0.0f };
+	spriteData.RightBot.position = { 640.0f,360.0f,0.0f,1.0f };
+	spriteData.RightBot.texcoord = { 1.0f,1.0f };
+	spriteData.RightTop.position = { 640.0f,0.0f,0.0f,1.0f };
+	spriteData.RightTop.texcoord = { 1.0f,0.0f };
 }

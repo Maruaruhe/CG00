@@ -15,6 +15,13 @@ struct TriangleData
 	VertexData Right_;
 };
 
+struct SpriteData {
+	VertexData LeftBot;
+	VertexData LeftTop;
+	VertexData RightBot;
+	VertexData RightTop;
+};
+
 struct Material {
 	Vector4 color;
 	int32_t enableLighting;

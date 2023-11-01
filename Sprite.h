@@ -10,7 +10,7 @@
 class Sprite
 {
 public:
-	void Initialize(DirectX12* directX12, TriangleData triangleData);
+	void Initialize(DirectX12* directX12, SpriteData spriteData);
 
 	void CreateVertexResource();
 
@@ -25,7 +25,6 @@ public:
 	void CreateTransformationMatrixResource();
 
 	void Update(Vector4& color, Transform& transform_);
-	void UpdateSprite(Vector4& color, Transform& transform_);
 
 	void Draw();
 private:
