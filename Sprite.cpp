@@ -8,6 +8,7 @@ void Sprite::Initialize(DirectX12* directX12, SpriteData spriteData) {
 	CreateMaterialResource();
 	CreateVertexBufferView();
 	CreateTransformationMatrixResource();
+	CreateIndexResource();
 	DataResource();
 
 	vertexData = nullptr;
@@ -15,19 +16,19 @@ void Sprite::Initialize(DirectX12* directX12, SpriteData spriteData) {
 	//左下
 	vertexData[0].position = spriteData.LeftBot.position;
 	vertexData[0].texcoord = spriteData.LeftBot.texcoord;
+	vertexData[0].normal = { 0.0f,0.0f,-1.0f };
 	//上									   
 	vertexData[1].position = spriteData.LeftTop.position;
 	vertexData[1].texcoord = spriteData.LeftTop.texcoord;
+	vertexData[1].normal = { 0.0f,0.0f,-1.0f };
 	//右下								
 	vertexData[2].position = spriteData.RightBot.position;
 	vertexData[2].texcoord = spriteData.RightBot.texcoord;
-												
-	vertexData[3].position = spriteData.LeftTop.position;
-	vertexData[3].texcoord = spriteData.LeftTop.texcoord;
-	vertexData[4].position = spriteData.RightTop.position;
-	vertexData[4].texcoord = spriteData.RightTop.texcoord;
-	vertexData[5].position = spriteData.RightBot.position;
-	vertexData[5].texcoord = spriteData.RightBot.texcoord;
+	vertexData[2].normal = { 0.0f,0.0f,-1.0f };
+
+	vertexData[3].position = spriteData.RightTop.position;
+	vertexData[3].texcoord = spriteData.RightTop.texcoord;
+	vertexData[3].normal = { 0.0f,0.0f,-1.0f };
 }
 
 void Sprite::Update(Vector4& color, Transform& transform_) {
@@ -44,6 +45,7 @@ void Sprite::Update(Vector4& color, Transform& transform_) {
 
 void Sprite::Draw() {
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
+	directX12_->GetCommandList()->IASetIndexBuffer(&indexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
@@ -53,7 +55,8 @@ void Sprite::Draw() {
 
 	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, directX12_->GetSrvHandleGPU());
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
-	directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
+	//directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
+	directX12_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
 }
 
 void Sprite::CreateVertexResource() {
@@ -77,9 +80,6 @@ void Sprite::CreateMaterialResource() {
 
 	materialData_->color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 	materialData_->enableLighting = false;
-
-
-	//materialResourceSprite = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
 }
 
 void Sprite::CreateTransformationMatrixResource() {
@@ -94,6 +94,24 @@ void Sprite::CreateTransformationMatrixResource() {
 	//単位行列を書き込んでおく
 	//*wvpData = MakeIdentity4x4();
 	transformationMatrix->WVP = MakeIdentity4x4();
+}
+
+void Sprite::CreateIndexResource() {
+	indexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(uint32_t) * 6);
+	indexBufferView = {};
+	indexBufferView.BufferLocation = indexResource->GetGPUVirtualAddress();
+	indexBufferView.SizeInBytes = sizeof(uint32_t) * 6;
+	indexBufferView.Format = DXGI_FORMAT_R32_UINT;
+
+	indexData = nullptr;
+	indexResource->Map(0, nullptr, reinterpret_cast<void**>(&indexData));
+
+	indexData[0] = 0;
+	indexData[1] = 1;
+	indexData[2] = 2;
+	indexData[3] = 1;
+	indexData[4] = 3;
+	indexData[5] = 2;
 }
 
 void Sprite::DataResource() {

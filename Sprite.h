@@ -24,6 +24,8 @@ public:
 
 	void CreateTransformationMatrixResource();
 
+	void CreateIndexResource();
+
 	void Update(Vector4& color, Transform& transform_);
 
 	void Draw();
@@ -48,7 +50,6 @@ private:
 	VertexData* vertexData;
 
 	ID3D12Resource* materialResource_;
-	ID3D12Resource* materialResourceSprite;
 
 	Material* materialData_;
 
@@ -56,6 +57,10 @@ private:
 
 	TransformationMatrix* transformationMatrix;
 	//Matrix4x4* wvpData;
+
+	ID3D12Resource* indexResource;
+	D3D12_INDEX_BUFFER_VIEW indexBufferView;
+	uint32_t* indexData;
 
 	Transform transform_;
 	//Matrix4x4 worldMatrix_;
