@@ -33,6 +33,7 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 			normals.push_back(normal);
 		}
 		else if (identifier == "f") {
+			VertexData triangle[3];
 			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
 				std::string vertexDefinition;
 				s >> vertexDefinition;
@@ -47,23 +48,36 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 				Vector4 position = positions[elementIndices[0] - 1];
 				Vector2 texcoord = texcoords[elementIndices[1] - 1];
 				Vector3 normal = normals[elementIndices[2] - 1];
+				position.x *= -1;
+				normal.x *= -1;
+				texcoord.y = 1.0f - texcoord.y;
 				VertexData vertex = { position,texcoord,normal };
 				modelData.vertices.push_back(vertex);
+				triangle[faceVertex] = { position,texcoord,normal };
 			}
+			modelData.vertices.push_back(triangle[2]);
+			modelData.vertices.push_back(triangle[1]);
+			modelData.vertices.push_back(triangle[0]);
+		}
+		else if (identifier == "mtllib") {
+			std::string materialFilename;
+			s >> materialFilename;
+
+			modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
 		}
 	}
 	return modelData;
 }
 void Model::InitializePosition() {
-	modelData = LoadObjFile("resources/plane.obj","plane");
-	ID3D12Resource* vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(vertexData) * modelData.vertices.size());
+	modelData = LoadObjFile("Resources","plane.obj");
+	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(vertexData) * modelData.vertices.size());
 
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
+	vertexBufferView = {};
 	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
 	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size());
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 
-	VertexData* vertexData = nullptr;
+	vertexData = nullptr;
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
 }
@@ -72,15 +86,9 @@ void Model::Initialize(DirectX12* directX12) {
 	directX12_ = directX12;
 	transform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	cameraTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f} };
-	CreateVertexResource();
 	CreateMaterialResource();
-	CreateVertexBufferView();
 	CreateTransformationMatrixResource();
 	CreateDirectionalLightResource();
-	DataResource();
-
-	vertexData = nullptr;
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 
 	InitializePosition();
 }
@@ -100,8 +108,6 @@ void Model::Update(Vector4& color, Transform& transform_, DirectionalLight& dire
 	directionalLight_->color = direcionalLight.color;
 	directionalLight_->direction = direcionalLight.direction;
 	directionalLight_->intensity = direcionalLight.intensity;
-
-	//ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 }
 
 void Model::Draw() {
@@ -114,24 +120,10 @@ void Model::Draw() {
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 
-	//directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall ? directX12_->GetSrvHandleGPU2() : directX12_->GetSrvHandleGPU());
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
+	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, directX12_->GetSrvHandleGPU());
+	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
 	directX12_->GetCommandList()->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
-}
-
-void Model::CreateVertexResource() {
-	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * 1536);
-}
-
-void Model::CreateVertexBufferView() {
-	vertexBufferView = {};
-	//リソースの先頭のアドレスから使う
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	//使用するリソースのサイズは頂点３つ分のサイズ
-	vertexBufferView.SizeInBytes = sizeof(VertexData) * 1536;
-	//1頂点当たりのサイズ
-	vertexBufferView.StrideInBytes = sizeof(VertexData);
 }
 
 void Model::CreateMaterialResource() {
@@ -139,7 +131,7 @@ void Model::CreateMaterialResource() {
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
-	materialData_->enableLighting = true;
+	materialData_->enableLighting = false;
 }
 
 void Model::CreateTransformationMatrixResource() {
@@ -159,13 +151,29 @@ void Model::CreateDirectionalLightResource() {
 	directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLight_));
 }
 
-void Model::DataResource() {
-	//書き込むためのアドレスを取得
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
-}
-
 void Model::Release() {
 	vertexResource->Release();
 	materialResource_->Release();
 	directionalLightResource->Release();
+}
+
+MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename) {
+	MaterialData materialData;
+	std::string line;
+	std::ifstream file(directoryPath + "/" + filename);
+	assert(file.is_open());
+
+	while (std::getline(file, line)) {
+		std::string identifier;
+		std::istringstream s(line);
+		s >> identifier;
+
+		if (identifier == "map_Kd") {
+			std::string textureFilename;
+			s >> textureFilename;
+
+			materialData.textureFilePath = directoryPath + "/" + textureFilename;
+		}
+	}
+	return materialData;
 }

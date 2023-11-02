@@ -15,6 +15,7 @@
 
 struct ModelData {
 	std::vector<VertexData> vertices;
+	MaterialData material;
 };
 
 class Model
@@ -43,6 +44,8 @@ public:
 	void Update(Vector4& color, Transform& transform_, DirectionalLight& directionalLight);
 
 	void Draw();
+
+	MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
 
 private:
 	DirectX12* directX12_;
