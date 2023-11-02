@@ -46,6 +46,7 @@ public:
 
 private:
 	DirectX12* directX12_;
+	ModelData modelData;
 
 	Transform transform;
 	Transform cameraTransform;
@@ -89,8 +90,3 @@ private:
 	float num = 0.0625f;
 	const float pi = 3.14f;
 };
-
-
-
-};
-

@@ -27,6 +27,8 @@ void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 	sprite->Initialize(directX12_, spriteData);
 	sphere->Initialize(directX12_);
 
+	model->Initialize(directX12_);
+
 	graphicsRenderer_->ViewportScissor();
 
 	transform.translate = { 0.0f,0.0f,0.0f };
@@ -57,6 +59,7 @@ void GameScene::Update() {
 	}
 	sprite->Update(color, transform);
 	sphere->Update(color, transform, light);
+	model->Update(color, transform, light);
 
 	ImGui::Render();
 }
@@ -70,6 +73,7 @@ void GameScene::Release() {
 		sprite->Release();
 	}
 	sphere->Release();
+	model->Release();
 }
 
 
@@ -96,9 +100,9 @@ void GameScene::Draw() {
 		//triangle_[1]->Draw();
 		//triangleSprite_[i]->Draw();
 	}
-	sprite->Draw();
-	sphere->Draw();
-
+	//sprite->Draw();
+	//sphere->Draw();
+	model->Draw();
 }
 
 void GameScene::VariableInit() {

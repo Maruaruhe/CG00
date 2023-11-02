@@ -55,7 +55,17 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 	return modelData;
 }
 void Model::InitializePosition() {
-	ModelData modelData = LoadObjFile("resources/plane.obj");
+	modelData = LoadObjFile("resources/plane.obj","plane");
+	ID3D12Resource* vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(vertexData) * modelData.vertices.size());
+
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
+	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size());
+	vertexBufferView.StrideInBytes = sizeof(VertexData);
+
+	VertexData* vertexData = nullptr;
+	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
 }
 
 void Model::Initialize(DirectX12* directX12) {
@@ -91,7 +101,7 @@ void Model::Update(Vector4& color, Transform& transform_, DirectionalLight& dire
 	directionalLight_->direction = direcionalLight.direction;
 	directionalLight_->intensity = direcionalLight.intensity;
 
-	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
+	//ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 }
 
 void Model::Draw() {
@@ -104,10 +114,10 @@ void Model::Draw() {
 	//wvp用のCBufferの場所を設定
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 
-	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall ? directX12_->GetSrvHandleGPU2() : directX12_->GetSrvHandleGPU());
+	//directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, useMonsterBall ? directX12_->GetSrvHandleGPU2() : directX12_->GetSrvHandleGPU());
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
-	directX12_->GetCommandList()->DrawInstanced(1536, 1, 0, 0);
+	directX12_->GetCommandList()->DrawInstanced(UINT(modelData.vertices.size()), 1, 0, 0);
 }
 
 void Model::CreateVertexResource() {
@@ -130,8 +140,6 @@ void Model::CreateMaterialResource() {
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 	materialData_->enableLighting = true;
-
-	//materialResourceSprite = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
 }
 
 void Model::CreateTransformationMatrixResource() {
