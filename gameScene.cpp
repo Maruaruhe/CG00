@@ -54,12 +54,12 @@ void GameScene::Update() {
 }
 
 void GameScene::Release() {
-	directX12_->Release();
-	graphicsRenderer_->Release();
+	//directX12_->Release();
+	//graphicsRenderer_->Release();
 
-	sprite->Release();
-	sphere->Release();
-	model->Release();
+	//sprite->Release();
+	//sphere->Release();
+	//model->Release();
 }
 
 
@@ -82,7 +82,7 @@ void GameScene::Final() {
 
 void GameScene::Draw() {
 	sprite->Draw();
-	//sphere->Draw();
+	sphere->Draw();
 	model->Draw();
 }
 

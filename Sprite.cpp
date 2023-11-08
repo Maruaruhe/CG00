@@ -135,6 +135,6 @@ void Sprite::DataResource() {
 }
 
 void Sprite::Release() {
-	vertexResource->Release();
-	materialResource_->Release();
+	//vertexResource->Release();
+	//materialResource_->Release();
 }

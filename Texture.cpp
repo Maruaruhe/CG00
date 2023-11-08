@@ -12,7 +12,7 @@ DirectX::ScratchImage Texture::LoadTexture(const std::string& filePath) {
 
 	return mipImages;
 }
-ID3D12Resource* Texture::CreateTextureResource(ID3D12Device* device, const DirectX::TexMetadata& metadata) {
+Microsoft::WRL::ComPtr<ID3D12Resource> Texture::CreateTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, const DirectX::TexMetadata& metadata) {
 	//metadataを基にResourceの設定
 	D3D12_RESOURCE_DESC resourceDesc{};
 	resourceDesc.Width = UINT(metadata.width);
@@ -40,7 +40,7 @@ ID3D12Resource* Texture::CreateTextureResource(ID3D12Device* device, const Direc
 
 	return resource;
 }
-void Texture::UploadTextureData(ID3D12Resource* resource, const DirectX::ScratchImage& mipImages) {
+void Texture::UploadTextureData(Microsoft::WRL::ComPtr<ID3D12Resource> resource, const DirectX::ScratchImage& mipImages) {
 	const DirectX::TexMetadata& metadata = mipImages.GetMetadata();
 
 	for (size_t mipLevel = 0; mipLevel < metadata.mipLevels; ++mipLevel) {
@@ -56,7 +56,7 @@ void Texture::UploadTextureData(ID3D12Resource* resource, const DirectX::Scratch
 	}
 }
 
-ID3D12Resource* Texture::CreateDepthStencilTextureResource(ID3D12Device* device, int32_t width, int32_t height) {
+Microsoft::WRL::ComPtr<ID3D12Resource> Texture::CreateDepthStencilTextureResource(Microsoft::WRL::ComPtr<ID3D12Device> device, int32_t width, int32_t height) {
 	D3D12_RESOURCE_DESC resourceDesc{};
 	resourceDesc.Width = width;
 	resourceDesc.Height = height;

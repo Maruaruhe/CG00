@@ -91,8 +91,8 @@ IDxcBlob* GraphicsRenderer::CompileShader(
 void GraphicsRenderer::DecideCommand(DirectX12* directX12) {
 	directX12->GetCommandList()->RSSetViewports(1, &viewport);
 	directX12->GetCommandList()->RSSetScissorRects(1, &scissorRect);
-	directX12->GetCommandList()->SetGraphicsRootSignature(rootSignature);
-	directX12->GetCommandList()->SetPipelineState(graphicsPipelineState);
+	directX12->GetCommandList()->SetGraphicsRootSignature(rootSignature.Get());
+	directX12->GetCommandList()->SetPipelineState(graphicsPipelineState.Get());
 }
 
 //void GraphicsRenderer::CloseCommand(DirectX12* directX12) {
@@ -196,7 +196,7 @@ void GraphicsRenderer::ShaderCompile() {
 void GraphicsRenderer::MakePSO(DirectX12* directX12) {
 	//PSOを生成する-----------------------------------------------------------------------------------------------
 	graphicsPipelineStateDesc = {};
-	graphicsPipelineStateDesc.pRootSignature = rootSignature;
+	graphicsPipelineStateDesc.pRootSignature = rootSignature.Get();
 	graphicsPipelineStateDesc.InputLayout = inputLayoutDesc;
 	graphicsPipelineStateDesc.VS = { vertexShaderBlob->GetBufferPointer(),vertexShaderBlob->GetBufferSize() };
 	graphicsPipelineStateDesc.PS = { pixelShaderBlob->GetBufferPointer(),pixelShaderBlob->GetBufferSize() };
@@ -278,12 +278,12 @@ void GraphicsRenderer::ViewportScissor() {
 
 void GraphicsRenderer::Release() {
 	//vertexResource->Release();
-	graphicsPipelineState->Release();
-	signatureBlob->Release();
-	if (errorBlob) {
-		errorBlob->Release();
-	}
-	rootSignature->Release();
-	pixelShaderBlob->Release();
-	vertexShaderBlob->Release();
+	//graphicsPipelineState->Release();
+	//signatureBlob->Release();
+	//if (errorBlob) {
+	//	errorBlob->Release();
+	//}
+	//rootSignature->Release();
+	//pixelShaderBlob->Release();
+	//vertexShaderBlob->Release();
 }

@@ -36,18 +36,6 @@ void Triangle::Update(Vector4& color,Transform& transform_) {
 	materialData_->color = color;
 }
 
-void Triangle::UpdateSprite(Vector4& color, Transform& transform_) {
-	transform.translate = transform_.translate;
-	transform.rotate = transform_.rotate;
-	transform.scale = transform_.scale;
-	transformationMatrix->World = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
-	Matrix4x4 viewMatrix = MakeIdentity4x4();
-	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kClientHeight), 0.0f, 100.0f);
-	Matrix4x4 worldViewProjectionMatrix = Multiply(transformationMatrix->World, Multiply(viewMatrix, projectionMatrix));
-	transformationMatrix->WVP = worldViewProjectionMatrix;
-	materialData_->color = color;
-}
-
 void Triangle::Draw() {
 	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
 	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
@@ -100,6 +88,6 @@ void Triangle::DataResource() {
 }
 
 void Triangle::Release() {
-	vertexResource->Release();
-	materialResource_->Release();
+	//vertexResource->Release();
+	//materialResource_->Release();
 }

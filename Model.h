@@ -59,18 +59,18 @@ private:
 	//頂点リソースの設定
 	D3D12_RESOURCE_DESC vertexResourceDesc;
 	//実際に頂点リソースを作る
-	ID3D12Resource* vertexResource;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
 
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 
 	//頂点リソースにデータを書き込む
 
-	ID3D12Resource* materialResource_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
 
 	Material* materialData_;
 
-	ID3D12Resource* wvpResource_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 
 	TransformationMatrix* transformationMatrix;
 	//Matrix4x4* wvpData;
@@ -79,7 +79,7 @@ private:
 	//Matrix4x4 worldMatrix_;
 
 	DirectionalLight* directionalLight_;
-	ID3D12Resource* directionalLightResource;
+	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource;
 
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;

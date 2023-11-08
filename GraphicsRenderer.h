@@ -49,7 +49,7 @@ public:
 	void Release();
 private:
 	HRESULT hr;
-	ID3D12Device* device;
+	Microsoft::WRL::ComPtr<ID3D12Device> device;
 	//InitializeDXC
 	IDxcUtils* dxcUtils =nullptr;
 	IDxcCompiler3* dxcCompiler;
@@ -59,7 +59,7 @@ private:
 	D3D12_ROOT_PARAMETER rootParameters[4];
 	ID3DBlob* signatureBlob;
 	ID3DBlob* errorBlob;
-	ID3D12RootSignature* rootSignature;
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
 	//SetInputLayout
 	D3D12_INPUT_ELEMENT_DESC inputElementDescs[3] = {};
 	D3D12_INPUT_LAYOUT_DESC inputLayoutDesc{};
@@ -72,13 +72,13 @@ private:
 	IDxcBlob* pixelShaderBlob;
 	//MakePSO
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC graphicsPipelineStateDesc{};
-	ID3D12PipelineState* graphicsPipelineState;
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> graphicsPipelineState;
 	//MakeVertexResource
 	D3D12_HEAP_PROPERTIES uploadHeapProperties{};
 	D3D12_RESOURCE_DESC vertexResourceDesc{};
-	ID3D12Resource* vertexResource;
-	ID3D12Resource* materialResource;
-	ID3D12Resource* wvpResource;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource;
+	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource;
 	//MakeVertexBufferView
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
 	//DateResource

@@ -7,6 +7,7 @@
 #include "Vector4.h"
 #include "ImGuiWND.h"
 #include "WindowsAPI.h"
+#include <wrl.h>
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
@@ -66,14 +67,14 @@ public:
 
 	void PushImGuiDrawCommand();
 
-	ID3D12Resource* CreateBufferResource(ID3D12Device* device, size_t sizeInBytes);
+	Microsoft::WRL::ComPtr<ID3D12Resource> CreateBufferResource(Microsoft::WRL::ComPtr<ID3D12Device> device, size_t sizeInBytes);
 
 
-	ID3D12Device* GetDevice() { return device; }
+	Microsoft::WRL::ComPtr<ID3D12Device> GetDevice() { return device; }
 
-	ID3D12GraphicsCommandList* GetCommandList() { return commandList; }
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> GetCommandList() { return commandList; }
 
-	ID3D12DescriptorHeap* CreateDescriptorHeap(ID3D12Device* device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> CreateDescriptorHeap(Microsoft::WRL::ComPtr<ID3D12Device> device, D3D12_DESCRIPTOR_HEAP_TYPE heapType, UINT numDescriptors, bool shaderVisible);
 public:
 	void GetBackBuffer();
 
@@ -85,7 +86,7 @@ public:
 
 	void NextFlameCommandList();
 
-	ID3D12DescriptorHeap* GetSrvDescriptorHeap() { return srvDescriptorHeap; }
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() { return srvDescriptorHeap; }
 
 
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU() { return textureSrvHandleGPU; }
@@ -102,34 +103,34 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU2;
 
-	ID3D12Device* device;
-	IDXGIFactory7* dxgiFactory;
+	Microsoft::WRL::ComPtr<ID3D12Device> device;
+	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory;
 
 
 	DXGI_ADAPTER_DESC3 adapterDesc;
 
 	//使用するアダプタ用の変数。最初にnullptrを入れておく
-	IDXGIAdapter4* useAdapter;
+	Microsoft::WRL::ComPtr<IDXGIAdapter4> useAdapter;
 
 	//コマンドキューを生成する
-	ID3D12CommandQueue* commandQueue;
+	Microsoft::WRL::ComPtr<ID3D12CommandQueue> commandQueue;
 	D3D12_COMMAND_QUEUE_DESC commandQueueDesc;
 
 	//コマンドアロケータを生成する
-	ID3D12CommandAllocator* commandAllocator;
+	Microsoft::WRL::ComPtr<ID3D12CommandAllocator> commandAllocator;
 
 	//コマンドリストを生成する
-	ID3D12GraphicsCommandList* commandList;
+	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> commandList;
 
 	//スワップチェーンを生成する
-	IDXGISwapChain4* swapChain;
+	Microsoft::WRL::ComPtr<IDXGISwapChain4> swapChain;
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc;
 
 	//ディスクリプターヒープの生成
-	ID3D12DescriptorHeap* rtvDescriptorHeap;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> rtvDescriptorHeap;
 	D3D12_DESCRIPTOR_HEAP_DESC rtvDescriptorHeapDesc;
 
-	ID3D12DescriptorHeap* dsvDescriptorHeap;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> dsvDescriptorHeap;
 
 	//RTVの設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc;
@@ -146,20 +147,20 @@ private:
 
 	UINT backBufferIndex;
 
-	ID3D12Resource* swapChainResource[2];
+	Microsoft::WRL::ComPtr<ID3D12Resource> swapChainResource[2];
 	//TransitionBarrierの設定
 	D3D12_RESOURCE_BARRIER barrier;
 
 	//初期値0でFenceを作る
-	ID3D12Fence* fence;
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence;
 	uint64_t fenceValue;
 
 	//FenceのSignalを待つためのイベントを作成する
 	HANDLE fenceEvent;
 
-	IDXGIDebug1* debug;
+	Microsoft::WRL::ComPtr<IDXGIDebug1> debug;
 
-	ID3D12DescriptorHeap* srvDescriptorHeap;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> srvDescriptorHeap;
 
 	const int32_t kClientWidth = 1280;
 	const int32_t kClientHeight = 720;

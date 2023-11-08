@@ -152,9 +152,9 @@ void Model::CreateDirectionalLightResource() {
 }
 
 void Model::Release() {
-	vertexResource->Release();
-	materialResource_->Release();
-	directionalLightResource->Release();
+	//vertexResource->Release();
+	//materialResource_->Release();
+	//directionalLightResource->Release();
 }
 
 MaterialData Model::LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename) {

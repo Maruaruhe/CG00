@@ -4,6 +4,7 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "struct.h"
+#include <wrl.h>
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -41,7 +42,7 @@ private:
 	//頂点リソースの設定
 	D3D12_RESOURCE_DESC vertexResourceDesc;
 	//実際に頂点リソースを作る
-	ID3D12Resource* vertexResource;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 
@@ -50,16 +51,16 @@ private:
 
 	VertexData* vertexData;
 
-	ID3D12Resource* materialResource_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
 
 	Material* materialData_;
 
-	ID3D12Resource* wvpResource_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 
 	TransformationMatrix* transformationMatrix;
 	//Matrix4x4* wvpData;
 
-	ID3D12Resource* indexResource;
+	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource;
 	D3D12_INDEX_BUFFER_VIEW indexBufferView;
 	uint32_t* indexData;
 

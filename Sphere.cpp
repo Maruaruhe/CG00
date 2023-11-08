@@ -228,7 +228,7 @@ void Sphere::DataResource() {
 }
 
 void Sphere::Release() {
-	vertexResource->Release();
+	/*vertexResource->Release();
 	materialResource_->Release();
-	directionalLightResource->Release();
+	directionalLightResource->Release();*/
 }

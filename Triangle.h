@@ -4,6 +4,7 @@
 #include "Vector4.h"
 #include "Matrix4x4.h"
 #include "struct.h"
+#include <wrl.h>
 
 #pragma comment(lib,"dxcompiler.lib")
 
@@ -25,7 +26,6 @@ public:
 	void CreateTransformationMatrixResource();
 
 	void Update(Vector4& color, Transform& transform_);
-	void UpdateSprite(Vector4& color, Transform& transform_);
 
 	void Draw();
 private:
@@ -39,7 +39,7 @@ private:
 	//頂点リソースの設定
 	D3D12_RESOURCE_DESC vertexResourceDesc;
 	//実際に頂点リソースを作る
-	ID3D12Resource* vertexResource;
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
 
@@ -48,13 +48,13 @@ private:
 
 	VertexData* vertexData;
 
-	ID3D12Resource* materialResource_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource_;
 
 	Material* materialData_;
 
 	TransformationMatrix* transformationMatrix;
 
-	ID3D12Resource* wvpResource_;
+	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
 	//Matrix4x4* wvpData;
 
 	Transform transform_;
