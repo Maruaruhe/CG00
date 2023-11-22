@@ -1,6 +1,8 @@
 #pragma once
 #include "Vector4.h"
 #include "Matrix4x4.h"
+#include <stdint.h>
+#include <vector>
 
 struct VertexData {
 	Vector4 position;
@@ -31,6 +33,11 @@ struct Material {
 
 struct MaterialData {
 	std::string textureFilePath;
+};
+
+struct ModelData {
+	std::vector<VertexData> vertices;
+	MaterialData material;
 };
 
 struct TransformationMatrix {

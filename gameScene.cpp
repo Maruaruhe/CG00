@@ -81,7 +81,7 @@ void GameScene::Final() {
 }
 
 void GameScene::Draw() {
-	sprite->Draw();
+	//sprite->Draw();
 	//sphere->Draw();
 	model->Draw();
 }

@@ -13,11 +13,6 @@
 
 #pragma comment(lib,"dxcompiler.lib")
 
-struct ModelData {
-	std::vector<VertexData> vertices;
-	MaterialData material;
-};
-
 class Model
 {
 public:
