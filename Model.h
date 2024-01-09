@@ -87,4 +87,6 @@ private:
 
 	float num = 0.0625f;
 	const float pi = 3.14f;
+
+	const int instanceCount = 10;
 };
