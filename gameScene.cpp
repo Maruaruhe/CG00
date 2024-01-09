@@ -34,7 +34,7 @@ void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 
 void GameScene::Update() {
 	//ImGui::ShowDemoWindow();
-	transform.rotate.y += 0.02f;
+	//transform.rotate.y += 0.02f;
 
 	ImGui::ColorEdit3("TriangleColor", colorVolume);
 	ImGui::SliderFloat3("TriangleColor", colorVolume, 0.0f, 1.0f);
@@ -81,8 +81,8 @@ void GameScene::Final() {
 }
 
 void GameScene::Draw() {
-	sprite->Draw();
-	sphere->Draw();
+	//sprite->Draw();
+	//sphere->Draw();
 	model->Draw();
 }
 
