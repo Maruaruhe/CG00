@@ -35,6 +35,8 @@ public:
 
 	void CreateMaterialResource();
 
+	void CreateInstance();
+
 	void CreateTransformationMatrixResource();
 
 	void CreateDirectionalLightResource();
@@ -92,8 +94,11 @@ private:
 	float num = 0.0625f;
 	const float pi = 3.14f;
 	Transform transforms[kNumInstance];
-	TransformationMatrix* instancingData = nullptr;
+	TransformationMatrix* instancingData;
 
+	uint32_t descriptorSizeSRV{};
+
+	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU;
 	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;
 
 	//const int kNumInstance = 10;

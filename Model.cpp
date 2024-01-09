@@ -77,22 +77,6 @@ void Model::InitializePosition() {
 	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size());
 	vertexBufferView.StrideInBytes = sizeof(VertexData);
 
-	instancingResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(TransformationMatrix) * kNumInstance);
-
-	
-	instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
-
-	for (uint32_t index = 0; index < kNumInstance; ++index) {
-		transforms[index].scale = { 1.0f,1.0f,1.0f };
-		transforms[index].rotate = { 0.0f,0.0f,0.0f };
-		transforms[index].translate = { index * 0.1f,index * 0.1f ,index * 0.1f };
-	}
-
-	for (uint32_t index = 0; index < kNumInstance; ++index) {
-		TransformationMatrix* instancingData=nullptr;
-		instancingData[index].WVP = MakeIdentity4x4();
-		instancingData[index].World = MakeIdentity4x4();
-	}
 	vertexData = nullptr;
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
 	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
@@ -107,6 +91,7 @@ void Model::Initialize(DirectX12* directX12) {
 	CreateDirectionalLightResource();
 
 	InitializePosition();
+	CreateInstance();
 	CreateSRV();
 }
 
@@ -142,10 +127,10 @@ void Model::Draw() {
 
 	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResourceSprite->GetGPUVirtualAddress());
 	//wvp用のCBufferの場所を設定
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 
 	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
-	//directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, directX12_->GetSrvHandleGPU());
+	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, directX12_->GetSrvHandleGPU());
 	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
 	directX12_->GetCommandList()->DrawInstanced(UINT(modelData.vertices.size()), kNumInstance, 0, 0);
@@ -157,6 +142,25 @@ void Model::CreateMaterialResource() {
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 	materialData_->color = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 	materialData_->enableLighting = false;
+}
+
+void Model::CreateInstance() {
+	instancingResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(TransformationMatrix) * kNumInstance);
+
+	instancingData = nullptr;
+
+	instancingResource->Map(0, nullptr, reinterpret_cast<void**>(&instancingData));
+
+	for (uint32_t index = 0; index < kNumInstance; ++index) {
+		instancingData[index].WVP = MakeIdentity4x4();
+		instancingData[index].World = MakeIdentity4x4();
+	}
+
+	for (uint32_t index = 0; index < kNumInstance; ++index) {
+		transforms[index].scale = { 1.0f,1.0f,1.0f };
+		transforms[index].rotate = { 0.0f,0.0f,0.0f };
+		transforms[index].translate = { index * 0.1f,index * 0.1f ,index * 0.1f };
+	}
 }
 
 void Model::CreateTransformationMatrixResource() {
@@ -177,7 +181,7 @@ void Model::CreateDirectionalLightResource() {
 }
 
 void Model::CreateSRV() {
-	//descriptorSizeSRV_ = directX12_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+	descriptorSizeSRV = directX12_->GetDevice()->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
 	instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
@@ -187,8 +191,8 @@ void Model::CreateSRV() {
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	instancingSrvDesc.Buffer.NumElements = kNumInstance;
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
-	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU = directX12_->GetCPUDescriptorHandle(directX12_->GetSrvDescriptorHeap().Get(), directX12_->GetDescriptorSizeSrv(), 3);
-	instancingSrvHandleGPU = directX12_->GetGPUDescriptorHandle(directX12_->GetSrvDescriptorHeap().Get(), directX12_->GetDescriptorSizeSrv(), 3);
+	instancingSrvHandleCPU = directX12_->GetCPUDescriptorHandle(directX12_->GetSrvDescriptorHeap().Get(), descriptorSizeSRV, 3);
+	instancingSrvHandleGPU = directX12_->GetGPUDescriptorHandle(directX12_->GetSrvDescriptorHeap().Get(), descriptorSizeSRV, 3);
 	directX12_->GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 }
 

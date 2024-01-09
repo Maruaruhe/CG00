@@ -1,9 +1,9 @@
 #include "Particle.hlsli"
 
-TransformationMatrix gTransformationMatrices[10];
+//TransformationMatrix gTransformationMatrices[10];
 StructuredBuffer<TransformationMatrix> gTransformationMatrices : register(t0);
 
-VertexShaderOutput main(VertexShaderInput input, uint32_t instancedId : SV_InstanceID) {
+VertexShaderOutput main(VertexShaderInput input, uint32_t instanceId : SV_InstanceID) {
 	VertexShaderOutput output;
 
 	output.position = mul(input.position, gTransformationMatrices[instanceId].WVP);
