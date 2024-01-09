@@ -11,6 +11,7 @@
 #include "struct.h"
 #include "Lighting.h"
 
+#define kNumInstance 10
 #pragma comment(lib,"dxcompiler.lib")
 
 class Model
@@ -23,6 +24,8 @@ public:
 	void InitializePosition();
 
 	void CreateVertexResource();
+
+	void CreateSRV();
 
 	void CreateVertexBufferView();
 
@@ -55,6 +58,7 @@ private:
 	D3D12_RESOURCE_DESC vertexResourceDesc;
 	//実際に頂点リソースを作る
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource;
+	Microsoft::WRL::ComPtr<ID3D12Resource> instancingResource;
 
 	//頂点バッファビューを作成する
 	D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
@@ -87,6 +91,10 @@ private:
 
 	float num = 0.0625f;
 	const float pi = 3.14f;
+	Transform transforms[kNumInstance];
+	TransformationMatrix* instancingData = nullptr;
 
-	const int instanceCount = 10;
+	D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU;
+
+	//const int kNumInstance = 10;
 };

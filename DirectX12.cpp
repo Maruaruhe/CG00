@@ -176,6 +176,18 @@ void DirectX12::DescriptorHeap() {
 	srvDesc2.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc2.Texture2D.MipLevels = UINT(metadata2.mipLevels);
 
+	//D3D12_SHADER_RESOURCE_VIEW_DESC instancingSrvDesc{};
+	//instancingSrvDesc.Format = DXGI_FORMAT_UNKNOWN;
+	//instancingSrvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	//instancingSrvDesc.ViewDimension = D3D12_SRV_DIMENSION_BUFFER;
+	//instancingSrvDesc.Buffer.FirstElement = 0;
+	//instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
+	//instancingSrvDesc.Buffer.NumElements = 10;
+	//instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
+
+	D3D12_CPU_DESCRIPTOR_HANDLE instancingSrvHandleCPU = GetCPUDescriptorHandle(srvDescriptorHeap.Get(), descriptorSizeSRV, 3);
+	//D3D12_GPU_DESCRIPTOR_HANDLE instancingSrvHandleGPU = GetGPUDescriptorHandle(srvDescriptorHeap.Get(), descriptorSizeSRV, 3);
+	//device->CreateShaderResourceView(instancingresource)
 	//dsv
 	dsvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1, false);
 
