@@ -101,6 +101,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Matrix4x4.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="Sphere.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -156,6 +157,7 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="Particle.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="struct.h" />

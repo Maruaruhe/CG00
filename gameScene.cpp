@@ -59,7 +59,7 @@ void GameScene::Release() {
 
 	//sprite->Release();
 	//sphere->Release();
-	//model->Release();
+	model->Release();
 }
 
 

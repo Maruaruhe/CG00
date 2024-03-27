@@ -9,6 +9,7 @@
 #include "Lighting.h"
 #include "Sprite.h"
 #include "Model.h"
+#include "Particle.h"
 
 #define TRIANGLECOUNT 2
 
@@ -42,7 +43,7 @@ private:
 	Sprite* sprite = new Sprite;
 	//Texture* texture_ = new Texture;
 	Sphere* sphere = new Sphere;
-	Model* model = new Model;
+	Particle* model = new Particle;
 
 	DirectionalLight light;
 

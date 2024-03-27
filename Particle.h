@@ -11,10 +11,10 @@
 #include "struct.h"
 #include "Lighting.h"
 
-#define kNumInstance 20
+#define kNum 5
 #pragma comment(lib,"dxcompiler.lib")
 
-class Model
+class Particle
 {
 public:
 	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
@@ -44,6 +44,8 @@ public:
 	void Update(Vector4& color, Transform& transform_, DirectionalLight& directionalLight);
 
 	void Draw();
+
+	//void SstPosition(Vector3 pos) { transform.translate = pos; }
 
 	MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
 
@@ -93,7 +95,7 @@ private:
 
 	float num = 0.0625f;
 	const float pi = 3.14f;
-	Transform transforms[kNumInstance];
+	Transform transforms[kNum];
 	TransformationMatrix* instancingData;
 
 	uint32_t descriptorSizeSRV{};
