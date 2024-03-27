@@ -69,47 +69,28 @@ ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string
 	return modelData;
 }
 void Model::InitializePosition() {
-	modelData = LoadObjFile("Resources","plane.obj");
-	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(vertexData) * modelData.vertices.size());
-
-	vertexBufferView = {};
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size());
-	vertexBufferView.StrideInBytes = sizeof(VertexData);
-
-	vertexData = nullptr;
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
-	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
 }
 
 void Model::Initialize(DirectX12* directX12) {
 	directX12_ = directX12;
-	transform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
 	cameraTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f} };
 	CreateMaterialResource();
-	CreateTransformationMatrixResource();
-	CreateDirectionalLightResource();
 
-	InitializePosition();
+	modelData = LoadObjFile("Resources", "plane.obj");
+
+	CreateVertexResource();
 	CreateInstance();
 	CreateSRV();
 }
 
 void Model::Update(Vector4& color, Transform& transform_, DirectionalLight& direcionalLight) {
-	transform.translate = transform_.translate;
-	transform.rotate = transform_.rotate;
-	transform.scale = transform_.scale;
 	materialData_->uvTransform = MakeIdentity4x4();
-	transformationMatrix->World = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
+
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
 	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
-	Matrix4x4 worldViewProjectionMatrix = Multiply(transformationMatrix->World, Multiply(viewMatrix, projectionMatrix));
-	transformationMatrix->WVP = worldViewProjectionMatrix;
+
 	materialData_->color = color;
-	directionalLight_->color = direcionalLight.color;
-	directionalLight_->direction = direcionalLight.direction;
-	directionalLight_->intensity = direcionalLight.intensity;
 
 	for (uint32_t index = 0; index < kNumInstance; ++index) {
 		Matrix4x4 worldMatrix = MakeAffineMatrix(transforms[index].scale, transforms[index].rotate, transforms[index].translate);
@@ -125,15 +106,24 @@ void Model::Draw() {
 	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
 
-	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResourceSprite->GetGPUVirtualAddress());
-	//wvp用のCBufferの場所を設定
-	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
-
 	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(1, instancingSrvHandleGPU);
 	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, directX12_->GetSrvHandleGPU());
-	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(3, directionalLightResource->GetGPUVirtualAddress());
+
 	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
 	directX12_->GetCommandList()->DrawInstanced(UINT(modelData.vertices.size()), kNumInstance, 0, 0);
+}
+
+void Model::CreateVertexResource() {
+	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * modelData.vertices.size());
+
+	vertexBufferView = {};
+	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size());
+	vertexBufferView.StrideInBytes = sizeof(VertexData);
+
+	vertexData = nullptr;
+	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size());
 }
 
 void Model::CreateMaterialResource() {
@@ -161,23 +151,6 @@ void Model::CreateInstance() {
 		transforms[index].rotate = { 0.0f,0.0f,0.0f };
 		transforms[index].translate = { index * 0.1f,index * 0.1f ,index * 0.1f };
 	}
-}
-
-void Model::CreateTransformationMatrixResource() {
-	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(TransformationMatrix));
-	//データを書き込む
-	transformationMatrix = nullptr;
-	//書き込むためのアドレスを取得
-	wvpResource_->Map(0, nullptr, reinterpret_cast<void**>(&transformationMatrix));
-	//単位行列を書き込んでおく
-	transformationMatrix->WVP = MakeIdentity4x4();
-}
-
-void Model::CreateDirectionalLightResource() {
-	directionalLightResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(DirectionalLight));
-	directionalLight_ = nullptr;
-	directionalLightResource->Map(0, nullptr, reinterpret_cast<void**>(&directionalLight_));
 }
 
 void Model::CreateSRV() {

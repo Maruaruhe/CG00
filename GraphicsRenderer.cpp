@@ -200,6 +200,7 @@ void GraphicsRenderer::SetInputLayout() {
 	inputElementDescs[2].SemanticIndex = 0;
 	inputElementDescs[2].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	inputElementDescs[2].AlignedByteOffset = D3D12_APPEND_ALIGNED_ELEMENT;
+
 	for (int i = 0; i < kNumPSO; i++) {
 		inputLayoutDesc[i] = {};
 		inputLayoutDesc[i].pInputElementDescs = inputElementDescs;
