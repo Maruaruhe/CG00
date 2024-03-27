@@ -1,6 +1,15 @@
 #include "WindowsAPI.h"
 
+WindowsAPI* WindowsAPI::instance = nullptr;
 
+WindowsAPI* WindowsAPI::GetInstance() {
+	//static WindowsAPI instance;
+	//return &instance;
+	if (instance == nullptr) {
+		instance = new WindowsAPI;
+	}
+	return instance;
+}
 
 void WindowsAPI::Init() {
 	WindowClass();
@@ -71,3 +80,7 @@ void WindowsAPI::WindowCreate() {
 	ShowWindow(hwnd, SW_SHOW);
 }
 
+void WindowsAPI::Finalize() {
+	delete instance;
+	instance = nullptr;
+}

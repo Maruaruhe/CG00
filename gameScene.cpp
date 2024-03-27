@@ -2,8 +2,11 @@
 
 
 
-void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
+void GameScene::Initialize()
 {
+	directX12_ = DirectX12::GetInstance();
+	directX12_->Initialize();
+
 	//light->Initialize();
 	light.color = { 1.0f,1.0f,1.0f,1.0f };
 	light.direction = { 0.0f,-1.0f,0.0f };
@@ -11,13 +14,11 @@ void GameScene::Initialize(DirectX12* directX12, WindowsAPI* windowsAPI)
 
 
 	VariableInit();
-	directX12_ = directX12;
-	directX12_->Init(windowsAPI);
 	colorVolume[0] = 1.0f;
 	colorVolume[1] = 1.0f;
 	colorVolume[2] = 1.0f;
 
-	graphicsRenderer_->Initialize(directX12);
+	graphicsRenderer_->Initialize();
 
 	sprite->Initialize(directX12_, spriteData);
 	sphere->Initialize(directX12_);
@@ -69,7 +70,7 @@ void GameScene::BeginFrame() {
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	directX12_->PreDraw();
-	graphicsRenderer_->DecideCommand(directX12_);
+	graphicsRenderer_->DecideCommand();
 }
 
 void GameScene::EndFrame() {

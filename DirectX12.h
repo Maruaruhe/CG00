@@ -21,8 +21,9 @@ class Texture;
 class DirectX12
 {
 public:
+	static DirectX12* GetInstance();
 
-	void Init(WindowsAPI* windowsAPI);
+	void Initialize();
 
 	void DXGIFactory();
 
@@ -87,25 +88,28 @@ public:
 
 	void NextFlameCommandList();
 
+	void Finalize();
+
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> GetSrvDescriptorHeap() { return srvDescriptorHeap; }
 
 
 	D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU() { return textureSrvHandleGPU; }
-	D3D12_GPU_DESCRIPTOR_HANDLE GetSrvHandleGPU2() { return textureSrvHandleGPU2; }
 
 	D3D12_DEPTH_STENCIL_DESC GetDepthStencilDesc() { return depthStencilDesc; }
 
-	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
-	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index);
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandle(uint32_t index);
+	D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandle(uint32_t index);
 
-	uint32_t GetDescriptorSizeSrv() { return descriptorSizeSRV; }
+	static const uint32_t kMaxSRVCount = 512;
+	uint32_t GetdescriptorSizeSRV() { return descriptorSizeSRV; }
 
 private:
+	static DirectX12* instance;
+
 	WindowsAPI* windowsAPI_;
 	Texture* texture;
 
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU;
-	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU2;
 
 	Microsoft::WRL::ComPtr<ID3D12Device> device;
 	Microsoft::WRL::ComPtr<IDXGIFactory7> dxgiFactory;
@@ -172,5 +176,10 @@ private:
 	uint32_t descriptorSizeSRV;
 	uint32_t descriptorSizeRTV;
 	uint32_t descriptorSizeDSV;
+
+	//DirectX12() = default;
+	//~DirectX12() = default;
+	//DirectX12(DirectX12&) = delete;
+	//DirectX12& operator=(DirectX12&) = delete;
 };
 

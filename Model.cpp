@@ -164,8 +164,8 @@ void Model::CreateSRV() {
 	instancingSrvDesc.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 	instancingSrvDesc.Buffer.NumElements = kNumInstance;
 	instancingSrvDesc.Buffer.StructureByteStride = sizeof(TransformationMatrix);
-	instancingSrvHandleCPU = directX12_->GetCPUDescriptorHandle(directX12_->GetSrvDescriptorHeap().Get(), descriptorSizeSRV, 3);
-	instancingSrvHandleGPU = directX12_->GetGPUDescriptorHandle(directX12_->GetSrvDescriptorHeap().Get(), descriptorSizeSRV, 3);
+	instancingSrvHandleCPU = directX12_->GetCPUDescriptorHandle(3);
+	instancingSrvHandleGPU = directX12_->GetGPUDescriptorHandle(3);
 	directX12_->GetDevice()->CreateShaderResourceView(instancingResource.Get(), &instancingSrvDesc, instancingSrvHandleCPU);
 }
 

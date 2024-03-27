@@ -22,7 +22,7 @@ class Lighting;
 class GameScene
 {
 public:
-	void Initialize(DirectX12* directX12, WindowsAPI* windowsAPI);
+	void Initialize();
 	void Update();
 	void Release();
 
@@ -36,7 +36,8 @@ private:
 	TriangleData triangleData[TRIANGLECOUNT];
 	SpriteData spriteData;
 
-	DirectX12* directX12_ = new DirectX12;
+	DirectX12* directX12_ = nullptr;
+
 	GraphicsRenderer* graphicsRenderer_ = new GraphicsRenderer;
 	Triangle** triangle_ = new Triangle * [TRIANGLECOUNT];
 	Sprite* sprite = new Sprite;

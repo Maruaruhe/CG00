@@ -2,9 +2,20 @@
 #include "Log.h"
 #include "Texture.h"
 
-void DirectX12::Init(WindowsAPI* windowsAPI) {
-	windowsAPI_ = windowsAPI;
-	windowsAPI->Init();
+DirectX12* DirectX12::instance = nullptr;
+
+DirectX12* DirectX12::GetInstance() {
+	//static DirectX12 instance;
+	//return &instance;
+	if (instance == nullptr) {
+		instance = new DirectX12;
+	}
+	return instance;
+}
+
+void DirectX12::Initialize() {
+	windowsAPI_ = WindowsAPI::GetInstance();
+	windowsAPI_->Init();
 	DXGIFactory();
 	Adapter();
 	D3D12Device();
@@ -123,8 +134,6 @@ void DirectX12::DescriptorHeap() {
 	rtvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 2, false);
 	rtvDescriptorHeapDesc = {};
 
-	srvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 128, true);
-
 	rtvDescriptorHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
 	rtvDescriptorHeapDesc.NumDescriptors = 2;
 
@@ -171,6 +180,7 @@ void DirectX12::DescriptorHeap() {
 	texture->UploadTextureData(textureResource, mipImages);
 	//
 
+	srvDescriptorHeap = CreateDescriptorHeap(device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 512, true);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc{};
 	srvDesc.Format = metadata.format;
@@ -178,8 +188,8 @@ void DirectX12::DescriptorHeap() {
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 	srvDesc.Texture2D.MipLevels = UINT(metadata.mipLevels);
 
-	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU = GetCPUDescriptorHandle(srvDescriptorHeap.Get(), descriptorSizeSRV, 1);
-	textureSrvHandleGPU = GetGPUDescriptorHandle(srvDescriptorHeap.Get(), descriptorSizeSRV, 1);
+	D3D12_CPU_DESCRIPTOR_HANDLE textureSrvHandleCPU = GetCPUDescriptorHandle(1);
+	textureSrvHandleGPU = GetGPUDescriptorHandle(1);
 
 	device->CreateShaderResourceView(textureResource.Get(), &srvDesc, textureSrvHandleCPU);
 }
@@ -374,13 +384,18 @@ void DirectX12::PushImGuiDrawCommand() {
 	ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), commandList.Get());
 }
 
-D3D12_CPU_DESCRIPTOR_HANDLE DirectX12::GetCPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-	handleCPU.ptr += (descriptorSize * index);
+D3D12_CPU_DESCRIPTOR_HANDLE DirectX12::GetCPUDescriptorHandle(uint32_t index) {
+	D3D12_CPU_DESCRIPTOR_HANDLE handleCPU = srvDescriptorHeap->GetCPUDescriptorHandleForHeapStart();
+	handleCPU.ptr += (descriptorSizeSRV * index);
 	return handleCPU;
 }
-D3D12_GPU_DESCRIPTOR_HANDLE DirectX12::GetGPUDescriptorHandle(ID3D12DescriptorHeap* descriptorHeap, uint32_t descriptorSize, uint32_t index) {
-	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-	handleGPU.ptr += (descriptorSize * index);
+D3D12_GPU_DESCRIPTOR_HANDLE DirectX12::GetGPUDescriptorHandle(uint32_t index) {
+	D3D12_GPU_DESCRIPTOR_HANDLE handleGPU = srvDescriptorHeap->GetGPUDescriptorHandleForHeapStart();
+	handleGPU.ptr += (descriptorSizeSRV * index);
 	return handleGPU;
+}
+
+void DirectX12::Finalize() {
+	delete instance;
+	instance = nullptr;
 }
