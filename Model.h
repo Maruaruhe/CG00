@@ -11,7 +11,7 @@
 #include "struct.h"
 #include "Lighting.h"
 
-#define kNumInstance 10
+#define kNumInstance 15
 #pragma comment(lib,"dxcompiler.lib")
 
 class Model
@@ -26,10 +26,6 @@ public:
 	void CreateVertexResource();
 
 	void CreateSRV();
-
-	void CreateVertexBufferView();
-
-	void DataResource();
 
 	void Release();
 
@@ -51,7 +47,6 @@ private:
 	DirectX12* directX12_;
 	ModelData modelData;
 
-	Transform transform;
 	Transform cameraTransform;
 
 	//頂点リソース用のヒープの設定
@@ -72,12 +67,6 @@ private:
 	Material* materialData_;
 
 	Microsoft::WRL::ComPtr<ID3D12Resource> wvpResource_;
-
-	TransformationMatrix* transformationMatrix;
-	//Matrix4x4* wvpData;
-
-	Transform transform_;
-	//Matrix4x4 worldMatrix_;
 
 	DirectionalLight* directionalLight_;
 	Microsoft::WRL::ComPtr<ID3D12Resource> directionalLightResource;
