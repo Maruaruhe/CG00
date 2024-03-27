@@ -161,8 +161,6 @@ void Sphere::Update(Vector4& color, Transform& transform_,DirectionalLight& dire
 	directionalLight_->color = direcionalLight.color;
 	directionalLight_->direction = direcionalLight.direction;
 	directionalLight_->intensity = direcionalLight.intensity;
-
-	ImGui::Checkbox("useMonsterBall", &useMonsterBall);
 }
 
 void Sphere ::Draw() {
