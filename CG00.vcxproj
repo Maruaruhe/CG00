@@ -106,10 +106,17 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClCompile Include="DirectXGame\Object\Texture\Texture.cpp" />
     <ClCompile Include="DirectXGame\Object\Triangle\Triangle.cpp" />
     <ClCompile Include="DirectXGame\Base\Log\Log.cpp" />
+    <ClCompile Include="DirectXGame\Manager\GameManager\GameManager.cpp" />
+    <ClCompile Include="DirectXGame\Scene\IScene.cpp" />
+    <ClCompile Include="DirectXGame\Base\Input\Input.cpp" />
+    <ClCompile Include="DirectXGame\Base\GlobalVariables\GlobalVariables.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="gameScene.cpp" />
     <ClCompile Include="DirectXGame\Base\GraphicsRenderer\GraphicsRenderer.cpp" />
     <ClCompile Include="DirectXGame\Base\WindowsAPI\WindowsAPI.cpp" />
+    <ClCompile Include="DirectXGame\Manager\ModelManager\ModelManager.cpp" />
+    <ClCompile Include="DirectXGame\Manager\TextureManager\TextureManager.cpp" />
+    <ClCompile Include="DirectXGame\Scene\TestScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Object3d.PS.hlsl">
@@ -163,10 +170,17 @@ copy "$(WindowsSdkDir)bin\$(TargetPlatformVersion)\x64\dxil.dll" "$(TargetDir)dx
     <ClInclude Include="DirectXGame\Math\TransformationMatrix.h" />
     <ClInclude Include="DirectXGame\Object\Triangle\Triangle.h" />
     <ClInclude Include="DirectXGame\Base\Log\Log.h" />
+    <ClInclude Include="DirectXGame\Manager\GameManager\GameManager.h" />
     <ClInclude Include="gameScene.h" />
     <ClInclude Include="DirectXGame\Base\GraphicsRenderer\GraphicsRenderer.h" />
     <ClInclude Include="DirectXGame\Math\Vector4.h" />
     <ClInclude Include="DirectXGame\Base\WindowsAPI\WindowsAPI.h" />
+    <ClInclude Include="DirectXGame\Manager\ModelManager\ModelManager.h" />
+    <ClInclude Include="DirectXGame\Manager\TextureManager\TextureManager.h" />
+    <ClInclude Include="DirectXGame\Scene\IScene.h" />
+    <ClInclude Include="DirectXGame\Scene\TestScene.h" />
+    <ClInclude Include="DirectXGame\Base\Input\Input.h" />
+    <ClInclude Include="DirectXGame\Base\GlobalVariables\GlobalVariables.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="externals\imgui\LICENSE.txt" />
