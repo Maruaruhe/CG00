@@ -12,10 +12,10 @@ void TestScene::Initialize() {
 	//sphere.SetCamera(camera2);
 	//sphere.Initialize();
 
-	TextureManager::GetInstance()->LoadTexture("Resources/ao.png");
+	//TextureManager::GetInstance()->LoadTexture("Resources/ao.png");
 	TextureManager::GetInstance()->LoadTexture("Resources/monsterBall.png");
 
-	ModelManager::GetInstance()->LoadModel("ghostPori");
+	//ModelManager::GetInstance()->LoadModel("ghostPori");
 	ModelManager::GetInstance()->LoadModel("axis");
 	ModelManager::GetInstance()->LoadModel("plane");
 

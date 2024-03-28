@@ -1,31 +1,7 @@
-#include "gameScene.h"
+#include "DirectXGame/Manager/GameManager/GameManager.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-	CoInitializeEx(0, COINIT_MULTITHREADED);
-	//インスタンス
-	GameScene* gameScene = new GameScene;
-	gameScene->Initialize();
-	//いろいろ
 
-
-	//初期化
-
-
-	//メインループ
-	MSG msg{};
-	while (msg.message != WM_QUIT) {
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		else {
-			gameScene->BeginFrame();
-			gameScene->Update();
-			gameScene->Draw();
-			gameScene->EndFrame();
-		}
-	}
-	gameScene->Final();
-	CoUninitialize();
+	GameManager::GetInstance()->Run();
 	return 0;
 }
