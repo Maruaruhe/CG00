@@ -8,7 +8,7 @@
 #include "../Object/Light/Lighting.h"
 #include "../Object/Camera/Camera.h"
 #include "../Object/Model/Model.h"
-//#include "../Object/Particle/Particle.h"
+#include "../Object/Particle/Particle.h"
 
 class TestScene : public IScene
 {
