@@ -1,7 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <cstdint>
-#include "ImGuiWND.h"
+#include "../ImGui/ImGuiWND.h"
 //クライアント領域のサイズ
 static const int32_t kCliantWidth = 1280;
 static const int32_t kClientHeight = 720;

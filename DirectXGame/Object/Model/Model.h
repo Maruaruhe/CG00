@@ -3,13 +3,12 @@
 #include <sstream>
 #include <stdint.h>
 #include <vector>
-#include "struct.h"
-#include "DirectX12.h"
+#include "../../Base/DirectX12/DirectX12.h"
 #include <dxcapi.h>
-#include "Vector4.h"
-#include "Matrix4x4.h"
-#include "struct.h"
-#include "Lighting.h"
+#include "../../Math/struct.h"
+#include "../../Math/Matrix4x4.h"
+#include "../../Math/Vector4.h"
+#include "../Light/Lighting.h"
 
 #define kNumInstance 15
 #pragma comment(lib,"dxcompiler.lib")

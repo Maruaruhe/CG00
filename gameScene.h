@@ -1,14 +1,14 @@
 #pragma once
-#include "DirectX12.h"
-#include "GraphicsRenderer.h"
-#include "WindowsAPI.h"
-#include "Triangle.h"
-#include "ImGuiWND.h"
-#include "Texture.h"
-#include "Sphere.h"
-#include "Lighting.h"
-#include "Sprite.h"
-#include "Model.h"
+#include "DirectXGame/Base/DirectX12/DirectX12.h"
+#include "DirectXGame/Base//GraphicsRenderer/GraphicsRenderer.h"
+#include "DirectXGame/Base/WindowsAPI/WindowsAPI.h"
+#include "DirectXGame/Base/ImGui/ImGuiWND.h"
+#include "DirectXGame/Object/Triangle/Triangle.h"
+#include "DirectXGame/Object/Texture/Texture.h"
+#include "DirectXGame/Object/Sphere/Sphere.h"
+#include "DirectXGame/Object/Light/Lighting.h"
+#include "DirectXGame/Object/Sprite/Sprite.h"
+#include "DirectXGame/Object/Model/Model.h"
 
 #define TRIANGLECOUNT 2
 

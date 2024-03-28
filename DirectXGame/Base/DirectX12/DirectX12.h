@@ -4,11 +4,11 @@
 #include <cassert>
 #include <format>
 #include <dxgidebug.h>
-#include "Vector4.h"
-#include "ImGuiWND.h"
-#include "WindowsAPI.h"
+#include "../../Math/Vector4.h"
+#include "../ImGui/ImGuiWND.h"
+#include "../WindowsAPI/WindowsAPI.h"
 #include <wrl.h>
-#include "struct.h"
+#include "../../Math/struct.h"
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
