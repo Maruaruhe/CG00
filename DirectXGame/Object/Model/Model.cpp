@@ -1,96 +1,35 @@
 #include "Model.h"
 #include <assert.h>
 
-ModelData Model::LoadObjFile(const std::string& directoryPath, const std::string& filename) {
-	ModelData modelData;
-	std::vector<Vector4> positions;
-	std::vector<Vector3> normals;
-	std::vector<Vector2> texcoords;
-	std::string line;
+#include "../../Manager/TextureManager/TextureManager.h"
+#include "../../Manager/ModelManager/ModelManager.h"
 
-	std::ifstream file(directoryPath + "/" + filename);
-	assert(file.is_open());
-
-	while (std::getline(file, line)) {
-		std::string identifier;
-		std::istringstream s(line);
-		s >> identifier;
-
-		if (identifier == "v") {
-			Vector4 position;
-			s >> position.x >> position.y >> position.z;
-			position.w = 1.0f;
-			positions.push_back(position);
-		}
-		else if (identifier == "vt") {
-			Vector2 texcoord;
-			s >> texcoord.x >> texcoord.y;
-			texcoords.push_back(texcoord);
-		}
-		else if (identifier == "vn") {
-			Vector3 normal;
-			s >> normal.x >> normal.y >> normal.z;
-			normals.push_back(normal);
-		}
-		else if (identifier == "f") {
-			VertexData triangle[3];
-			for (int32_t faceVertex = 0; faceVertex < 3; ++faceVertex) {
-				std::string vertexDefinition;
-				s >> vertexDefinition;
-
-				std::istringstream v(vertexDefinition);
-				uint32_t elementIndices[3];
-				for (int32_t element = 0; element < 3; ++element) {
-					std::string index;
-					std::getline(v, index, '/');
-					elementIndices[element] = std::stoi(index);
-				}
-				Vector4 position = positions[elementIndices[0] - 1];
-				Vector2 texcoord = texcoords[elementIndices[1] - 1];
-				Vector3 normal = normals[elementIndices[2] - 1];
-				position.x *= -1;
-				normal.x *= -1;
-				texcoord.y = 1.0f - texcoord.y;
-				VertexData vertex = { position,texcoord,normal };
-				modelData.vertices.push_back(vertex);
-				triangle[faceVertex] = { position,texcoord,normal };
-			}
-			modelData.vertices.push_back(triangle[2]);
-			modelData.vertices.push_back(triangle[1]);
-			modelData.vertices.push_back(triangle[0]);
-		}
-		else if (identifier == "mtllib") {
-			std::string materialFilename;
-			s >> materialFilename;
-
-			modelData.material = LoadMaterialTemplateFile(directoryPath, materialFilename);
-		}
-	}
-	return modelData;
-}
 void Model::InitializePosition() {
 }
 
-void Model::Initialize(DirectX12* directX12) {
-	directX12_ = directX12;
+void Model::Initialize(const std::string& filename) {
+	directX12_ = DirectX12::GetInstance();
 	cameraTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-10.0f} };
+
+	modelData = ModelManager::GetInstance()->GetModel(filename);
+
 	CreateMaterialResource();
-
-	modelData = LoadObjFile("Resources", "plane.obj");
-
 	CreateVertexResource();
 	CreateInstance();
 	CreateSRV();
+
+	TextureManager::GetInstance()->LoadTexture("Resources/uvChecker.png");
+	textureIndex = TextureManager::GetInstance()->GetTextureIndexByFilePath("Resources/uvChecker.png");
 }
 
-void Model::Update(Vector4& color, Transform& transform_, DirectionalLight& direcionalLight) {
+void Model::Update() {
 	materialData_->uvTransform = MakeIdentity4x4();
 
 	Matrix4x4 cameraMatrix = MakeAffineMatrix(cameraTransform.scale, cameraTransform.rotate, cameraTransform.translate);
 	Matrix4x4 viewMatrix = Inverse(cameraMatrix);
 	Matrix4x4 projectionMatrix = MakePerspectiveFovMatrix(0.45f, float(kClientWidth) / float(kClientHeight), 0.1f, 100.0f);
 
-	materialData_->color = color;
+	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
 
 	for (uint32_t index = 0; index < kNumInstance; ++index) {
 		Matrix4x4 worldMatrix = MakeAffineMatrix(transforms[index].scale, transforms[index].rotate, transforms[index].translate);

@@ -16,9 +16,13 @@
 class Model
 {
 public:
-	ModelData LoadObjFile(const std::string& directoryPath, const std::string& filename);
+	void Initialize(const std::string& filename);
 
-	void Initialize(DirectX12* directX12);
+	void Update();
+
+	void Draw();
+
+private:
 
 	void InitializePosition();
 
@@ -36,13 +40,12 @@ public:
 
 	void CreateDirectionalLightResource();
 
-	void Update(Vector4& color, Transform& transform_, DirectionalLight& directionalLight);
-
-	void Draw();
 
 	MaterialData LoadMaterialTemplateFile(const std::string& directoryPath, const std::string& filename);
 
 private:
+	uint32_t textureIndex = 0;
+
 	DirectX12* directX12_;
 	ModelData modelData;
 

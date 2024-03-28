@@ -19,17 +19,8 @@ public:
 
 private:
 	Input* input = nullptr;
-	Lighting light;
-
-	Camera* camera2;
-
-	Sphere sphere;
 
 	Model model;
-	Model modela;
-
-	//Particle p;
-
 	Sprite sprite;
 };
 

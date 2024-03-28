@@ -1,56 +1,33 @@
 #include "Sprite.h"
 
-void Sprite::Initialize(DirectX12* directX12, SpriteData spriteData) {
-	directX12_ = directX12;
+void Sprite::Initialize(Vector2 leftTop, Vector2 rightBot, std::string textureFilePath) {
 	transform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,0.0f} };
-	cameraTransform = { {1.0f,1.0f,1.0f},{0.0f,0.0f,0.0f},{0.0f,0.0f,-5.0f} };
+
 	uvTransform = {
 		{1.0f,1.0f,1.0f},
 		{0.0f,0.0f,0.0f},
 		{0.0f,0.0f,0.0f},
 	};
+
+	isActive = true;
 	CreateVertexResource();
 	CreateMaterialResource();
 	CreateVertexBufferView();
 	CreateTransformationMatrixResource();
 	CreateIndexResource();
-	DataResource();
+	CreateVertexData(leftTop, rightBot);
 
-	vertexData = nullptr;
-	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
-	//左下
-	vertexData[0].position = spriteData.LeftBot.position;
-	vertexData[0].texcoord = spriteData.LeftBot.texcoord;
-	vertexData[0].normal = { 0.0f,0.0f,-1.0f };
-	//上									   
-	vertexData[1].position = spriteData.LeftTop.position;
-	vertexData[1].texcoord = spriteData.LeftTop.texcoord;
-	vertexData[1].normal = { 0.0f,0.0f,-1.0f };
-	//右下								
-	vertexData[2].position = spriteData.RightBot.position;
-	vertexData[2].texcoord = spriteData.RightBot.texcoord;
-	vertexData[2].normal = { 0.0f,0.0f,-1.0f };
-
-	vertexData[3].position = spriteData.RightTop.position;
-	vertexData[3].texcoord = spriteData.RightTop.texcoord;
-	vertexData[3].normal = { 0.0f,0.0f,-1.0f };
+	textureIndex = TextureManager::GetInstance()->GetTextureIndexByFilePath(textureFilePath);
 }
 
-void Sprite::Update(Vector4& color, Transform& transform_) {
-	ImGui::DragFloat2("uvTranslate", &uvTransform.translate.x, 0.01f, -10.0f, 10.0f);
-	ImGui::DragFloat2("uvScale", &uvTransform.scale.x, 0.01f, -10.0f, 10.0f);
-	ImGui::SliderAngle("ucRotate", &uvTransform.rotate.z);
-
-	transform.translate = transform_.translate;
-	transform.rotate = transform_.rotate;
-	transform.scale = transform_.scale;
+void Sprite::Update() {
 	materialData_->uvTransform = MakeIdentity4x4();
 	transformationMatrix->World = MakeAffineMatrix(transform.scale, transform.rotate, transform.translate);
 	Matrix4x4 viewMatrix = MakeIdentity4x4();
 	Matrix4x4 projectionMatrix = MakeOrthographicMatrix(0.0f, 0.0f, float(kCliantWidth), float(kClientHeight), 0.0f, 100.0f);
 	Matrix4x4 worldViewProjectionMatrix = Multiply(transformationMatrix->World, Multiply(viewMatrix, projectionMatrix));
 	transformationMatrix->WVP = worldViewProjectionMatrix;
-	materialData_->color = color;
+	materialData_->color = { 1.0f,1.0f,1.0f,1.0f };
 
 	Matrix4x4 uvTransformMatrix = MakeScaleMatrix(uvTransform.scale);
 	uvTransformMatrix = Multiply(uvTransformMatrix, MakeRotateZMatrix(uvTransform.rotate.z));
@@ -59,23 +36,24 @@ void Sprite::Update(Vector4& color, Transform& transform_) {
 }
 
 void Sprite::Draw() {
-	directX12_->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
-	directX12_->GetCommandList()->IASetIndexBuffer(&indexBufferView);	//VBVを設定
-	//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
-	directX12_->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
-	//directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResourceSprite->GetGPUVirtualAddress());
-	//wvp用のCBufferの場所を設定
-	directX12_->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
+	if (isActive) {
+		DirectX12::GetInstance()->GetCommandList()->IASetVertexBuffers(0, 1, &vertexBufferView);	//VBVを設定
+		DirectX12::GetInstance()->GetCommandList()->IASetIndexBuffer(&indexBufferView);	//VBVを設定
+		//形状を設定。PSOに設定しているものとはまた別。同じものを設定すると考えておけばよい
+		DirectX12::GetInstance()->GetCommandList()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(0, materialResource_->GetGPUVirtualAddress());
+		//wvp用のCBufferの場所を設定
+		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootConstantBufferView(1, wvpResource_->GetGPUVirtualAddress());
 
-	directX12_->GetCommandList()->SetGraphicsRootDescriptorTable(2, directX12_->GetSrvHandleGPU());
-	//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
-	//directX12_->GetCommandList()->DrawInstanced(6, 1, 0, 0);
-	directX12_->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+		DirectX12::GetInstance()->GetCommandList()->SetGraphicsRootDescriptorTable(2, TextureManager::GetInstance()->GetSrvHandleGPU(textureIndex));
+
+		//描画！　（DrawCall/ドローコール)。3頂点で1つのインスタンス。インスタンスについては今後
+		DirectX12::GetInstance()->GetCommandList()->DrawIndexedInstanced(6, 1, 0, 0, 0);
+	}
 }
 
 void Sprite::CreateVertexResource() {
-	vertexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(VertexData) * 6);
+	vertexResource = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice(), sizeof(VertexData) * 6);
 }
 
 void Sprite::CreateVertexBufferView() {
@@ -89,7 +67,7 @@ void Sprite::CreateVertexBufferView() {
 }
 
 void Sprite::CreateMaterialResource() {
-	materialResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Material));
+	materialResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice(), sizeof(Material));
 	materialData_ = nullptr;
 	materialResource_->Map(0, nullptr, reinterpret_cast<void**>(&materialData_));
 
@@ -99,7 +77,7 @@ void Sprite::CreateMaterialResource() {
 
 void Sprite::CreateTransformationMatrixResource() {
 	//WVP用のリソースを作る。Matrix4x4　1つ分のサイズを用意する
-	wvpResource_ = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(Matrix4x4));
+	wvpResource_ = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice(), sizeof(Matrix4x4));
 	//データを書き込む
 	//wvpData = nullptr;
 	transformationMatrix = nullptr;
@@ -112,7 +90,7 @@ void Sprite::CreateTransformationMatrixResource() {
 }
 
 void Sprite::CreateIndexResource() {
-	indexResource = directX12_->CreateBufferResource(directX12_->GetDevice(), sizeof(uint32_t) * 6);
+	indexResource = DirectX12::GetInstance()->CreateBufferResource(DirectX12::GetInstance()->GetDevice(), sizeof(uint32_t) * 6);
 	indexBufferView = {};
 	indexBufferView.BufferLocation = indexResource->GetGPUVirtualAddress();
 	indexBufferView.SizeInBytes = sizeof(uint32_t) * 6;
@@ -129,12 +107,42 @@ void Sprite::CreateIndexResource() {
 	indexData[5] = 2;
 }
 
-void Sprite::DataResource() {
-	//書き込むためのアドレスを取得
+void Sprite::CreateVertexData(Vector2 leftTop, Vector2 rightBot) {
+	vertexData = nullptr;
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+	//左上									   
+	vertexData[1].position = { leftTop.x, leftTop.y, 0.0f, 1.0f };
+	vertexData[1].texcoord = { 0.0f,0.0f };
+	vertexData[1].normal = { 0.0f,0.0f,-1.0f };
+	//左下
+	vertexData[0].position = { leftTop.x, rightBot.y, 0.0f, 1.0f };
+	vertexData[0].texcoord = { 0.0f,1.0f };
+	vertexData[0].normal = { 0.0f,0.0f,-1.0f };
+	//右上
+	vertexData[3].position = { rightBot.x,leftTop.y, 0.0f, 1.0f };
+	vertexData[3].texcoord = { 1.0f, 0.0f };
+	vertexData[3].normal = { 0.0f,0.0f,-1.0f };
+	//右下								
+	vertexData[2].position = { rightBot.x,rightBot.y, 0.0f, 1.0f };
+	vertexData[2].texcoord = { 1.0f,1.0f };
+	vertexData[2].normal = { 0.0f,0.0f,-1.0f };
 }
 
 void Sprite::Release() {
-	//vertexResource->Release();
-	//materialResource_->Release();
+}
+
+void Sprite::SetPosition(Vector2 translate) {
+	transform.translate.x = translate.x;
+	transform.translate.y = translate.y;
+}
+
+void Sprite::SetTexcoord(Vector2 LT, Vector2 LB, Vector2 RT, Vector2 RB) {
+	//左上									   
+	vertexData[1].texcoord = { LT };
+	//左下
+	vertexData[0].texcoord = { LB };
+	//右上
+	vertexData[3].texcoord = { RT };
+	//右下								
+	vertexData[2].texcoord = { RB };
 }
