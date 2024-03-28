@@ -38,17 +38,17 @@ void TestScene::Initialize() {
 }
 
 void TestScene::Update() {
-	/*GlobalVariables::GetInstance()->Update();
+	//GlobalVariables::GetInstance()->Update();
 
-	light.Update();
-	camera2->Update();
+	//light.Update();
+	//camera2->Update();
 
-	sphere.Update();
+	//sphere.Update();
 
-	p.Update();
-	modela.Update();
+	//p.Update();
+	//modela.Update();
 
-	sprite.Update();*/
+	//sprite.Update();
 }
 
 void TestScene::Draw() {
